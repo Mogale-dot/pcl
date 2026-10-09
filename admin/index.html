@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#050a15" />
+  <title>Admin — PCL</title>
+  <link rel="stylesheet" href="/css/main.css" />
+
+  <style>
+    /* =========================================================
+       ADMIN DASHBOARD — page styles
+       ========================================================= */
+
+    /* ---------- Layout ---------- */
+    body.admin {
+      background: var(--bg);
+      min-height: 100dvh;
+    }
+
+    .admin-shell {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100dvh;
+    }
+
+    @media (max-width: 960px) {
+      .admin-shell { grid-template-columns: 1fr; }
+    }
+
+    /* ---------- Sidebar ---------- */
+    .admin-side {
+      background: var(--bg-2);
+      border-right: 1px solid var(--border);
+      padding: 22px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      position: sticky;
+      top: 0;
+      height: 100dvh;
+      overflow-y: auto;
+    }
+    @media (max-width: 960px) {
+      .admin-side {
+        position: fixed;
+        inset: 0 auto 0 0;
+        width: 260px;
+        z-index: 300;
+        transform: translateX(-100%);
+        transition: transform 0.35s var(--ease);
+      }
+      .admin-side.open { transform: translateX(0); }
+    }
+
+    .side-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 6px 0;
+    }
+    .side-brand img { height: 38px; width: auto; }
+    .side-brand-tag {
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 3px 6px;
+      border-radius: 4px;
+      background: rgba(0, 224, 123, 0.08);
+      border: 1px solid rgba(0, 224, 123, 0.3);
+    }
+
+    .side-group-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      padding: 0 8px;
+      margin-bottom: 6px;
+    }
+
+    .side-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .side-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      background: none;
+      border: none;
+      text-align: left;
+      width: 100%;
+      transition: background var(--dur) var(--ease),
+                  color var(--dur) var(--ease);
+    }
+    .side-nav-item:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+    }
+    .side-nav-item.active {
+      background: rgba(0, 224, 123, 0.10);
+      color: var(--accent);
+      border: 1px solid rgba(0, 224, 123, 0.28);
+    }
+    .side-nav-item svg { flex-shrink: 0; }
+    .side-nav-item .badge {
+      margin-left: auto;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #04120b;
+    }
+
+    .side-foot {
+      margin-top: auto;
+      padding: 12px 8px 0;
+      border-top: 1px solid var(--border);
+    }
+    .side-foot-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .side-foot-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #00a95c);
+      color: #04120b;
+      display: grid; place-items: center;
+      font-weight: 900;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    .side-foot-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .side-foot-role {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    /* ---------- Main ---------- */
+    .admin-main {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    /* Topbar */
+    .admin-top {
+      height: 64px;
+      padding-inline: 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(10, 17, 32, 0.72);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    @media (max-width: 960px) {
+      .admin-top { padding-inline: 16px; }
+    }
+
+    .admin-top-burger {
+      display: none;
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: none;
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+      place-items: center;
+      cursor: pointer;
+    }
+    @media (max-width: 960px) {
+      .admin-top-burger { display: grid; }
+    }
+
+    .admin-top-title {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .admin-top-search {
+      position: relative;
+      width: min(320px, 34vw);
+    }
+    .admin-top-search input {
+      width: 100%;
+      padding: 9px 12px 9px 34px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+      transition: border-color var(--dur) var(--ease);
+    }
+    .admin-top-search input:focus { border-color: var(--accent); }
+    .admin-top-search svg {
+      position: absolute;
+      left: 11px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+    @media (max-width: 620px) {
+      .admin-top-search { display: none; }
+    }
+
+    .admin-top-icon {
+      width: 38px; height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text);
+      cursor: pointer;
+      position: relative;
+      transition: background var(--dur) var(--ease);
+    }
+    .admin-top-icon:hover { background: rgba(255, 255, 255, 0.04); }
+    .admin-top-icon .dot {
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 6px var(--accent);
+    }
+
+    /* Page area */
+    .admin-page {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      flex: 1;
+    }
+    @media (max-width: 620px) {
+      .admin-page { padding: 16px; }
+    }
+
+    /* ---------- Panels ---------- */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .panel-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .panel-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ---------- Overview stats ---------- */
+    .ov-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 900px) { .ov-stats { grid-template-columns: repeat(2, 1fr); } }
+    .ov-stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .ov-stat-icon {
+      width: 34px; height: 34px;
+      display: grid; place-items: center;
+      border-radius: 9px;
+      background: rgba(0, 224, 123, 0.08);
+      border: 1px solid rgba(0, 224, 123, 0.25);
+      color: var(--accent);
+    }
+    .ov-stat-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+    .ov-stat-value {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .ov-stat-value.accent { color: var(--accent); }
+
+    /* ---------- Tables ---------- */
+    .tbl-wrap { overflow-x: auto; }
+    .tbl {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      min-width: 640px;
+    }
+    .tbl th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .tbl td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+      vertical-align: middle;
+    }
+    .tbl tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+    .tbl td.name { color: var(--text); font-weight: 700; }
+
+    .crest {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      border: 1px solid var(--border-strong);
+      display: grid; place-items: center;
+      font-size: 11px;
+      font-weight: 900;
+      color: var(--accent);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .crest img { width: 100%; height: 100%; object-fit: cover; }
+
+    .cell-team {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* ---------- Buttons ---------- */
+    .btn-sm {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      border: 1px solid var(--border-strong);
+      background: transparent;
+      color: var(--text);
+      transition: background var(--dur) var(--ease),
+                  border-color var(--dur) var(--ease),
+                  color var(--dur) var(--ease);
+    }
+    .btn-sm:hover { background: rgba(255, 255, 255, 0.06); }
+    .btn-sm.primary {
+      background: var(--accent);
+      color: #04120b;
+      border-color: var(--accent);
+    }
+    .btn-sm.primary:hover { background: #14f58c; }
+    .btn-sm.danger {
+      color: var(--danger);
+      border-color: rgba(255, 77, 94, 0.4);
+    }
+    .btn-sm.danger:hover { background: rgba(255, 77, 94, 0.08); }
+    .btn-sm.success {
+      background: rgba(0, 224, 123, 0.12);
+      border-color: rgba(0, 224, 123, 0.35);
+      color: var(--accent);
+    }
+    .btn-sm.success:hover { background: rgba(0, 224, 123, 0.2); }
+    .btn-sm + .btn-sm { margin-left: 6px; }
+
+    /* ---------- Tags ---------- */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .tag.pending { background: rgba(255, 214, 10, 0.1); color: var(--accent-2); border: 1px solid rgba(255, 214, 10, 0.35); }
+    .tag.approved { background: rgba(0, 224, 123, 0.1); color: var(--accent); border: 1px solid rgba(0, 224, 123, 0.35); }
+    .tag.rejected { background: rgba(255, 77, 94, 0.1); color: var(--danger); border: 1px solid rgba(255, 77, 94, 0.35); }
+    .tag.info     { background: rgba(0, 120, 255, 0.1); color: #7cb2ff; border: 1px solid rgba(0, 120, 255, 0.35); }
+
+    /* ---------- Sections show/hide ---------- */
+    .page-section { display: none; }
+    .page-section.active { display: flex; flex-direction: column; gap: 20px; }
+
+    /* ---------- Forms ---------- */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 620px) { .form-grid { grid-template-columns: 1fr; } }
+    .form-grid .full { grid-column: 1 / -1; }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .field label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .field input,
+    .field select {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      transition: border-color var(--dur) var(--ease);
+      width: 100%;
+    }
+    .field input:focus,
+    .field select:focus { border-color: var(--accent); }
+
+    /* ---------- Tournament format cards ---------- */
+    .format-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 720px) { .format-cards { grid-template-columns: 1fr; } }
+
+    .format-card {
+      padding: 18px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: border-color var(--dur) var(--ease),
+                  background var(--dur) var(--ease);
+    }
+    .format-card:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-2);
+    }
+    .format-card.active {
+      border-color: var(--accent);
+      background: rgba(0, 224, 123, 0.06);
+    }
+    .format-card-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .format-card-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+
+    /* ---------- Modals (reused) ---------- */
+    .modal-back {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 10, 21, 0.8);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 16px;
+      z-index: 500;
+      overflow-y: auto;
+      opacity: 0;
+      transition: opacity 0.22s var(--ease);
+    }
+    .modal-back.open { display: flex; opacity: 1; }
+    .modal-panel {
+      width: 100%;
+      max-width: 560px;
+      background: var(--bg-2);
+      border: 1px solid var(--border-strong);
+      border-radius: 18px;
+      padding: 22px;
+      transform: translateY(10px);
+      transition: transform 0.28s var(--ease);
+    }
+    .modal-back.open .modal-panel { transform: translateY(0); }
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .modal-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .modal-close {
+      width: 34px; height: 34px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      cursor: pointer;
+      border: none;
+    }
+    .modal-close:hover { background: rgba(255, 255, 255, 0.1); }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    /* ---------- Empty ---------- */
+    .empty {
+      padding: 40px 20px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    /* ---------- Mobile overlay for sidebar ---------- */
+    .side-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 290;
+      opacity: 0;
+      transition: opacity var(--dur) var(--ease);
+    }
+    @media (max-width: 960px) {
+      .side-overlay.open { display: block; opacity: 1; }
+    }
+  </style>
+</head>
+<body class="admin">
+
+  <div class="admin-shell">
+
+    <!-- ============================================================
+         SIDEBAR
+         ============================================================ -->
+    <aside class="admin-side" id="adminSide">
+      <div class="side-brand">
+        <img src="/assets/images/pcl-logo.jpeg" alt="PCL" />
+        <span class="side-brand-tag">Admin</span>
+      </div>
+
+      <div>
+        <div class="side-group-label">Tournament</div>
+        <nav class="side-nav">
+          <button class="side-nav-item active" data-tab="overview">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="8" height="8" rx="1" />
+              <rect x="13" y="3" width="8" height="8" rx="1" />
+              <rect x="3" y="13" width="8" height="8" rx="1" />
+              <rect x="13" y="13" width="8" height="8" rx="1" />
+            </svg>
+            Overview
+          </button>
+
+          <button class="side-nav-item" data-tab="tournament">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 4h8v4a4 4 0 0 1-8 0z" />
+              <path d="M16 5h3v2a3 3 0 0 1-3 3" />
+              <path d="M8 5H5v2a3 3 0 0 0 3 3" />
+              <path d="M12 12v4" />
+              <path d="M9 20h6" />
+            </svg>
+            Tournament Setup
+          </button>
+        </nav>
+      </div>
+
+      <div>
+        <div class="side-group-label">Registrations</div>
+        <nav class="side-nav">
+          <button class="side-nav-item" data-tab="pending">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v5l3 2" />
+            </svg>
+            Pending Teams
+            <span class="badge" id="pendingCount">3</span>
+          </button>
+
+          <button class="side-nav-item" data-tab="teams">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" />
+            </svg>
+            Teams
+          </button>
+
+          <button class="side-nav-item" data-tab="players">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 21a8 8 0 0 1 16 0" />
+            </svg>
+            Players
+          </button>
+        </nav>
+      </div>
+
+      <div>
+        <div class="side-group-label">Matches</div>
+        <nav class="side-nav">
+          <button class="side-nav-item" data-tab="fixtures">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="5" width="18" height="16" rx="2" />
+              <path d="M3 10h18M8 3v4M16 3v4" />
+            </svg>
+            Fixtures
+          </button>
+
+          <button class="side-nav-item" data-tab="results">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M8 12l3 3 5-6" />
+            </svg>
+            Results & Stats
+          </button>
+        </nav>
+      </div>
+
+      <div>
+        <div class="side-group-label">System</div>
+        <nav class="side-nav">
+          <button class="side-nav-item" data-tab="settings">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" />
+            </svg>
+            Settings
+          </button>
+        </nav>
+      </div>
+
+      <div class="side-foot">
+        <div class="side-foot-user">
+          <div class="side-foot-avatar">AD</div>
+          <div>
+            <div class="side-foot-name">PCL Admin</div>
+            <div class="side-foot-role">Administrator</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="side-overlay" id="sideOverlay"></div>
+
+
+    <!-- ============================================================
+         MAIN
+         ============================================================ -->
+    <div class="admin-main">
+
+      <!-- top bar -->
+      <div class="admin-top">
+        <button class="admin-top-burger" id="sideToggle" aria-label="Open menu">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M3 6h18M3 12h18M3 18h18" />
+          </svg>
+        </button>
+
+        <div class="admin-top-title" id="topTitle">Overview</div>
+
+        <label class="admin-top-search">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7" />
+            <path d="M21 21l-4-4" />
+          </svg>
+          <input type="search" placeholder="Search teams, players..." id="topSearch" />
+        </label>
+
+        <button class="admin-top-icon" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+               stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8" />
+            <path d="M10 21a2 2 0 0 0 4 0" />
+          </svg>
+          <span class="dot"></span>
+        </button>
+
+        <a href="/index.html" class="admin-top-icon" aria-label="View public site">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+               stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+            <path d="M10 17l5-5-5-5" />
+            <path d="M15 12H3" />
+          </svg>
+        </a>
+      </div>
+
+      <!-- page content -->
+      <div class="admin-page">
+
+
+        <!-- ============================================================
+             OVERVIEW
+             ============================================================ -->
+        <section class="page-section active" id="tab-overview">
+          <div class="ov-stats">
+            <div class="ov-stat">
+              <div class="ov-stat-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                     stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 7v5l3 2" />
+                </svg>
+              </div>
+              <div class="ov-stat-label">Pending teams</div>
+              <div class="ov-stat-value accent" id="ovPending">3</div>
+            </div>
+
+            <div class="ov-stat">
+              <div class="ov-stat-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                     stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" />
+                </svg>
+              </div>
+              <div class="ov-stat-label">Active teams</div>
+              <div class="ov-stat-value" id="ovTeams">10</div>
+            </div>
+
+            <div class="ov-stat">
+              <div class="ov-stat-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                     stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 21a8 8 0 0 1 16 0" />
+                </svg>
+              </div>
+              <div class="ov-stat-label">Registered players</div>
+              <div class="ov-stat-value" id="ovPlayers">58</div>
+            </div>
+
+            <div class="ov-stat">
+              <div class="ov-stat-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                     stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="5" width="18" height="16" rx="2" />
+                  <path d="M3 10h18M8 3v4M16 3v4" />
+                </svg>
+              </div>
+              <div class="ov-stat-label">Fixtures scheduled</div>
+              <div class="ov-stat-value" id="ovFixtures">12</div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-title">Quick actions</div>
+                <div class="panel-sub">The most common admin tasks.</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              <button class="btn-sm primary" data-jump="pending">Review pending teams</button>
+              <button class="btn-sm" data-jump="fixtures">Generate fixtures</button>
+              <button class="btn-sm" data-jump="players">Add a player</button>
+              <button class="btn-sm" data-jump="tournament">Create tournament</button>
+              <button class="btn-sm" data-jump="results">Record a result</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Recent activity</div>
+            </div>
+            <div id="activityList"></div>
+          </div>
+        </section>
+
+
+        <!-- ============================================================
+             TOURNAMENT SETUP
+             ============================================================ -->
+        <section class="page-section" id="tab-tournament">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-title">Create tournament</div>
+                <div class="panel-sub">Pick a format. Teams will register and fixtures auto-generate for group stage formats.</div>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="tName">Tournament name</label>
+                <input id="tName" type="text" value="PCL 2026 Season" />
+              </div>
+              <div class="field">
+                <label for="tAge">Age group</label>
+                <select id="tAge">
+                  <option>Open / Senior</option>
+                  <option>U21</option>
+                  <option>U18</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label>Format</label>
+                <div class="format-cards" id="formatCards">
+                  <div class="format-card active" data-format="top4">
+                    <div class="format-card-name">Top 4</div>
+                    <div class="format-card-desc">
+                      Single round-robin. Top 4 into semi-finals (1v4, 2v3). Straightforward.
+                    </div>
+                  </div>
+                  <div class="format-card" data-format="top6">
+                    <div class="format-card-name">Top 6 · Group Stage</div>
+                    <div class="format-card-desc">
+                      Teams split into two groups of 3. Group stage, then knockouts. Auto-fixtures.
+                    </div>
+                  </div>
+                  <div class="format-card" data-format="top8">
+                    <div class="format-card-name">Top 8</div>
+                    <div class="format-card-desc">
+                      Two groups of 4. Group stage + quarter-finals, semis and final.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-actions">
+              <button class="btn-sm" id="resetTournamentForm">Reset</button>
+              <button class="btn-sm primary" id="createTournament">Create tournament</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Active tournament</div>
+            </div>
+            <div id="activeTournament"></div>
+          </div>
+        </section>
+
+
+        <!-- ============================================================
+             PENDING TEAMS
+             ============================================================ -->
+        <section class="page-section" id="tab-pending">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-title">Pending team registrations</div>
+                <div class="panel-sub">Approve to add teams to the tournament, or reject with a note.</div>
+              </div>
+            </div>
+            <div class="tbl-wrap">
+              <table class="tbl">
+                <thead>
+                  <tr>
+                    <th>Team</th>
+                    <th>Coach / Manager</th>
+                    <th>Contact</th>
+                    <th>Players</th>
+                    <th>Submitted</th>
+                    <th style="text-align:right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="pendingBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ============================================================
+             TEAMS
+             ============================================================ -->
+        <section class="page-section" id="tab-teams">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-title">Active teams</div>
+                <div class="panel-sub">Edit stats, view squad, or remove a team.</div>
+              </div>
+            </div>
+            <div class="tbl-wrap">
+              <table class="tbl">
+                <thead>
+                  <tr>
+                    <th>Team</th>
+                    <th>Coach</th>
+                    <th>P</th>
+                    <th>W</th>
+                    <th>D</th>
+                    <th>L</th>
+                    <th>GF</th>
+                    <th>GA</th>
+                    <th>Pts</th>
+                    <th style="text-align:right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="teamsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ============================================================
+             PLAYERS
+             ============================================================ -->
+        <section class="page-section" id="tab-players">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-title">All players</div>
+                <div class="panel-sub">Add a player, edit stats, or remove them from a squad.</div>
+              </div>
+              <button class="btn-sm primary" id="addPlayerBtn">+ Add player</button>
+            </div>
+            <div class="tbl-wrap">
+              <table class="tbl">
+                <thead>
+                  <tr>
+                    <th>Player</th>
+                    <th>#</th>
+                    <th>Team</th>
+                    <th>Position</th>
+                    <th>Apps</th>
+                    <th>Goals</th>
+                    <th>Assists</th>
+                    <th style="text-align:right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="playersBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ============================================================
+             FIXTURES
+             ============================================================ -->
+        <section class="page-section" id="tab-fixtures">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-title">Fixtures</div>
+                <div class="panel-sub">Auto-generate from registered teams, or add manually.</div>
+              </div>
+              <div>
+                <button class="btn-sm success" id="autoFixtureBtn">Auto-generate</button>
+                <button class="btn-sm primary" id="addFixtureBtn">+ Add fixture</button>
+              </div>
+            </div>
+            <div class="tbl-wrap">
+              <table class="tbl">
+                <thead>
+                  <tr>
+                    <th>Match</th>
+                    <th>Date & time</th>
+                    <th>Court</th>
+                    <th>Stage</th>
+                    <th style="text-align:right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="fixturesBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ============================================================
+             RESULTS & STATS
+             ============================================================ -->
+        <section class="page-section" id="tab-results">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-title">Record a result</div>
+                <div class="panel-sub">Entering a score updates standings and player stats automatically.</div>
+              </div>
+            </div>
+            <div class="tbl-wrap">
+              <table class="tbl">
+                <thead>
+                  <tr>
+                    <th>Match</th>
+                    <th>Date</th>
+                    <th>Score</th>
+                    <th>Status</th>
+                    <th style="text-align:right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="resultsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ============================================================
+             SETTINGS
+             ============================================================ -->
+        <section class="page-section" id="tab-settings">
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Admin profile</div>
+            </div>
+            <div class="form-grid">
+              <div class="field">
+                <label>Name</label>
+                <input type="text" value="PCL Admin" />
+              </div>
+              <div class="field">
+                <label>Email</label>
+                <input type="email" value="admin@pcl.co.za" />
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Danger zone</div>
+            </div>
+            <p style="font-size:13px;color:var(--text-muted);max-width:560px;line-height:1.6;">
+              These actions affect the current season and cannot be undone.
+            </p>
+            <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;">
+              <button class="btn-sm danger">Reset season</button>
+              <button class="btn-sm danger">Delete all fixtures</button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       MODAL — generic (used by all "add/edit" flows)
+       ============================================================ -->
+  <div class="modal-back" id="modalBack" role="dialog" aria-modal="true">
+    <div class="modal-panel" id="modalPanel">
+      <div class="modal-head">
+        <div class="modal-title" id="modalTitle">Modal</div>
+        <button type="button" class="modal-close" id="modalClose" aria-label="Close">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+      <div id="modalBody"></div>
+      <div class="modal-actions" id="modalActions"></div>
+    </div>
+  </div>
+
+
+  <script type="module">
+    /* =========================================================
+       MOCK DATA
+       ========================================================= */
+    let SEASON = {
+      name: 'PCL 2026 Season',
+      ageGroup: 'Open / Senior',
+      format: 'top6',
+      formatLabel: 'Top 6 · Group Stage',
+    };
+
+    let PENDING_TEAMS = [
+      { id: 101, name: 'Bochum Warriors', coach: 'K. Netshifhefhe', phone: '+27 82 000 1111', email: 'bochum@pcl.local', players: 9,  submitted: '2h ago' },
+      { id: 102, name: 'Mankweng Rovers', coach: 'L. Ramaphosa',    phone: '+27 82 222 3333', email: 'mankweng@pcl.local', players: 10, submitted: '6h ago' },
+      { id: 103, name: 'Ga-Rankuwa FC',   coach: 'S. Mothibi',      phone: '+27 83 444 5555', email: 'gr@pcl.local',      players: 8,  submitted: '1d ago' },
+    ];
+
+    let TEAMS = [
+      { id: 1, name: 'N1 Padel FC',      coach: 'S. Mokoena',     players: 8, stats: { p: 10, w: 7, d: 2, l: 1, gf: 24, ga: 9  } },
+      { id: 2, name: 'Limpopo Lions',    coach: 'A. van Wyk',     players: 5, stats: { p: 10, w: 6, d: 1, l: 3, gf: 21, ga: 14 } },
+      { id: 3, name: 'Polokwane United', coach: 'M. Tshabalala',  players: 4, stats: { p: 10, w: 5, d: 3, l: 2, gf: 19, ga: 12 } },
+      { id: 4, name: 'Mokopane Stars',   coach: 'T. Nkosi',       players: 4, stats: { p: 10, w: 4, d: 3, l: 3, gf: 15, ga: 13 } },
+      { id: 5, name: 'Seshego City',     coach: 'J. Mashego',     players: 3, stats: { p: 10, w: 3, d: 4, l: 3, gf: 14, ga: 13 } },
+      { id: 6, name: 'Turfloop Titans',  coach: 'B. Kgosana',     players: 3, stats: { p: 10, w: 3, d: 3, l: 4, gf: 13, ga: 15 } },
+      { id: 7, name: 'Lebowakgomo FC',   coach: 'P. Chuene',      players: 3, stats: { p: 10, w: 2, d: 2, l: 6, gf: 10, ga: 20 } },
+    ];
+
+    let PLAYERS = [
+      { id: 1, num: 11, name: 'S. Khumalo',   teamId: 1, position: 'FWD', apps: 10, goals: 9, assists: 3 },
+      { id: 2, num: 9,  name: 'R. Moloi',     teamId: 1, position: 'FWD', apps: 9,  goals: 6, assists: 2 },
+      { id: 3, num: 10, name: 'B. Radebe',    teamId: 1, position: 'MID', apps: 10, goals: 4, assists: 6 },
+      { id: 4, num: 8,  name: 'L. Mokoena',   teamId: 1, position: 'MID', apps: 10, goals: 3, assists: 5 },
+      { id: 5, num: 10, name: 'C. Mahlangu',  teamId: 2, position: 'FWD', apps: 10, goals: 8, assists: 5 },
+      { id: 6, num: 11, name: 'T. Ngwenya',   teamId: 2, position: 'FWD', apps: 10, goals: 5, assists: 3 },
+      { id: 7, num: 9,  name: 'G. Maluleka',  teamId: 3, position: 'FWD', apps: 10, goals: 7, assists: 2 },
+      { id: 8, num: 8,  name: 'K. Molefe',    teamId: 3, position: 'MID', apps: 10, goals: 4, assists: 6 },
+      { id: 9, num: 10, name: 'L. Rakgomo',   teamId: 4, position: 'MID', apps: 10, goals: 5, assists: 4 },
+      { id: 10,num: 11, name: 'T. Mokwena',   teamId: 4, position: 'FWD', apps: 10, goals: 6, assists: 3 },
+    ];
+
+    let FIXTURES = [
+      { id: 1, teamAId: 1, teamBId: 2, date: 'Sat 14:00', court: 'Court A', stage: 'Group Stage', played: false, scoreA: null, scoreB: null },
+      { id: 2, teamAId: 3, teamBId: 4, date: 'Sat 15:30', court: 'Court B', stage: 'Group Stage', played: false, scoreA: null, scoreB: null },
+      { id: 3, teamAId: 5, teamBId: 6, date: 'Sat 17:00', court: 'Court A', stage: 'Group Stage', played: false, scoreA: null, scoreB: null },
+      { id: 4, teamAId: 1, teamBId: 3, date: 'Sun 10:00', court: 'Court A', stage: 'Group Stage', played: true,  scoreA: 4,    scoreB: 2    },
+      { id: 5, teamAId: 2, teamBId: 4, date: 'Sun 11:30', court: 'Court B', stage: 'Group Stage', played: true,  scoreA: 1,    scoreB: 1    },
+    ];
+
+    let ACTIVITY = [
+      { text: 'Team <strong>N1 Padel FC</strong> approved', time: '2h ago' },
+      { text: 'Match result recorded: <strong>N1 Padel 4 — 2 Polokwane United</strong>', time: '4h ago' },
+      { text: 'New pending team: <strong>Bochum Warriors</strong>', time: '2h ago' },
+      { text: 'Fixture added: <strong>Seshego City vs Turfloop Titans</strong>', time: '1d ago' },
+    ];
+
+
+    /* =========================================================
+       HELPERS
+       ========================================================= */
+    const $  = (sel) => document.querySelector(sel);
+    const $$ = (sel) => document.querySelectorAll(sel);
+
+    const initialsOf = (name) =>
+      name.split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+
+    const findTeam = (id) => TEAMS.find(t => t.id === id);
+    const points = (s) => s.w * 3 + s.d;
+
+    /* =========================================================
+       TAB NAVIGATION
+       ========================================================= */
+    const TITLES = {
+      overview:   'Overview',
+      tournament: 'Tournament Setup',
+      pending:    'Pending Teams',
+      teams:      'Teams',
+      players:    'Players',
+      fixtures:   'Fixtures',
+      results:    'Results & Stats',
+      settings:   'Settings',
+    };
+
+    function switchTab(tab) {
+      $$('.side-nav-item').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+      $$('.page-section').forEach(s => s.classList.toggle('active', s.id === `tab-${tab}`));
+      $('#topTitle').textContent = TITLES[tab] || 'Admin';
+      closeSide();
+    }
+
+    $$('.side-nav-item').forEach(btn => {
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+
+    $$('[data-jump]').forEach(btn => {
+      btn.addEventListener('click', () => switchTab(btn.dataset.jump));
+    });
+
+    /* =========================================================
+       SIDEBAR (mobile)
+       ========================================================= */
+    const adminSide   = $('#adminSide');
+    const sideOverlay = $('#sideOverlay');
+    const sideToggle  = $('#sideToggle');
+
+    function openSide() {
+      adminSide.classList.add('open');
+      sideOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeSide() {
+      adminSide.classList.remove('open');
+      sideOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    sideToggle?.addEventListener('click', openSide);
+    sideOverlay?.addEventListener('click', closeSide);
+
+
+    /* =========================================================
+       OVERVIEW
+       ========================================================= */
+    function renderOverview() {
+      $('#ovPending').textContent  = PENDING_TEAMS.length;
+      $('#ovTeams').textContent    = TEAMS.length;
+      $('#ovPlayers').textContent  = PLAYERS.length;
+      $('#ovFixtures').textContent = FIXTURES.length;
+      $('#pendingCount').textContent = PENDING_TEAMS.length;
+
+      $('#activityList').innerHTML = ACTIVITY.map(a => `
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text-muted);">
+          <span>${a.text}</span>
+          <span style="font-size:11px;color:var(--text-dim);white-space:nowrap;">${a.time}</span>
+        </div>
+      `).join('');
+    }
+
+
+    /* =========================================================
+       TOURNAMENT SETUP
+       ========================================================= */
+    function renderActiveTournament() {
+      $('#activeTournament').innerHTML = `
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;">
+          <div>
+            <div style="font-size:10px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-dim);">Name</div>
+            <div style="font-size:15px;font-weight:800;color:var(--text);margin-top:4px;">${SEASON.name}</div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-dim);">Age group</div>
+            <div style="font-size:15px;font-weight:800;color:var(--text);margin-top:4px;">${SEASON.ageGroup}</div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-dim);">Format</div>
+            <div style="font-size:15px;font-weight:800;color:var(--text);margin-top:4px;">${SEASON.formatLabel}</div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-dim);">Status</div>
+            <div style="margin-top:6px;"><span class="tag approved">Active</span></div>
+          </div>
+        </div>
+      `;
+    }
+
+    $$('#formatCards .format-card').forEach(card => {
+      card.addEventListener('click', () => {
+        $$('#formatCards .format-card').forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+      });
+    });
+
+    $('#createTournament').addEventListener('click', () => {
+      const name = $('#tName').value.trim() || 'PCL Season';
+      const age = $('#tAge').value;
+      const active = $('#formatCards .format-card.active');
+      const fmt = active?.dataset.format;
+      const label = {
+        top4: 'Top 4',
+        top6: 'Top 6 · Group Stage',
+        top8: 'Top 8',
+      }[fmt] || 'Top 6 · Group Stage';
+
+      SEASON = { name, ageGroup: age, format: fmt, formatLabel: label };
+
+      ACTIVITY.unshift({ text: `New tournament created: <strong>${name}</strong> · ${label}`, time: 'just now' });
+      renderOverview();
+      renderActiveTournament();
+
+      alert(`Tournament "${name}" created.\nFormat: ${label}\n\nFixtures will auto-generate once enough teams are approved.`);
+    });
+
+    $('#resetTournamentForm').addEventListener('click', () => {
+      $('#tName').value = 'PCL 2026 Season';
+      $('#tAge').value = 'Open / Senior';
+      $$('#formatCards .format-card').forEach((c, i) => c.classList.toggle('active', i === 1));
+    });
+
+
+    /* =========================================================
+       PENDING TEAMS
+       ========================================================= */
+    function renderPending() {
+      const body = $('#pendingBody');
+      if (!PENDING_TEAMS.length) {
+        body.innerHTML = `<tr><td colspan="6" class="empty">No pending teams.</td></tr>`;
+        return;
+      }
+      body.innerHTML = PENDING_TEAMS.map(t => `
+        <tr>
+          <td>
+            <div class="cell-team">
+              <div class="crest">${initialsOf(t.name)}</div>
+              <span class="name">${t.name}</span>
+            </div>
+          </td>
+          <td>${t.coach}</td>
+          <td>
+            <div style="font-size:12px;">${t.phone}</div>
+            <div style="font-size:11px;color:var(--text-dim);">${t.email}</div>
+          </td>
+          <td>${t.players}</td>
+          <td>${t.submitted}</td>
+          <td style="text-align:right;">
+            <button class="btn-sm success" data-approve="${t.id}">Approve</button>
+            <button class="btn-sm danger"  data-reject="${t.id}">Reject</button>
+          </td>
+        </tr>
+      `).join('');
+
+      body.querySelectorAll('[data-approve]').forEach(btn => {
+        btn.addEventListener('click', () => approveTeam(Number(btn.dataset.approve)));
+      });
+      body.querySelectorAll('[data-reject]').forEach(btn => {
+        btn.addEventListener('click', () => rejectTeam(Number(btn.dataset.reject)));
+      });
+    }
+
+    function approveTeam(id) {
+      const idx = PENDING_TEAMS.findIndex(t => t.id === id);
+      if (idx === -1) return;
+      const team = PENDING_TEAMS[idx];
+
+      TEAMS.push({
+        id: Date.now(),
+        name: team.name,
+        coach: team.coach,
+        players: team.players,
+        stats: { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
+      });
+
+      PENDING_TEAMS.splice(idx, 1);
+      ACTIVITY.unshift({ text: `Team <strong>${team.name}</strong> approved`, time: 'just now' });
+
+      renderOverview();
+      renderPending();
+      renderTeams();
+    }
+
+    function rejectTeam(id) {
+      const idx = PENDING_TEAMS.findIndex(t => t.id === id);
+      if (idx === -1) return;
+      const team = PENDING_TEAMS[idx];
+      if (!confirm(`Reject registration from "${team.name}"?`)) return;
+      PENDING_TEAMS.splice(idx, 1);
+      ACTIVITY.unshift({ text: `Team <strong>${team.name}</strong> rejected`, time: 'just now' });
+      renderOverview();
+      renderPending();
+    }
+
+
+    /* =========================================================
+       TEAMS
+       ========================================================= */
+    function renderTeams() {
+      const body = $('#teamsBody');
+      if (!TEAMS.length) {
+        body.innerHTML = `<tr><td colspan="10" class="empty">No teams yet.</td></tr>`;
+        return;
+      }
+      body.innerHTML = TEAMS.map(t => {
+        const s = t.stats;
+        return `
+          <tr>
+            <td>
+              <div class="cell-team">
+                <div class="crest">${initialsOf(t.name)}</div>
+                <span class="name">${t.name}</span>
+              </div>
+            </td>
+            <td>${t.coach}</td>
+            <td>${s.p}</td>
+            <td>${s.w}</td>
+            <td>${s.d}</td>
+            <td>${s.l}</td>
+            <td>${s.gf}</td>
+            <td>${s.ga}</td>
+            <td style="color:var(--accent);font-weight:800;">${points(s)}</td>
+            <td style="text-align:right;">
+              <button class="btn-sm" data-edit-team="${t.id}">Edit stats</button>
+              <button class="btn-sm danger" data-del-team="${t.id}">Remove</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      body.querySelectorAll('[data-edit-team]').forEach(b =>
+        b.addEventListener('click', () => editTeamModal(Number(b.dataset.editTeam))));
+      body.querySelectorAll('[data-del-team]').forEach(b =>
+        b.addEventListener('click', () => removeTeam(Number(b.dataset.delTeam))));
+    }
+
+    function removeTeam(id) {
+      const t = findTeam(id);
+      if (!t) return;
+      if (!confirm(`Remove "${t.name}" from the tournament?\nAll their fixtures will be removed.`)) return;
+      TEAMS = TEAMS.filter(x => x.id !== id);
+      FIXTURES = FIXTURES.filter(f => f.teamAId !== id && f.teamBId !== id);
+      PLAYERS = PLAYERS.filter(p => p.teamId !== id);
+      ACTIVITY.unshift({ text: `Team <strong>${t.name}</strong> removed`, time: 'just now' });
+      renderOverview();
+      renderTeams();
+      renderFixtures();
+      renderPlayers();
+    }
+
+    function editTeamModal(id) {
+      const t = findTeam(id);
+      if (!t) return;
+      const s = t.stats;
+
+      openModal({
+        title: `Edit stats — ${t.name}`,
+        body: `
+          <div class="form-grid">
+            <div class="field"><label>Played</label>      <input type="number" id="esP"  value="${s.p}"  min="0"></div>
+            <div class="field"><label>Won</label>         <input type="number" id="esW"  value="${s.w}"  min="0"></div>
+            <div class="field"><label>Draws</label>       <input type="number" id="esD"  value="${s.d}"  min="0"></div>
+            <div class="field"><label>Lost</label>        <input type="number" id="esL"  value="${s.l}"  min="0"></div>
+            <div class="field"><label>Goals for</label>   <input type="number" id="esGF" value="${s.gf}" min="0"></div>
+            <div class="field"><label>Goals against</label><input type="number" id="esGA" value="${s.ga}" min="0"></div>
+          </div>
+        `,
+        actions: [
+          { label: 'Cancel', variant: 'ghost', onClick: closeModal },
+          { label: 'Save', variant: 'primary', onClick: () => {
+            t.stats.p  = Number($('#esP').value)  || 0;
+            t.stats.w  = Number($('#esW').value)  || 0;
+            t.stats.d  = Number($('#esD').value)  || 0;
+            t.stats.l  = Number($('#esL').value)  || 0;
+            t.stats.gf = Number($('#esGF').value) || 0;
+            t.stats.ga = Number($('#esGA').value) || 0;
+            ACTIVITY.unshift({ text: `Stats updated for <strong>${t.name}</strong>`, time: 'just now' });
+            closeModal();
+            renderTeams();
+            renderOverview();
+          }},
+        ],
+      });
+    }
+
+
+    /* =========================================================
+       PLAYERS
+       ========================================================= */
+    function renderPlayers() {
+      const body = $('#playersBody');
+      if (!PLAYERS.length) {
+        body.innerHTML = `<tr><td colspan="8" class="empty">No players yet.</td></tr>`;
+        return;
+      }
+      body.innerHTML = PLAYERS.map(p => {
+        const team = findTeam(p.teamId);
+        return `
+          <tr>
+            <td class="name">${p.name}</td>
+            <td>${p.num}</td>
+            <td>${team?.name ?? '—'}</td>
+            <td><span class="tag info">${p.position}</span></td>
+            <td>${p.apps}</td>
+            <td>${p.goals}</td>
+            <td>${p.assists}</td>
+            <td style="text-align:right;">
+              <button class="btn-sm danger" data-del-player="${p.id}">Remove</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      body.querySelectorAll('[data-del-player]').forEach(b =>
+        b.addEventListener('click', () => removePlayer(Number(b.dataset.delPlayer))));
+    }
+
+    function removePlayer(id) {
+      const p = PLAYERS.find(x => x.id === id);
+      if (!p) return;
+      if (!confirm(`Remove player "${p.name}"?`)) return;
+      PLAYERS = PLAYERS.filter(x => x.id !== id);
+      ACTIVITY.unshift({ text: `Player <strong>${p.name}</strong> removed`, time: 'just now' });
+      renderOverview();
+      renderPlayers();
+    }
+
+    $('#addPlayerBtn').addEventListener('click', () => {
+      if (!TEAMS.length) { alert('Add a team first.'); return; }
+      const teamOptions = TEAMS.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+      openModal({
+        title: 'Add player',
+        body: `
+          <div class="form-grid">
+            <div class="field"><label>Full name</label><input id="npName" type="text" placeholder="e.g. S. Khumalo"></div>
+            <div class="field"><label>Shirt number</label><input id="npNum" type="number" min="1" max="99" value="10"></div>
+            <div class="field full"><label>Team</label><select id="npTeam">${teamOptions}</select></div>
+            <div class="field">
+              <label>Position</label>
+              <select id="npPos">
+                <option>GK</option><option>DEF</option><option>MID</option><option>FWD</option>
+              </select>
+            </div>
+            <div class="field"><label>Apps</label>    <input id="npApps"    type="number" min="0" value="0"></div>
+            <div class="field"><label>Goals</label>   <input id="npGoals"   type="number" min="0" value="0"></div>
+            <div class="field"><label>Assists</label> <input id="npAssists" type="number" min="0" value="0"></div>
+          </div>
+        `,
+        actions: [
+          { label: 'Cancel', variant: 'ghost', onClick: closeModal },
+          { label: 'Add player', variant: 'primary', onClick: () => {
+            const name = $('#npName').value.trim();
+            if (!name) { alert('Name is required.'); return; }
+            PLAYERS.push({
+              id: Date.now(),
+              num: Number($('#npNum').value) || 0,
+              name,
+              teamId: Number($('#npTeam').value),
+              position: $('#npPos').value,
+              apps: Number($('#npApps').value) || 0,
+              goals: Number($('#npGoals').value) || 0,
+              assists: Number($('#npAssists').value) || 0,
+            });
+            ACTIVITY.unshift({ text: `Player <strong>${name}</strong> added`, time: 'just now' });
+            closeModal();
+            renderPlayers();
+            renderOverview();
+          }},
+        ],
+      });
+    });
+
+
+    /* =========================================================
+       FIXTURES
+       ========================================================= */
+    function renderFixtures() {
+      const body = $('#fixturesBody');
+      if (!FIXTURES.length) {
+        body.innerHTML = `<tr><td colspan="5" class="empty">No fixtures yet.</td></tr>`;
+        return;
+      }
+      body.innerHTML = FIXTURES.map(f => {
+        const a = findTeam(f.teamAId);
+        const b = findTeam(f.teamBId);
+        return `
+          <tr>
+            <td class="name">
+              ${a?.name ?? 'TBD'} <span style="color:var(--text-dim);font-weight:400;">vs</span> ${b?.name ?? 'TBD'}
+            </td>
+            <td>${f.date}</td>
+            <td>${f.court}</td>
+            <td><span class="tag info">${f.stage}</span></td>
+            <td style="text-align:right;">
+              <button class="btn-sm danger" data-del-fixture="${f.id}">Remove</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      body.querySelectorAll('[data-del-fixture]').forEach(b =>
+        b.addEventListener('click', () => {
+          const id = Number(b.dataset.delFixture);
+          if (!confirm('Remove this fixture?')) return;
+          FIXTURES = FIXTURES.filter(f => f.id !== id);
+          renderFixtures();
+          renderOverview();
+        }));
+    }
+
+    $('#addFixtureBtn').addEventListener('click', () => {
+      if (TEAMS.length < 2) { alert('Need at least 2 teams.'); return; }
+      const opts = TEAMS.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+      openModal({
+        title: 'Add fixture manually',
+        body: `
+          <div class="form-grid">
+            <div class="field"><label>Team A</label><select id="fA">${opts}</select></div>
+            <div class="field"><label>Team B</label><select id="fB">${opts}</select></div>
+            <div class="field"><label>Date & time</label><input id="fDate" type="text" placeholder="Sat 14:00" value="Sat 14:00"></div>
+            <div class="field"><label>Court</label><input id="fCourt" type="text" value="Court A"></div>
+            <div class="field full">
+              <label>Stage</label>
+              <select id="fStage">
+                <option>Group Stage</option>
+                <option>Quarter-Final</option>
+                <option>Semi-Final</option>
+                <option>Final</option>
+              </select>
+            </div>
+          </div>
+        `,
+        actions: [
+          { label: 'Cancel', variant: 'ghost', onClick: closeModal },
+          { label: 'Add fixture', variant: 'primary', onClick: () => {
+            const teamAId = Number($('#fA').value);
+            const teamBId = Number($('#fB').value);
+            if (teamAId === teamBId) { alert('Pick two different teams.'); return; }
+            FIXTURES.push({
+              id: Date.now(),
+              teamAId, teamBId,
+              date: $('#fDate').value || 'TBD',
+              court: $('#fCourt').value || 'Court A',
+              stage: $('#fStage').value,
+              played: false, scoreA: null, scoreB: null,
+            });
+            ACTIVITY.unshift({ text: `Fixture added: <strong>${findTeam(teamAId)?.name} vs ${findTeam(teamBId)?.name}</strong>`, time: 'just now' });
+            closeModal();
+            renderFixtures();
+            renderOverview();
+          }},
+        ],
+      });
+    });
+
+    $('#autoFixtureBtn').addEventListener('click', () => {
+      if (TEAMS.length < 2) { alert('Need at least 2 approved teams.'); return; }
+      if (!confirm(`Auto-generate fixtures for ${TEAMS.length} teams using ${SEASON.formatLabel}?`)) return;
+
+      const generated = [];
+      const slots = ['Sat 10:00','Sat 11:30','Sat 13:00','Sat 14:30','Sat 16:00','Sun 10:00','Sun 11:30','Sun 13:00'];
+      const courts = ['Court A','Court B'];
+      let slot = 0;
+
+      for (let i = 0; i < TEAMS.length; i++) {
+        for (let j = i + 1; j < TEAMS.length; j++) {
+          generated.push({
+            id: Date.now() + generated.length,
+            teamAId: TEAMS[i].id,
+            teamBId: TEAMS[j].id,
+            date: slots[slot % slots.length],
+            court: courts[slot % courts.length],
+            stage: 'Group Stage',
+            played: false, scoreA: null, scoreB: null,
+          });
+          slot++;
+        }
+      }
+
+      FIXTURES = generated;
+      ACTIVITY.unshift({ text: `Auto-generated <strong>${generated.length}</strong> fixtures`, time: 'just now' });
+      renderFixtures();
+      renderOverview();
+      alert(`${generated.length} fixtures generated.`);
+    });
+
+
+    /* =========================================================
+       RESULTS & STATS
+       ========================================================= */
+    function renderResults() {
+      const body = $('#resultsBody');
+      const list = FIXTURES.filter(f => {
+        const a = findTeam(f.teamAId); const b = findTeam(f.teamBId);
+        return a && b;
+      });
+      if (!list.length) {
+        body.innerHTML = `<tr><td colspan="5" class="empty">No fixtures to record yet.</td></tr>`;
+        return;
+      }
+      body.innerHTML = list.map(f => {
+        const a = findTeam(f.teamAId);
+        const b = findTeam(f.teamBId);
+        const score = f.played ? `${f.scoreA} — ${f.scoreB}` : '—';
+        const status = f.played
+          ? `<span class="tag approved">Completed</span>`
+          : `<span class="tag pending">Pending</span>`;
+        return `
+          <tr>
+            <td class="name">${a.name} <span style="color:var(--text-dim);font-weight:400;">vs</span> ${b.name}</td>
+            <td>${f.date}</td>
+            <td style="font-family:monospace;font-size:14px;color:var(--text);font-weight:800;">${score}</td>
+            <td>${status}</td>
+            <td style="text-align:right;">
+              <button class="btn-sm primary" data-res="${f.id}">
+                ${f.played ? 'Edit result' : 'Record result'}
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      body.querySelectorAll('[data-res]').forEach(b =>
+        b.addEventListener('click', () => recordResult(Number(b.dataset.res))));
+    }
+
+    function recordResult(id) {
+      const f = FIXTURES.find(x => x.id === id);
+      if (!f) return;
+      const a = findTeam(f.teamAId);
+      const b = findTeam(f.teamBId);
+      if (!a || !b) return;
+
+      openModal({
+        title: `Record result — ${a.name} vs ${b.name}`,
+        body: `
+          <div class="form-grid">
+            <div class="field"><label>${a.name} score</label><input id="rA" type="number" min="0" value="${f.scoreA ?? 0}"></div>
+            <div class="field"><label>${b.name} score</label><input id="rB" type="number" min="0" value="${f.scoreB ?? 0}"></div>
+          </div>
+        `,
+        actions: [
+          { label: 'Cancel', variant: 'ghost', onClick: closeModal },
+          { label: f.played ? 'Update' : 'Save', variant: 'primary', onClick: () => {
+            const scoreA = Number($('#rA').value) || 0;
+            const scoreB = Number($('#rB').value) || 0;
+
+            /* if editing an existing played match, subtract previous contribution */
+            if (f.played) {
+              applyResult(a, f.scoreA, f.scoreB, -1);
+              applyResult(b, f.scoreB, f.scoreA, -1);
+            }
+
+            f.scoreA = scoreA;
+            f.scoreB = scoreB;
+            f.played = true;
+
+            applyResult(a, scoreA, scoreB, +1);
+            applyResult(b, scoreB, scoreA, +1);
+
+            ACTIVITY.unshift({
+              text: `Result recorded: <strong>${a.name} ${scoreA} — ${scoreB} ${b.name}</strong>`,
+              time: 'just now',
+            });
+
+            closeModal();
+            renderTeams();
+            renderResults();
+            renderOverview();
+          }},
+        ],
+      });
+    }
+
+    function applyResult(team, gf, ga, sign) {
+      const s = team.stats;
+      s.p  += sign * 1;
+      s.gf += sign * gf;
+      s.ga += sign * ga;
+      if (gf > ga) s.w += sign * 1;
+      else if (gf === ga) s.d += sign * 1;
+      else s.l += sign * 1;
+    }
+
+
+    /* =========================================================
+       MODAL
+       ========================================================= */
+    const modalBack = $('#modalBack');
+    const modalBody = $('#modalBody');
+    const modalTitle = $('#modalTitle');
+    const modalActions = $('#modalActions');
+    const modalClose = $('#modalClose');
+
+    function openModal({ title, body, actions = [] }) {
+      modalTitle.textContent = title;
+      modalBody.innerHTML = body;
+      modalActions.innerHTML = '';
+
+      actions.forEach(a => {
+        const btn = document.createElement('button');
+        btn.className = `btn-sm ${a.variant || ''}`;
+        btn.textContent = a.label;
+        btn.addEventListener('click', a.onClick);
+        modalActions.appendChild(btn);
+      });
+
+      modalBack.classList.add('open');
+      modalBack.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      modalBack.classList.remove('open');
+      modalBack.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    modalBack.addEventListener('click', e => { if (e.target === modalBack) closeModal(); });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modalBack.classList.contains('open')) closeModal();
+    });
+
+
+    /* =========================================================
+       SEARCH (decorative for now — filters the current table)
+       ========================================================= */
+    $('#topSearch').addEventListener('input', e => {
+      const q = e.target.value.toLowerCase().trim();
+      /* simple: filter visible rows */
+      $$('.tbl tbody tr').forEach(row => {
+        row.style.display = !q || row.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+    });
+
+
+    /* =========================================================
+       INIT
+       ========================================================= */
+    renderOverview();
+    renderActiveTournament();
+    renderPending();
+    renderTeams();
+    renderPlayers();
+    renderFixtures();
+    renderResults();
+  </script>
+
+</body>
+</html>

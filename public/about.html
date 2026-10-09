@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="About PCL — the story, vision and people behind the Polokwane Champions League indoor football tournament." />
+  <meta name="theme-color" content="#050a15" />
+  <title>About — PCL</title>
+  <link rel="stylesheet" href="/css/main.css" />
+
+  <style>
+    /* =========================================================
+       ABOUT PAGE — page-specific styles
+       ========================================================= */
+
+    /* ---------- Page hero ---------- */
+    .page-hero {
+      position: relative;
+      padding: clamp(56px, 9vw, 120px) 0 clamp(40px, 6vw, 72px);
+       background:
+    linear-gradient(
+      to right,
+      rgba(5, 10, 21, 0.92) 0%,
+      rgba(5, 10, 21, 0.78) 50%,
+      rgba(5, 10, 21, 0.92) 100%
+    ),
+    url('/assets/images/banner.jpeg') center / cover no-repeat;
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+      overflow: hidden;
+    }
+    .page-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(5,10,21,0.6) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .page-hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: var(--container);
+      margin-inline: auto;
+      padding-inline: var(--sp-5);
+    }
+    .page-eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 6px 12px;
+      border: 1px solid rgba(0, 7, 224, 0.35);
+      border-radius: 999px;
+      background: rgba(0, 22, 224, 0.06);
+      margin-bottom: 16px;
+    }
+    .page-title {
+      font-size: clamp(34px, 6vw, 64px);
+      font-weight: 900;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 16px;
+      max-width: 900px;
+    }
+    .page-sub {
+      font-size: clamp(15px, 1.7vw, 18px);
+      color: rgba(255, 255, 255, 0.72);
+      max-width: 680px;
+      line-height: 1.6;
+    }
+
+    /* ---------- Generic section ---------- */
+    .about-section {
+      padding-block: clamp(56px, 8vw, 96px);
+    }
+    .about-section.alt {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .about-head {
+      margin-bottom: 40px;
+      max-width: 720px;
+    }
+    .about-eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .about-title {
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      line-height: 1.1;
+    }
+
+    /* ---------- Story block (text + image) ---------- */
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: clamp(24px, 4vw, 56px);
+      align-items: center;
+    }
+    @media (max-width: 860px) {
+      .story-grid { grid-template-columns: 1fr; }
+    }
+    .story-text p {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+    .story-text p:last-child { margin-bottom: 0; }
+    .story-text strong { color: var(--text); font-weight: 700; }
+    .story-text .accent {
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .story-image {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+    }
+    .story-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .story-image::after {
+      content: '';
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 40%;
+      background: linear-gradient(to top, rgba(5,10,21,0.6), transparent);
+      pointer-events: none;
+    }
+
+    /* ---------- Values (3 small cards) ---------- */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 40px;
+    }
+    @media (max-width: 860px) { .values-grid { grid-template-columns: 1fr; } }
+
+    .value-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      transition: border-color var(--dur) var(--ease),
+                  background var(--dur) var(--ease),
+                  transform var(--dur) var(--ease);
+    }
+    .value-card:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-2);
+      transform: translateY(-3px);
+    }
+    .value-icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: rgba(0, 63, 224, 0.08);
+      border: 1px solid rgba(0, 56, 224, 0.25);
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .value-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .value-desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    /* ---------- Stats tiles ---------- */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 860px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .stat-tile {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px 20px;
+      transition: border-color var(--dur) var(--ease),
+                  background var(--dur) var(--ease);
+    }
+    .stat-tile:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-2);
+    }
+    .stat-number {
+      font-size: clamp(32px, 4vw, 44px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    /* ---------- Venue block ---------- */
+    .venue-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.05fr;
+      gap: clamp(24px, 4vw, 56px);
+      align-items: center;
+    }
+    @media (max-width: 860px) {
+      .venue-grid { grid-template-columns: 1fr; }
+    }
+    .venue-image {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+    }
+    .venue-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .venue-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(5, 10, 21, 0.78);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--border-strong);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .venue-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 22px;
+    }
+    .venue-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .venue-item svg {
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .venue-item strong {
+      display: block;
+      font-size: 14px;
+      color: var(--text);
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .venue-item span {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ---------- Format steps ---------- */
+    .format-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      counter-reset: step;
+    }
+    @media (max-width: 960px) { .format-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .format-grid { grid-template-columns: 1fr; } }
+
+    .format-step {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 20px 20px;
+      transition: border-color var(--dur) var(--ease),
+                  background var(--dur) var(--ease),
+                  transform var(--dur) var(--ease);
+    }
+    .format-step:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-2);
+      transform: translateY(-3px);
+    }
+    .format-step::before {
+      counter-increment: step;
+      content: "0" counter(step);
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      font-size: 24px;
+      font-weight: 900;
+      color: rgba(74, 74, 226, 0.18);
+      letter-spacing: -0.03em;
+    }
+    .format-icon {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: rgba(0, 45, 224, 0.08);
+      border: 1px solid rgba(0, 30, 224, 0.25);
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .format-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .format-desc {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+
+    /* ---------- Organisers ---------- */
+    .organisers-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 860px) { .organisers-grid { grid-template-columns: 1fr; } }
+
+    .organiser-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: border-color var(--dur) var(--ease),
+                  transform var(--dur) var(--ease);
+    }
+    .organiser-card:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-3px);
+    }
+    .organiser-photo {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      position: relative;
+    }
+    .organiser-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .organiser-photo .fallback {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: 40px;
+      font-weight: 900;
+      color: var(--accent);
+    }
+    .organiser-name {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .organiser-role {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-top: 2px;
+    }
+    .organiser-bio {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* ---------- Get involved CTAs ---------- */
+    .cta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 860px) { .cta-grid { grid-template-columns: 1fr; } }
+
+    .cta-card {
+      position: relative;
+      padding: 28px 22px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid var(--border-strong);
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(0, 63, 224, 0.12), transparent 60%),
+        var(--surface);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: transform var(--dur) var(--ease),
+                  border-color var(--dur) var(--ease);
+    }
+    .cta-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+    }
+    .cta-card:nth-child(2) {
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(10, 116, 255, 0.1), transparent 60%),
+        var(--surface);
+    }
+    .cta-card:nth-child(3) {
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(0, 120, 255, 0.12), transparent 60%),
+        var(--surface);
+    }
+    .cta-icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: rgba(0, 7, 224, 0.08);
+      border: 1px solid rgba(0, 37, 224, 0.25);
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .cta-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .cta-desc {
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+    .cta-link {
+      margin-top: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    .cta-link svg { transition: transform var(--dur) var(--ease); }
+    .cta-card:hover .cta-link svg { transform: translateX(3px); }
+
+    /* ---------- Contact strip ---------- */
+    .contact-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 860px) { .contact-strip { grid-template-columns: 1fr; } }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      transition: border-color var(--dur) var(--ease),
+                  background var(--dur) var(--ease);
+    }
+    .contact-item:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-2);
+    }
+    .contact-icon {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: rgba(0, 19, 224, 0.08);
+      border: 1px solid rgba(0, 60, 224, 0.25);
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .contact-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .contact-value {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 2px;
+      word-break: break-word;
+    }
+
+    /* ---------- Final CTA banner ---------- */
+    .final-banner {
+      margin-top: 40px;
+      padding: clamp(28px, 4vw, 48px);
+      border-radius: 20px;
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(0, 30, 224, 0.18), transparent 60%),
+        radial-gradient(ellipse at 80% 70%, rgba(0, 120, 255, 0.14), transparent 60%),
+        linear-gradient(135deg, #0a1120 0%, #050a15 100%);
+      border: 1px solid var(--border-strong);
+      text-align: center;
+    }
+    .final-banner h3 {
+      font-size: clamp(22px, 3.4vw, 34px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .final-banner p {
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 560px;
+      margin: 0 auto 22px;
+      line-height: 1.6;
+    }
+    .final-banner-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       NAV
+       ============================================================ -->
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="/index.html" class="nav-logo" aria-label="PCL Home">
+        <img src="/assets/images/logo.jpeg" alt="PCL — Polokwane Champions League" />
+      </a>
+
+      <div class="nav-actions">
+        <a href="/auth/login.html" class="nav-login" data-auth="logged-out">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+               stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+            <path d="M10 17l5-5-5-5" />
+            <path d="M15 12H3" />
+          </svg>
+          <span>Login</span>
+        </a>
+
+        <button type="button" class="nav-user" data-auth="logged-in" hidden aria-label="Account">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+               stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 21a8 8 0 0 1 16 0" />
+          </svg>
+        </button>
+
+        <button type="button" class="nav-menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="nav-divider"></div>
+  </header>
+
+
+  <!-- ============================================================
+       NAV DRAWER
+       ============================================================ -->
+  <div class="nav-overlay" id="navOverlay"></div>
+
+  <aside class="nav-drawer" id="navDrawer" aria-hidden="true">
+    <div class="nav-drawer-head">
+      <span class="nav-drawer-title">Menu</span>
+      <button type="button" class="nav-drawer-close" id="menuClose" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+
+    <nav class="nav-drawer-links" id="drawerLinks" aria-label="Main navigation"></nav>
+
+    <div class="nav-drawer-foot">
+      <a href="/auth/signup.html" class="btn btn-primary btn-block">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+        Become a Fan Member
+      </a>
+      <a href="/auth/register-team.html" class="btn btn-ghost btn-block">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" />
+        </svg>
+        Register a Team
+      </a>
+    </div>
+  </aside>
+
+
+  <main>
+
+    <!-- ============================================================
+         PAGE HERO
+         ============================================================ -->
+    <section class="page-hero">
+      <div class="page-hero-inner">
+        <span class="page-eyebrow">About PCL</span>
+        <h1 class="page-title"></h1>
+        <p class="page-sub">
+          PCL exists to give local indoor football a proper stage: real competition, real records,
+          real recognition. From the pitch at N1 Padel to the stories that follow the players.
+        </p>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         OUR STORY
+         ============================================================ -->
+    <section class="about-section">
+      <div class="container">
+        <div class="about-head">
+          <span class="about-eyebrow">Our Story</span>
+          <h2 class="about-title">Built in Polokwane, # pcl Thing.</h2>
+        </div>
+
+        <div class="story-grid">
+          <div class="story-text">
+            <p>
+              PCL — the <strong>Polokwane Champions League</strong> — started as a simple idea:
+              give local indoor football teams a serious, well-run competition they can be proud of.
+            </p>
+            <p>
+              For years, tournament football in the region ran on paper, WhatsApp groups and instinct.
+              Results were lost, stats were forgotten, and fans had nowhere to follow the action.
+              We built PCL to change that.
+            </p>
+            <p>
+              Today, PCL is a <span class="accent">digitally managed football tournament</span> —
+              every team, player, fixture, goal and stat recorded and published.
+              Teams register online, referees are assigned properly, standings are calculated automatically,
+              and fans can finally follow the game they love.
+            </p>
+            <p>
+              But we're not done. PCL is becoming a proper sporting brand — a platform
+              that connects players, fans, sponsors and eventually scouts.
+            </p>
+          </div>
+
+          <div class="story-image">
+            <img src="/assets/images/stories/pc4.jpeg" alt="PCL indoor football" loading="lazy"
+                 onerror="this.style.display='none'">
+          </div>
+        </div>
+
+        <!-- values -->
+        <div class="values-grid">
+          <div class="value-card">
+            <div class="value-icon">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                   stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" />
+              </svg>
+            </div>
+            <div class="value-title">Competitive integrity</div>
+            <div class="value-desc">
+              Every result, every stat, every standing — recorded properly and calculated consistently.
+              What happens on the pitch is what shows on the table.
+            </div>
+          </div>
+
+          <div class="value-card">
+            <div class="value-icon">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                   stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 7v5l3 2" />
+              </svg>
+            </div>
+            <div class="value-title">Professional standards</div>
+            <div class="value-desc">
+              Fixtures published early, referees assigned, results accurate.
+              The small operational things that make a tournament feel real.
+            </div>
+          </div>
+
+          <div class="value-card">
+            <div class="value-icon">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                   stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="9" r="3" />
+                <circle cx="17" cy="9" r="3" />
+                <path d="M3 20c0-3 3-5 6-5s6 2 6 5" />
+                <path d="M14 15c2.5 0 5 1.7 5 5" />
+              </svg>
+            </div>
+            <div class="value-title">Community &amp; growth</div>
+            <div class="value-desc">
+              Players, fans, families, sponsors — everyone has a place in the PCL ecosystem.
+              The more people who engage, the bigger the platform grows.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         BY THE NUMBERS
+         ============================================================ -->
+    <section class="about-section alt">
+      <div class="container">
+        <div class="about-head">
+          <span class="about-eyebrow">By the Numbers</span>
+          <h2 class="about-title">2026 Season snapshot</h2>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-tile">
+            <div class="stat-number">10+</div>
+            <div class="stat-label">Teams</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-number">80+</div>
+            <div class="stat-label">Registered Players</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-number">45+</div>
+            <div class="stat-label">Matches Played</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-number">2,500+</div>
+            <div class="stat-label">Fans &amp; Attendees</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         THE VENUE
+         ============================================================ -->
+    <section class="about-section">
+      <div class="container">
+        <div class="about-head">
+          <span class="about-eyebrow">The Venue</span>
+          <h2 class="about-title">Home of PCL — N1 Padel, Polokwane.</h2>
+        </div>
+
+        <div class="venue-grid">
+          <div class="venue-image">
+            <span class="venue-badge">N1 Padel</span>
+            <img src="/assets/images/n1.jpeg" alt="N1 Padel, Polokwane" loading="lazy"
+                 onerror="this.style.display='none'">
+          </div>
+
+          <div>
+            <p style="color:var(--text-muted);font-size:15px;line-height:1.7;">
+              PCL matches are played at <strong style="color:var(--text);">N1 Padel</strong> —
+              one of Polokwane's best indoor sporting facilities. The venue gives players a proper surface,
+              fans a proper match-day experience, and the tournament a professional home.
+            </p>
+
+            <div class="venue-list">
+              <div class="venue-item">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                     stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11Z" />
+                  <circle cx="12" cy="10" r="2.5" />
+                </svg>
+                <div>
+                  <strong>Indoor pitches</strong>
+                  <span>Professional-grade playing surface, ready for competitive football.</span>
+                </div>
+              </div>
+
+              <div class="venue-item">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                     stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2v6" />
+                  <path d="M8 8h8l-1 12a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z" />
+                </svg>
+                <div>
+                  <strong>Kitchen &amp; bar</strong>
+                  <span>Hot dogs, shawarmas, coffee, ice cream — match-day food all day long.</span>
+                </div>
+              </div>
+
+              <div class="venue-item">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                     stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 21V8l9-5 9 5v13" />
+                  <path d="M9 21V12h6v9" />
+                </svg>
+                <div>
+                  <strong>Match-day atmosphere</strong>
+                  <span>Fans, families, music, and full seating around the pitches.</span>
+                </div>
+              </div>
+
+              <div class="venue-item">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                     stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="5" width="18" height="16" rx="2" />
+                  <path d="M3 10h18M8 3v4M16 3v4" />
+                </svg>
+                <div>
+                  <strong>Match days</strong>
+                  <span>Saturdays and Sundays throughout the season. Fixtures published in advance.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         HOW IT WORKS
+         ============================================================ -->
+    <section class="about-section alt">
+      <div class="container">
+        <div class="about-head">
+          <span class="about-eyebrow">How PCL Works</span>
+          <h2 class="about-title">From registration to the trophy — four steps.</h2>
+        </div>
+
+        <div class="format-grid">
+          <div class="format-step">
+            <div class="format-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                   stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" />
+              </svg>
+            </div>
+            <div class="format-title">Register</div>
+            <div class="format-desc">
+              Teams register online, submit their squad and player details. Administrators review and approve.
+            </div>
+          </div>
+
+          <div class="format-step">
+            <div class="format-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                   stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="5" width="18" height="16" rx="2" />
+                <path d="M3 10h18M8 3v4M16 3v4" />
+              </svg>
+            </div>
+            <div class="format-title">Schedule</div>
+            <div class="format-desc">
+              Fixtures generated, referees assigned, and match days published at least two days in advance.
+            </div>
+          </div>
+
+          <div class="format-step">
+            <div class="format-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                   stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 3v3M12 18v3M3 12h3M18 12h3" />
+              </svg>
+            </div>
+            <div class="format-title">Play</div>
+            <div class="format-desc">
+              Matches are played at N1 Padel. Every goal, card and event is recorded by the match official.
+            </div>
+          </div>
+
+          <div class="format-step">
+            <div class="format-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                   stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 4h8v4a4 4 0 0 1-8 0z" />
+                <path d="M16 5h3v2a3 3 0 0 1-3 3" />
+                <path d="M8 5H5v2a3 3 0 0 0 3 3" />
+                <path d="M12 12v4" />
+                <path d="M9 20h6" />
+              </svg>
+            </div>
+            <div class="format-title">Publish</div>
+            <div class="format-desc">
+              Results, standings and stats update automatically. Fans, players and sponsors see everything online.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         ORGANISERS
+         ============================================================ -->
+    <section class="about-section">
+      <div class="container">
+        <div class="about-head">
+          <span class="about-eyebrow">The Team Behind PCL</span>
+          <h2 class="about-title">Organisers &amp; committee.</h2>
+        </div>
+
+        <div class="organisers-grid" id="organisersGrid"></div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         GET INVOLVED
+         ============================================================ -->
+    <section class="about-section alt">
+      <div class="container">
+        <div class="about-head">
+          <span class="about-eyebrow">Get Involved</span>
+          <h2 class="about-title">Three ways to be part of PCL.</h2>
+        </div>
+
+        <div class="cta-grid">
+          <a href="/auth/register-team.html" class="cta-card">
+            <div class="cta-icon">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                   stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" />
+              </svg>
+            </div>
+            <div class="cta-title">Register your team</div>
+            <div class="cta-desc">
+              Bring your squad to the PCL. Submit your team, register your players, and take your place in the league.
+            </div>
+            <span class="cta-link">
+              Register a team
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </span>
+          </a>
+
+          <a href="/auth/signup.html" class="cta-card">
+            <div class="cta-icon">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                   stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 21a8 8 0 0 1 16 0" />
+              </svg>
+            </div>
+            <div class="cta-title">Become a fan member</div>
+            <div class="cta-desc">
+              Vote for Man of the Match, unlock member pricing at the bar, and be first in line for rewards.
+            </div>
+            <span class="cta-link">
+              Join the family
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </span>
+          </a>
+
+          <a href="/public/sponsors.html" class="cta-card">
+            <div class="cta-icon">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                   stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 21V8l9-5 9 5v13" />
+                <path d="M9 21V12h6v9" />
+              </svg>
+            </div>
+            <div class="cta-title">Partner with us</div>
+            <div class="cta-desc">
+              Get your brand in front of local teams, fans and match-day crowds. Sponsor PCL.
+            </div>
+            <span class="cta-link">
+              Become a sponsor
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         CONTACT
+         ============================================================ -->
+    <section class="about-section">
+      <div class="container">
+        <div class="about-head">
+          <span class="about-eyebrow">Contact</span>
+          <h2 class="about-title">Get in touch with PCL.</h2>
+        </div>
+
+        <div class="contact-strip">
+          <a href="mailto:info@pcl.co.za" class="contact-item">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                   stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="5" width="18" height="14" rx="2" />
+                <path d="M3 7l9 6 9-6" />
+              </svg>
+            </div>
+            <div>
+              <div class="contact-label">Email</div>
+              <div class="contact-value">info@pcl.co.za</div>
+            </div>
+          </a>
+
+          <a href="https://wa.me/" class="contact-item" target="_blank" rel="noopener">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                   stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 12a8 8 0 0 1-11.9 7l-4.1 1 1.1-3.8A8 8 0 1 1 20 12Z" />
+                <path d="M8.5 10.5c0 3 2 5 5 5l1-1.5-2-1-1 .7c-1-.4-2-1.4-2.4-2.4l.7-1-1-2z" />
+              </svg>
+            </div>
+            <div>
+              <div class="contact-label">WhatsApp</div>
+              <div class="contact-value">+27 63 477 7034
+            </div>
+          </a>
+
+          <a href="https://instagram.com/pcl" class="contact-item" target="_blank" rel="noopener">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                   stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" />
+              </svg>
+            </div>
+            <div>
+              <div class="contact-label">Instagram</div>
+              <div class="contact-value">@pcl</div>
+            </div>
+          </a>
+        </div>
+
+       
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="/assets/images/logo.jpeg" alt="PCL" class="footer-logo" />
+        <p>Polokwane Champions League — indoor football, brought to you at N1 Padel, Limpopo.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <a href="/public/tournament.html">Tournament</a>
+        <a href="/public/fixtures.html">Fixtures</a>
+        <a href="/public/shops.html">Teams</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Engage</h4>
+        <a href="/public/membership.html">Membership</a>
+        <a href="/public/tickets.html">Tickets</a>
+        <a href="/public/about.html">About</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Account</h4>
+        <a href="/auth/login.html">Login</a>
+        <a href="/auth/signup.html">Sign Up</a>
+        <a href="/auth/register-team.html">Register Team</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 Polokwane Champions League. All rights reserved.</span>
+      <span>Built for the PCL Digital Platform · MVP 1</span>
+    </div>
+  </footer>
+
+
+  <!-- ============================================================
+       SCRIPTS
+       ============================================================ -->
+  <script type="module">
+    import { NAV_LINKS } from '/js/config.js';
+
+    /* =========================================================
+       MOCK DATA — Organisers
+       Photos go in /assets/images/organisers/*.jpg
+       ========================================================= */
+    const MOCK_ORGANISERS = [
+      {
+        name: 'Madam CEO ' ,
+        role: 'Tournament Director',
+        bio: 'Founder of PCL. Oversees the entire tournament — from registration to the final whistle.',
+        photo:  '/assets/images/news/photo1.jpeg'
+      },
+     
+    ];
+
+    /* =========================================================
+       ICONS
+       ========================================================= */
+    const ICONS = {
+      home:     '<path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H10v6H4a1 1 0 0 1-1-1z"/>',
+      trophy:   '<path d="M8 4h8v4a4 4 0 0 1-8 0z"/><path d="M16 5h3v2a3 3 0 0 1-3 3"/><path d="M8 5H5v2a3 3 0 0 0 3 3"/><path d="M12 12v4"/><path d="M9 20h6"/><path d="M10 20v-4h4v4"/>',
+      calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+      shield:   '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+      star:     '<path d="M12 2l2.9 6.9L22 10l-5.5 4.6L18.2 22 12 18.3 5.8 22l1.7-7.4L2 10l7.1-1.1z"/>',
+      ticket:   '<path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M13 6v12"/>',
+      info:     '<circle cx="12" cy="12" r="9"/><path d="M12 8h.01"/><path d="M11 12h1v5h1"/>',
+    };
+    const iconSVG = (name, size = 20) => `
+      <svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none"
+           stroke="currentColor" stroke-width="1.8"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        ${ICONS[name] || ''}
+      </svg>
+    `;
+    const initialsOf = (name) =>
+      name.split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+
+
+    /* =========================================================
+       DRAWER
+       ========================================================= */
+    const drawerLinks = document.getElementById('drawerLinks');
+    NAV_LINKS.forEach(link => {
+      const a = document.createElement('a');
+      a.href = link.href;
+      a.className = 'nav-drawer-link';
+      a.innerHTML = `
+        <span class="nav-drawer-icon">${iconSVG(link.icon)}</span>
+        <span class="nav-drawer-label">${link.label}</span>
+        <svg class="nav-drawer-arrow" viewBox="0 0 24 24" width="18" height="18"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 6l6 6-6 6" />
+        </svg>
+      `;
+      drawerLinks.appendChild(a);
+    });
+
+    const menuBtn   = document.getElementById('menuBtn');
+    const menuClose = document.getElementById('menuClose');
+    const drawer    = document.getElementById('navDrawer');
+    const overlay   = document.getElementById('navOverlay');
+
+    function openDrawer() {
+      drawer.classList.add('open');
+      overlay.classList.add('open');
+      menuBtn.setAttribute('aria-expanded', 'true');
+      drawer.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDrawer() {
+      drawer.classList.remove('open');
+      overlay.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      drawer.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    menuBtn.addEventListener('click', openDrawer);
+    menuClose.addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+
+    /* =========================================================
+       AUTH STATE
+       ========================================================= */
+    const loggedIn = localStorage.getItem('pcl_user') !== null;
+    document.querySelectorAll('[data-auth]').forEach(el => {
+      el.hidden = el.dataset.auth !== (loggedIn ? 'logged-in' : 'logged-out');
+    });
+
+
+    /* =========================================================
+       RENDER: ORGANISERS
+       ========================================================= */
+    function organiserHTML(o) {
+      return `
+        <article class="organiser-card">
+          <div class="organiser-photo">
+            <span class="fallback">${initialsOf(o.name)}</span>
+            <img src="${o.photo}" alt="${o.name}" loading="lazy" onerror="this.remove()">
+          </div>
+          <div>
+            <div class="organiser-name">${o.name}</div>
+            <div class="organiser-role">${o.role}</div>
+            <div class="organiser-bio">${o.bio}</div>
+          </div>
+        </article>
+      `;
+    }
+
+    document.getElementById('organisersGrid').innerHTML =
+      MOCK_ORGANISERS.map(organiserHTML).join('');
+  </script>
+
+</body>
+</html>

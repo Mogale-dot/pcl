@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="PCL Fixtures & Standings — Elite 6ix tournament." />
+  <meta name="theme-color" content="#050a15" />
+  <title>Fixtures — PCL</title>
+  <link rel="stylesheet" href="/css/main.css" />
+
+  <style>
+    /* =========================================================
+       FIXTURES PAGE
+       ========================================================= */
+
+    /* ---------- Page hero ---------- */
+    .page-hero {
+      position: relative;
+      padding: clamp(56px, 8vw, 96px) 0 clamp(36px, 5vw, 60px);
+      background:
+    linear-gradient(
+      to right,
+      rgba(5, 10, 21, 0.92) 0%,
+      rgba(5, 10, 21, 0.78) 50%,
+      rgba(5, 10, 21, 0.92) 100%
+    ),
+    url('/assets/images/banner.jpeg') center / cover no-repeat;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .page-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(5,10,21,0.6) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .page-hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: var(--container);
+      margin-inline: auto;
+      padding-inline: var(--sp-5);
+    }
+    .page-eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 6px 12px;
+      border: 1px solid rgba(0, 15, 224, 0.35);
+      border-radius: 999px;
+      background: rgba(0, 34, 224, 0.06);
+      margin-bottom: 16px;
+    }
+    .page-title {
+      font-size: clamp(34px, 6vw, 60px);
+      font-weight: 900;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .page-sub {
+      font-size: clamp(14px, 1.6vw, 17px);
+      color: rgba(255, 255, 255, 0.72);
+      max-width: 620px;
+      line-height: 1.55;
+    }
+
+    /* ---------- Section primitives ---------- */
+    .section { padding-block: clamp(36px, 4vw, 56px); }
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .section-eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .section-title {
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      line-height: 1.1;
+    }
+    .section-count {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dim);
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+    }
+
+    /* =========================================================
+       STANDINGS — compact
+       ========================================================= */
+    .standings-section {
+      padding-block: clamp(28px, 4vw, 44px) clamp(16px, 2vw, 24px);
+    }
+
+    .standings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 960px) { .standings-grid { grid-template-columns: 1fr; gap: 24px; } }
+
+    .group-block {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .group-title {
+      text-align: center;
+      font-size: clamp(20px, 2.6vw, 26px);
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+      padding-bottom: 2px;
+      text-shadow: 0 2px 12px rgba(255, 214, 10, 0.15);
+    }
+    .group-title.group-b {
+      color: #7cb2ff;
+      text-shadow: 0 2px 12px rgba(0, 120, 255, 0.2);
+    }
+
+    .standings-table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      overflow-x: auto;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+    }
+
+    .standings-table {
+      width: 100%;
+      min-width: 380px;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    /* Header */
+    .standings-table thead th {
+      padding: 8px 4px;
+      text-align: center;
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid var(--border-strong);
+      white-space: nowrap;
+    }
+    .standings-table thead th.team {
+      text-align: left;
+      padding-left: 10px;
+    }
+    .standings-table thead th.pos { width: 28px; }
+    .standings-table thead th.num { width: 26px; }
+    .standings-table thead th.pts {
+      width: 34px;
+      color: var(--accent);
+    }
+
+    /* Body */
+    .standings-table tbody td {
+      padding: 8px 4px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 12px;
+      vertical-align: middle;
+    }
+    .standings-table tbody tr:last-child td { border-bottom: none; }
+
+    .standings-table tbody td.pos {
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--text);
+    }
+    .standings-table tbody td.team {
+      text-align: left;
+      padding-left: 10px;
+    }
+    .standings-table tbody td.pts {
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--accent);
+    }
+
+    /* Team cell */
+    .standings-team {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .standings-team-crest {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      border: 1px solid var(--border-strong);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      font-size: 8px;
+      font-weight: 900;
+      color: var(--accent);
+    }
+    .standings-team-crest img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .standings-team-name {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.01em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* qualify / eliminate */
+    .standings-table tbody tr.qualify {
+      background: rgba(0, 224, 123, 0.03);
+    }
+    .standings-table tbody tr.qualify td.pos {
+      color: var(--accent);
+      position: relative;
+    }
+    .standings-table tbody tr.qualify td.pos::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 22%;
+      bottom: 22%;
+      width: 3px;
+      background: var(--accent);
+      border-radius: 0 2px 2px 0;
+    }
+    .standings-table tbody tr.eliminated td.pos {
+      color: var(--danger);
+      position: relative;
+    }
+    .standings-table tbody tr.eliminated td.pos::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 22%;
+      bottom: 22%;
+      width: 3px;
+      background: var(--danger);
+      border-radius: 0 2px 2px 0;
+    }
+
+    /* legend */
+    .standings-legend {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .standings-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+    }
+    .legend-dot.green { background: var(--accent); }
+    .legend-dot.red { background: var(--danger); }
+
+    /* =========================================================
+       KNOCKOUT QUALIFICATION INFO
+       ========================================================= */
+    .qualify-info {
+      margin-top: 28px;
+      padding: 22px;
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(0, 49, 224, 0.06), transparent 60%),
+        radial-gradient(ellipse at 80% 70%, rgba(5, 3, 126, 0.05), transparent 60%),
+        var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+    }
+
+    .qualify-info-head {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .qualify-info-title {
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .qualify-info-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      max-width: 560px;
+      margin-inline: auto;
+    }
+
+    .qualify-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 900px) { .qualify-grid { grid-template-columns: 1fr; gap: 12px; } }
+
+    .qualify-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .qualify-card.final {
+      background:
+        radial-gradient(ellipse at 50% 20%, rgba(10, 100, 255, 0.08), transparent 60%),
+        var(--bg-2);
+      border-color: rgba(10, 169, 255, 0.25);
+    }
+
+    .qualify-stage {
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .qualify-card.final .qualify-stage { color: var(--accent-2); }
+
+    .qualify-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .qualify-matchup {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .qualify-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--text);
+      font-weight: 700;
+    }
+    .qualify-pos {
+      min-width: 30px;
+      height: 22px;
+      padding: 0 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      background: rgba(0, 224, 123, 0.08);
+      border: 1px solid rgba(0, 224, 123, 0.3);
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      flex-shrink: 0;
+    }
+    .qualify-row .qualify-pos.group-b {
+      background: rgba(0, 120, 255, 0.08);
+      border-color: rgba(0, 120, 255, 0.3);
+      color: #7cb2ff;
+    }
+    .qualify-vs {
+      text-align: center;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      color: var(--text-dim);
+      padding: 2px 0;
+    }
+
+    .qualify-note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      background: rgba(0, 224, 123, 0.04);
+      border: 1px solid rgba(0, 15, 224, 0.2);
+      border-radius: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      text-align: center;
+    }
+    .qualify-note strong { color: var(--accent); font-weight: 800; }
+
+    /* ---------- Filter tabs ---------- */
+    .fixtures-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .filter-btn {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background var(--dur) var(--ease),
+                  color var(--dur) var(--ease),
+                  border-color var(--dur) var(--ease);
+    }
+    .filter-btn:hover {
+      color: var(--text);
+      border-color: rgba(255,255,255,0.3);
+    }
+    .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #040912;
+    }
+
+    /* =========================================================
+       FIXTURE CARDS
+       ========================================================= */
+    .fixtures-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 1024px) { .fixtures-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px)  { .fixtures-grid { grid-template-columns: 1fr; gap: 12px; } }
+
+    .fixture-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: border-color var(--dur) var(--ease),
+                  background var(--dur) var(--ease),
+                  transform var(--dur) var(--ease);
+    }
+    .fixture-card:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-2);
+      transform: translateY(-2px);
+    }
+
+    .fixture-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+    .fixture-meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .fixture-court { color: var(--accent); }
+
+    .fixture-group-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255, 214, 10, 0.1);
+      border: 1px solid rgba(255, 214, 10, 0.35);
+      color: var(--accent-2);
+    }
+    .fixture-group-badge.group-b {
+      background: rgba(0, 120, 255, 0.1);
+      border-color: rgba(0, 120, 255, 0.35);
+      color: #7cb2ff;
+    }
+
+    .fixture-body {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 8px;
+    }
+    .fixture-team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+      min-width: 0;
+    }
+    .fixture-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    .fixture-vs {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      color: var(--text-dim);
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+
+    .team-crest {
+      position: relative;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      border: 1px solid var(--border-strong);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .team-crest-fallback {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+      z-index: 0;
+    }
+    .team-crest img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ---------- Profile drawer ---------- */
+    .profile-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--dur) var(--ease), visibility var(--dur) var(--ease);
+      z-index: 998;
+    }
+    .profile-overlay.open { opacity: 1; visibility: visible; }
+
+    .profile-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100dvh;
+      width: min(100%, 400px);
+      background: var(--bg-2);
+      border-left: 1px solid var(--border);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.4s var(--ease);
+      overflow-y: auto;
+    }
+    .profile-drawer.open { transform: translateX(0); }
+
+    .profile-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--border);
+    }
+    .profile-head-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .profile-close {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--r-md);
+      color: var(--text);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: background var(--dur) var(--ease);
+    }
+    .profile-close:hover { background: rgba(255, 255, 255, 0.06); }
+
+    .profile-body {
+      padding: 24px 22px 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .profile-avatar {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #00a95c);
+      color: #04120b;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      overflow: hidden;
+      border: 3px solid rgba(0, 224, 123, 0.2);
+    }
+    .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .profile-name {
+      font-size: 19px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-align: center;
+      line-height: 1.15;
+    }
+    .profile-email {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+      word-break: break-all;
+    }
+    .profile-role {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: rgba(0, 224, 123, 0.10);
+      border: 1px solid rgba(0, 224, 123, 0.35);
+      color: var(--accent);
+      margin-top: 2px;
+    }
+    .profile-member-code {
+      width: 100%;
+      margin-top: 6px;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .profile-member-code-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .profile-member-code-value {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+      font-family: monospace;
+    }
+    .profile-links { padding: 12px 0; }
+    .profile-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 22px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background var(--dur) var(--ease), padding-left var(--dur) var(--ease);
+    }
+    .profile-link:hover {
+      background: rgba(255, 255, 255, 0.03);
+      padding-left: 26px;
+    }
+    .profile-link svg {
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .profile-link-arrow {
+      margin-left: auto;
+      color: var(--text-dim);
+    }
+    .profile-foot {
+      margin-top: auto;
+      padding: 20px 22px;
+      border-top: 1px solid var(--border);
+    }
+    .profile-logout {
+      width: 100%;
+      padding: 13px 18px;
+      border-radius: 12px;
+      background: rgba(255, 77, 94, 0.08);
+      border: 1px solid rgba(255, 77, 94, 0.35);
+      color: #ff8a95;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background var(--dur) var(--ease);
+    }
+    .profile-logout:hover { background: rgba(255, 77, 94, 0.14); }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="/index.html" class="nav-logo" aria-label="PCL Home">
+        <img src="/assets/images/logo.jpeg" alt="PCL — Polokwane Champions League" />
+      </a>
+
+      <div class="nav-actions">
+        <a href="/auth/login.html" class="nav-login" id="navLoginBtn" hidden>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+               stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+            <path d="M10 17l5-5-5-5" />
+            <path d="M15 12H3" />
+          </svg>
+          <span>Login</span>
+        </a>
+
+        <button type="button" class="nav-user" id="navProfileBtn" hidden aria-label="Account">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+               stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 21a8 8 0 0 1 16 0" />
+          </svg>
+        </button>
+
+        <button type="button" class="nav-menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="nav-divider"></div>
+  </header>
+
+
+  <!-- NAV DRAWER -->
+  <div class="nav-overlay" id="navOverlay"></div>
+
+  <aside class="nav-drawer" id="navDrawer" aria-hidden="true">
+    <div class="nav-drawer-head">
+      <span class="nav-drawer-title">Menu</span>
+      <button type="button" class="nav-drawer-close" id="menuClose" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+
+    <nav class="nav-drawer-links" id="drawerLinks" aria-label="Main navigation"></nav>
+
+    <div class="nav-drawer-foot">
+      <a href="/auth/signup.html" class="btn btn-primary btn-block">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+        Become a Fan Member
+      </a>
+      <a href="/auth/register-team.html" class="btn btn-ghost btn-block">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" />
+        </svg>
+        Register a Team
+      </a>
+    </div>
+  </aside>
+
+
+  <!-- PROFILE DRAWER -->
+  <div class="profile-overlay" id="profileOverlay"></div>
+
+  <aside class="profile-drawer" id="profileDrawer" aria-hidden="true">
+    <div class="profile-head">
+      <span class="profile-head-title">My Account</span>
+      <button type="button" class="profile-close" id="profileClose" aria-label="Close">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="profile-body">
+      <div class="profile-avatar" id="profileAvatar">PCL</div>
+      <div class="profile-name" id="profileName">Member</div>
+      <div class="profile-email" id="profileEmail">member@example.com</div>
+      <span class="profile-role" id="profileRole">Member</span>
+
+      <div class="profile-member-code" id="profileMemberCodeBox" hidden>
+        <span class="profile-member-code-label">Member Code</span>
+        <span class="profile-member-code-value" id="profileMemberCode">PCL-2026-0001</span>
+      </div>
+    </div>
+
+    <nav class="profile-links" id="profileLinks"></nav>
+
+    <div class="profile-foot">
+      <button type="button" class="profile-logout" id="profileLogout">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <path d="M16 17l5-5-5-5" />
+          <path d="M21 12H9" />
+        </svg>
+        Sign out
+      </button>
+    </div>
+  </aside>
+
+
+  <main>
+
+    <!-- PAGE HERO -->
+    <section class="page-hero">
+      <div class="page-hero-inner">
+        <span class="page-eyebrow">Elite 6ix · 2026 Season</span>
+        <h1 class="page-title">Standings &amp; Fixtures</h1>
+        <p class="page-sub">
+          Group stage tables and full match schedule. Top 2 from each group qualify for the semi-finals.
+        </p>
+      </div>
+    </section>
+
+
+    <!-- STANDINGS -->
+    <section class="section standings-section">
+      <div class="container">
+        <header class="section-head" style="justify-content:center;text-align:center;">
+          <div>
+            <span class="section-eyebrow">Group Stage</span>
+            <h2 class="section-title">Standings</h2>
+          </div>
+        </header>
+
+        <div class="standings-grid">
+
+          <!-- GROUP A -->
+          <div class="group-block">
+            <h3 class="group-title">Group A</h3>
+            <div class="standings-table-wrap">
+              <table class="standings-table" id="standingsTableA">
+                <thead>
+                  <tr>
+                    <th class="pos">Pos</th>
+                    <th class="team">Team</th>
+                    <th class="num">PL</th>
+                    <th class="num">W</th>
+                    <th class="num">D</th>
+                    <th class="num">L</th>
+                    <th class="num">GF</th>
+                    <th class="num">GA</th>
+                    <th class="num">GD</th>
+                    <th class="pts">PTS</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- GROUP B -->
+          <div class="group-block">
+            <h3 class="group-title group-b">Group B</h3>
+            <div class="standings-table-wrap">
+              <table class="standings-table" id="standingsTableB">
+                <thead>
+                  <tr>
+                    <th class="pos">Pos</th>
+                    <th class="team">Team</th>
+                    <th class="num">PL</th>
+                    <th class="num">W</th>
+                    <th class="num">D</th>
+                    <th class="num">L</th>
+                    <th class="num">GF</th>
+                    <th class="num">GA</th>
+                    <th class="num">GD</th>
+                    <th class="pts">PTS</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="standings-legend">
+          <span class="standings-legend-item">
+            <span class="legend-dot green"></span>
+            Top 2 — qualify to semi-finals
+          </span>
+          <span class="standings-legend-item">
+            <span class="legend-dot red"></span>
+            3rd place — eliminated
+          </span>
+        </div>
+
+        <!-- ============================================================
+             KNOCKOUT QUALIFICATION INFO
+             ============================================================ -->
+        <div class="qualify-info">
+          <div class="qualify-info-head">
+            <div class="qualify-info-title">How the knockout stage works</div>
+            <div class="qualify-info-sub">
+              Top 2 from each group advance. The knockout is single-elimination — win and you move on.
+            </div>
+          </div>
+
+          <div class="qualify-grid">
+
+            <!-- SEMI-FINAL 1 -->
+            <div class="qualify-card">
+              <span class="qualify-stage">Semi-Final 1</span>
+              <div class="qualify-title">1st Group A vs 2nd Group B</div>
+              <div class="qualify-matchup">
+                <div class="qualify-row">
+                  <span class="qualify-pos">1A</span>
+                  <span>Winner · Group A</span>
+                </div>
+                <div class="qualify-vs">— VS —</div>
+                <div class="qualify-row">
+                  <span class="qualify-pos group-b">2B</span>
+                  <span>Runner-up · Group B</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- SEMI-FINAL 2 -->
+            <div class="qualify-card">
+              <span class="qualify-stage">Semi-Final 2</span>
+              <div class="qualify-title">1st Group B vs 2nd Group A</div>
+              <div class="qualify-matchup">
+                <div class="qualify-row">
+                  <span class="qualify-pos group-b">1B</span>
+                  <span>Winner · Group B</span>
+                </div>
+                <div class="qualify-vs">— VS —</div>
+                <div class="qualify-row">
+                  <span class="qualify-pos">2A</span>
+                  <span>Runner-up · Group A</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- FINAL -->
+            <div class="qualify-card final">
+              <span class="qualify-stage">Final</span>
+              <div class="qualify-title">Winner SF1 vs Winner SF2</div>
+              <div class="qualify-matchup">
+                <div class="qualify-row">
+                  <span class="qualify-pos">W1</span>
+                  <span>Winner · Semi-Final 1</span>
+                </div>
+                <div class="qualify-vs">— VS —</div>
+                <div class="qualify-row">
+                  <span class="qualify-pos">W2</span>
+                  <span>Winner · Semi-Final 2</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="qualify-note">
+            <strong>1st place</strong> from Group A plays the <strong>2nd place</strong> from Group B — and vice versa.
+            The winner of each semi-final advances to the <strong>Final</strong>.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- FIXTURES -->
+    <section class="section" style="background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+      <div class="container">
+        <header class="section-head">
+          <div>
+            <span class="section-eyebrow">Schedule</span>
+            <h2 class="section-title" id="fixturesSectionTitle">All Matches</h2>
+          </div>
+          <span class="section-count" id="fixturesCount">12 matches</span>
+        </header>
+
+        <div class="fixtures-toolbar" id="fixturesToolbar">
+          <button class="filter-btn active" data-filter="all">All Matches</button>
+          <button class="filter-btn" data-filter="A">Group A</button>
+          <button class="filter-btn" data-filter="B">Group B</button>
+        </div>
+
+        <div class="fixtures-grid" id="fixturesGrid"></div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="/assets/images/logo.jpeg" alt="PCL" class="footer-logo" />
+        <p>Polokwane Champions League — indoor football, brought to you at N1 Padel, Limpopo.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <a href="/public/tournament.html">Tournament</a>
+        <a href="/public/fixtures.html">Fixtures</a>
+        <a href="/public/shops.html">Teams</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Engage</h4>
+        <a href="/public/membership.html">Membership</a>
+        <a href="/public/tickets.html">Tickets</a>
+        <a href="/public/about.html">About</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Account</h4>
+        <a href="/auth/login.html">Login</a>
+        <a href="/auth/signup.html">Sign Up</a>
+        <a href="/auth/register-team.html">Register Team</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 Polokwane Champions League. All rights reserved.</span>
+      <span>Built for the PCL Digital Platform · MVP 1</span>
+    </div>
+  </footer>
+
+
+  <!-- SCRIPT -->
+  <script type="module">
+    import { NAV_LINKS } from '/js/config.js';
+
+    /* =========================================================
+       TEAMS
+       ========================================================= */
+    const TEAMS = {
+      brighton:   { name: 'Brighton',       logo: '/assets/images/teams/bri.jpeg' },
+      choko:      { name: 'Choko Choko',    logo: '/assets/images/teams/choko.jpeg'    },
+      sunday:     { name: 'Sunday Ballers', logo: '/assets/images/teams/sunday.jpeg'   },
+      clutch:     { name: 'Clutch FC',      logo: '/assets/images/teams/clutch.jpeg'   },
+      maafter:    { name: 'Ma After 9',     logo: '/assets/images/teams/after9.jpeg'  },
+      newcastle:  { name: 'Newcastle',      logo: '/assets/images/teams/new.jpeg' },
+    };
+
+    /* =========================================================
+       STANDINGS — fresh season
+       ========================================================= */
+    const STANDINGS_A = [
+      { team: TEAMS.brighton, p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
+      { team: TEAMS.choko,    p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
+      { team: TEAMS.sunday,   p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
+    ];
+
+    const STANDINGS_B = [
+      { team: TEAMS.clutch,    p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
+      { team: TEAMS.maafter,   p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
+      { team: TEAMS.newcastle, p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
+    ];
+
+    /* =========================================================
+       FIXTURES
+       ========================================================= */
+    const FIXTURES_A = [
+      { id: 1, group: 'A', court: 'Court A', date: 'Sat 12 Oct · 10:00',
+        teamA: TEAMS.choko,    teamB: TEAMS.sunday },
+      { id: 2, group: 'A', court: 'Court B', date: 'Sat 12 Oct · 11:30',
+        teamA: TEAMS.brighton, teamB: TEAMS.choko },
+      { id: 3, group: 'A', court: 'Court A', date: 'Sat 12 Oct · 14:00',
+        teamA: TEAMS.sunday,   teamB: TEAMS.brighton },
+      { id: 4, group: 'A', court: 'Court A', date: 'Sun 13 Oct · 10:00',
+        teamA: TEAMS.choko,    teamB: TEAMS.brighton },
+      { id: 5, group: 'A', court: 'Court B', date: 'Sun 13 Oct · 11:30',
+        teamA: TEAMS.sunday,   teamB: TEAMS.choko },
+      { id: 6, group: 'A', court: 'Court A', date: 'Sun 13 Oct · 14:00',
+        teamA: TEAMS.brighton, teamB: TEAMS.sunday },
+    ];
+
+    const FIXTURES_B = [
+      { id: 7, group: 'B', court: 'Court A', date: 'Sat 12 Oct · 12:30',
+        teamA: TEAMS.newcastle, teamB: TEAMS.maafter },
+      { id: 8, group: 'B', court: 'Court B', date: 'Sat 12 Oct · 15:30',
+        teamA: TEAMS.clutch,    teamB: TEAMS.newcastle },
+      { id: 9, group: 'B', court: 'Court A', date: 'Sat 12 Oct · 17:00',
+        teamA: TEAMS.maafter,   teamB: TEAMS.clutch },
+      { id: 10, group: 'B', court: 'Court A', date: 'Sun 13 Oct · 12:30',
+        teamA: TEAMS.clutch,    teamB: TEAMS.maafter },
+      { id: 11, group: 'B', court: 'Court B', date: 'Sun 13 Oct · 15:30',
+        teamA: TEAMS.newcastle, teamB: TEAMS.clutch },
+      { id: 12, group: 'B', court: 'Court A', date: 'Sun 13 Oct · 17:00',
+        teamA: TEAMS.maafter,   teamB: TEAMS.newcastle },
+    ];
+
+    const ALL_FIXTURES = [...FIXTURES_A, ...FIXTURES_B];
+
+
+    /* =========================================================
+       ICONS
+       ========================================================= */
+    const ICONS = {
+      home:     '<path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H10v6H4a1 1 0 0 1-1-1z"/>',
+      trophy:   '<path d="M8 4h8v4a4 4 0 0 1-8 0z"/><path d="M16 5h3v2a3 3 0 0 1-3 3"/><path d="M8 5H5v2a3 3 0 0 0 3 3"/><path d="M12 12v4"/><path d="M9 20h6"/><path d="M10 20v-4h4v4"/>',
+      calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+      shield:   '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+      star:     '<path d="M12 2l2.9 6.9L22 10l-5.5 4.6L18.2 22 12 18.3 5.8 22l1.7-7.4L2 10l7.1-1.1z"/>',
+      ticket:   '<path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M13 6v12"/>',
+      info:     '<circle cx="12" cy="12" r="9"/><path d="M12 8h.01"/><path d="M11 12h1v5h1"/>',
+    };
+    const iconSVG = (name, size = 20) => `
+      <svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none"
+           stroke="currentColor" stroke-width="1.8"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        ${ICONS[name] || ''}
+      </svg>
+    `;
+    const initialsOf = (name) =>
+      name.split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+
+
+    /* =========================================================
+       DRAWER
+       ========================================================= */
+    const drawerLinks = document.getElementById('drawerLinks');
+    NAV_LINKS.forEach(link => {
+      const a = document.createElement('a');
+      a.href = link.href;
+      a.className = 'nav-drawer-link';
+      a.innerHTML = `
+        <span class="nav-drawer-icon">${iconSVG(link.icon)}</span>
+        <span class="nav-drawer-label">${link.label}</span>
+        <svg class="nav-drawer-arrow" viewBox="0 0 24 24" width="18" height="18"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 6l6 6-6 6" />
+        </svg>
+      `;
+      drawerLinks.appendChild(a);
+    });
+
+    const menuBtn   = document.getElementById('menuBtn');
+    const menuClose = document.getElementById('menuClose');
+    const drawer    = document.getElementById('navDrawer');
+    const overlay   = document.getElementById('navOverlay');
+
+    function openDrawer() {
+      drawer.classList.add('open');
+      overlay.classList.add('open');
+      menuBtn.setAttribute('aria-expanded', 'true');
+      drawer.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDrawer() {
+      drawer.classList.remove('open');
+      overlay.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      drawer.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    menuBtn.addEventListener('click', openDrawer);
+    menuClose.addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+
+    /* =========================================================
+       AUTH STATE (localStorage only)
+       ========================================================= */
+    const loginBtn   = document.getElementById('navLoginBtn');
+    const profileBtn = document.getElementById('navProfileBtn');
+    const profileDrawer  = document.getElementById('profileDrawer');
+    const profileOverlay = document.getElementById('profileOverlay');
+    const profileClose   = document.getElementById('profileClose');
+    const profileLogout  = document.getElementById('profileLogout');
+    const profileLinks   = document.getElementById('profileLinks');
+
+    function getToken() {
+      const t = localStorage.getItem('pcl_token');
+      return (t && t !== 'null' && t !== 'undefined') ? t : null;
+    }
+    function getCachedUser() {
+      try {
+        const raw = localStorage.getItem('pcl_user');
+        return raw ? JSON.parse(raw) : null;
+      } catch { return null; }
+    }
+    function clearAuth() {
+      localStorage.removeItem('pcl_token');
+      localStorage.removeItem('pcl_refresh');
+      localStorage.removeItem('pcl_user');
+      localStorage.removeItem('pcl_role');
+    }
+
+    const ROLE_LABELS = {
+      admin: 'Administrator', captain: 'Team Captain', player: 'Player', member: 'Member',
+    };
+
+    function buildProfileLinks(role) {
+      const links = [];
+      if (role === 'admin') {
+        links.push({
+          href: '/admin/index.html', label: 'Admin Dashboard',
+          icon: '<rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/>',
+        });
+      }
+      if (role === 'member') {
+        links.push({
+          href: '/public/membership.html', label: 'Member Hub',
+          icon: '<path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M13 6v12"/>',
+        });
+        links.push({
+          href: '/public/tickets.html', label: 'My Tickets',
+          icon: '<path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M13 6v12"/>',
+        });
+      }
+      if (role === 'captain') {
+        links.push({
+          href: '/public/shops.html', label: 'My Team',
+          icon: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+        });
+      }
+      links.push({
+        href: '/public/membership.html', label: 'Membership',
+        icon: '<path d="M12 2l2.9 6.9L22 10l-5.5 4.6L18.2 22 12 18.3 5.8 22l1.7-7.4L2 10l7.1-1.1z"/>',
+      });
+      return links;
+    }
+
+    function renderProfile(user) {
+      if (!user) return;
+      const initials = (user.full_name || user.name || 'PCL')
+        .split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+      document.getElementById('profileAvatar').textContent = initials;
+      document.getElementById('profileName').textContent   = user.full_name || user.name || 'Member';
+      document.getElementById('profileEmail').textContent  = user.email || '';
+      document.getElementById('profileRole').textContent   = ROLE_LABELS[user.role] || 'Member';
+
+      const codeBox = document.getElementById('profileMemberCodeBox');
+      if (user.role === 'member' && user.member?.member_code) {
+        codeBox.hidden = false;
+        document.getElementById('profileMemberCode').textContent = user.member.member_code;
+      } else {
+        codeBox.hidden = true;
+      }
+
+      profileLinks.innerHTML = buildProfileLinks(user.role).map(l => `
+        <a href="${l.href}" class="profile-link">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+               stroke="currentColor" stroke-width="1.8"
+               stroke-linecap="round" stroke-linejoin="round">${l.icon}</svg>
+          <span>${l.label}</span>
+          <svg class="profile-link-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none"
+               stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 6l6 6-6 6" />
+          </svg>
+        </a>
+      `).join('');
+    }
+
+    function setLoggedInUI(user) {
+      loginBtn.hidden = true;
+      profileBtn.hidden = false;
+      if (user) renderProfile(user);
+    }
+    function setLoggedOutUI() {
+      loginBtn.hidden = false;
+      profileBtn.hidden = true;
+    }
+    function syncAuthUI() {
+      const t = getToken();
+      const u = getCachedUser();
+      if (t && u) setLoggedInUI(u);
+      else setLoggedOutUI();
+    }
+
+    function openProfile() {
+      profileDrawer.classList.add('open');
+      profileOverlay.classList.add('open');
+      profileDrawer.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeProfile() {
+      profileDrawer.classList.remove('open');
+      profileOverlay.classList.remove('open');
+      profileDrawer.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    profileBtn.addEventListener('click', openProfile);
+    profileClose.addEventListener('click', closeProfile);
+    profileOverlay.addEventListener('click', closeProfile);
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && profileDrawer.classList.contains('open')) closeProfile();
+    });
+
+    profileLogout.addEventListener('click', () => {
+      clearAuth();
+      closeProfile();
+      setLoggedOutUI();
+      window.location.href = '/index.html';
+    });
+
+    syncAuthUI();
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'pcl_token' || e.key === 'pcl_user') syncAuthUI();
+    });
+
+
+    /* =========================================================
+       RENDER: STANDINGS
+       ========================================================= */
+    function renderStandings(tbodyEl, rows) {
+      tbodyEl.innerHTML = rows
+        .slice()
+        .sort((a, b) => {
+          const pA = a.w * 3 + a.d;
+          const pB = b.w * 3 + b.d;
+          if (pB !== pA) return pB - pA;
+          const gdA = a.gf - a.ga;
+          const gdB = b.gf - b.ga;
+          if (gdB !== gdA) return gdB - gdA;
+          return b.gf - a.gf;
+        })
+        .map((r, i) => {
+          const pts = r.w * 3 + r.d;
+          const gd  = r.gf - r.ga;
+          const gdStr = gd > 0 ? `+${gd}` : String(gd);
+          const pos = i + 1;
+          const rowClass = pos <= 2 ? 'qualify' : 'eliminated';
+          return `
+            <tr class="${rowClass}">
+              <td class="pos">${pos}</td>
+              <td class="team">
+                <div class="standings-team">
+                 <div class="standings-team-crest">
+  ${r.team.logo ? `<img src="${r.team.logo}" alt="" onerror="this.remove()">` : ''}
+</div>
+                  <span class="standings-team-name">${r.team.name}</span>
+                </div>
+              </td>
+              <td class="num">${r.p}</td>
+              <td class="num">${r.w}</td>
+              <td class="num">${r.d}</td>
+              <td class="num">${r.l}</td>
+              <td class="num">${r.gf}</td>
+              <td class="num">${r.ga}</td>
+              <td class="num">${gdStr}</td>
+              <td class="pts">${pts}</td>
+            </tr>
+          `;
+        })
+        .join('');
+    }
+
+    renderStandings(document.querySelector('#standingsTableA tbody'), STANDINGS_A);
+    renderStandings(document.querySelector('#standingsTableB tbody'), STANDINGS_B);
+
+
+    /* =========================================================
+       RENDER: FIXTURES
+       ========================================================= */
+    function crestHTML(team) {
+      return `
+        <div class="team-crest">
+          <span class="team-crest-fallback">${initialsOf(team.name)}</span>
+          ${team.logo ? `<img src="${team.logo}" alt="" loading="lazy" onerror="this.remove()">` : ''}
+        </div>
+      `;
+    }
+
+    function fixtureCardHTML(f) {
+      const groupClass = f.group === 'A' ? '' : ' group-b';
+
+      return `
+        <article class="fixture-card" data-group="${f.group}" data-id="${f.id}">
+          <div class="fixture-meta">
+            <span class="fixture-meta-item">
+              <span class="fixture-group-badge${groupClass}">Group ${f.group}</span>
+            </span>
+            <span class="fixture-meta-item fixture-court">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none"
+                   stroke="currentColor" stroke-width="1.8"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="16" rx="1"/>
+                <path d="M12 4v16"/>
+                <path d="M3 12h18"/>
+              </svg>
+              ${f.court}
+            </span>
+            <span class="fixture-meta-item">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none"
+                   stroke="currentColor" stroke-width="1.8"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 7v5l3 2"/>
+              </svg>
+              ${f.date}
+            </span>
+          </div>
+
+          <div class="fixture-body">
+            <div class="fixture-team">
+              ${crestHTML(f.teamA)}
+              <span class="fixture-name">${f.teamA.name}</span>
+            </div>
+            <span class="fixture-vs">VS</span>
+            <div class="fixture-team">
+              ${crestHTML(f.teamB)}
+              <span class="fixture-name">${f.teamB.name}</span>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    const fixturesGrid = document.getElementById('fixturesGrid');
+    fixturesGrid.innerHTML = ALL_FIXTURES.map(fixtureCardHTML).join('');
+
+
+    /* =========================================================
+       FILTER TABS
+       ========================================================= */
+    const toolbar      = document.getElementById('fixturesToolbar');
+    const sectionTitle = document.getElementById('fixturesSectionTitle');
+    const countEl      = document.getElementById('fixturesCount');
+
+    const LABELS = {
+      all: 'All Matches',
+      A: 'Group A Fixtures',
+      B: 'Group B Fixtures',
+    };
+
+    function applyFilter(filter) {
+      toolbar.querySelectorAll('.filter-btn').forEach(b =>
+        b.classList.toggle('active', b.dataset.filter === filter));
+
+      const cards = fixturesGrid.querySelectorAll('.fixture-card');
+      let visible = 0;
+
+      cards.forEach(card => {
+        const show = filter === 'all' || card.dataset.group === filter;
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      sectionTitle.textContent = LABELS[filter] || 'All Matches';
+      countEl.textContent = `${visible} match${visible === 1 ? '' : 'es'}`;
+    }
+
+    toolbar.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => applyFilter(btn.dataset.filter));
+    });
+
+    applyFilter('all');
+  </script>
+
+</body>
+</html>

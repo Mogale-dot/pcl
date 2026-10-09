@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="PCL — Teams. Meet every team competing in the Polokwane Champions League." />
+  <meta name="theme-color" content="#050a15" />
+  <title>Teams — PCL</title>
+  <link rel="stylesheet" href="/css/main.css" />
+
+  <style>
+    /* =========================================================
+       TEAMS PAGE — page-specific styles
+       ========================================================= */
+
+    /* ---------- Page hero strip ---------- */
+    .page-hero {
+      position: relative;
+      padding: clamp(48px, 8vw, 96px) 0 clamp(32px, 5vw, 56px);
+      background:
+        radial-gradient(ellipse at 20% 40%, rgba(0, 224, 123, 0.14), transparent 55%),
+        radial-gradient(ellipse at 80% 60%, rgba(0, 120, 255, 0.12), transparent 60%),
+        linear-gradient(135deg, #071a2e 0%, #050a15 100%);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .page-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(5, 10, 21, 0.6) 0%,
+        transparent 60%
+      );
+      pointer-events: none;
+    }
+    .page-hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: var(--container);
+      margin-inline: auto;
+      padding-inline: var(--sp-5);
+    }
+    .page-eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 6px 12px;
+      border: 1px solid rgba(0, 224, 123, 0.35);
+      border-radius: 999px;
+      background: rgba(0, 224, 123, 0.06);
+      margin-bottom: 16px;
+    }
+    .page-title {
+      font-size: clamp(34px, 6vw, 60px);
+      font-weight: 900;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .page-sub {
+      font-size: clamp(14px, 1.6vw, 17px);
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 620px;
+      line-height: 1.55;
+    }
+
+    /* ---------- Toolbar (filters + search) ---------- */
+    .teams-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 28px;
+    }
+    .teams-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .filter-btn {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background var(--dur) var(--ease),
+                  color var(--dur) var(--ease),
+                  border-color var(--dur) var(--ease);
+    }
+    .filter-btn:hover {
+      color: var(--text);
+      border-color: rgba(255,255,255,0.3);
+    }
+    .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #04120b;
+    }
+
+    .teams-search {
+      position: relative;
+      min-width: 240px;
+    }
+    .teams-search input {
+      width: 100%;
+      padding: 10px 14px 10px 38px;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+      transition: border-color var(--dur) var(--ease);
+    }
+    .teams-search input:focus {
+      border-color: var(--accent);
+    }
+    .teams-search svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+
+    /* ---------- Teams grid ---------- */
+    .teams-section {
+      padding-block: clamp(32px, 5vw, 64px) clamp(64px, 8vw, 96px);
+    }
+
+    .teams-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 1024px) { .teams-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px)  { .teams-grid { grid-template-columns: 1fr; gap: 14px; } }
+
+    /* ---------- Team card ---------- */
+    .team-card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      cursor: pointer;
+      transition: border-color var(--dur) var(--ease),
+                  background var(--dur) var(--ease),
+                  transform var(--dur) var(--ease);
+      overflow: hidden;
+    }
+    .team-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity var(--dur) var(--ease);
+    }
+    .team-card:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-2);
+      transform: translateY(-3px);
+    }
+    .team-card:hover::before { opacity: 1; }
+
+    .team-card-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .team-card-crest {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      border: 1px solid var(--border-strong);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .team-card-crest .fallback {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+    .team-card-crest img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .team-card-title {
+      flex: 1;
+      min-width: 0;
+    }
+    .team-card-name {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .team-card-coach {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 2px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* points pill */
+    .team-card-points {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(0, 224, 123, 0.08);
+      border: 1px solid rgba(0, 224, 123, 0.3);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* stat row */
+    .team-card-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 14px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .stat-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+    .stat.win .stat-value { color: var(--accent); }
+    .stat.loss .stat-value { color: var(--danger); }
+    .stat.draw .stat-value { color: var(--accent-2); }
+
+    /* footer of card */
+    .team-card-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .team-card-foot strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+    .team-card-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .team-card-cta svg {
+      transition: transform var(--dur) var(--ease);
+    }
+    .team-card:hover .team-card-cta svg {
+      transform: translateX(3px);
+    }
+
+    /* ---------- Empty state ---------- */
+    .teams-empty {
+      grid-column: 1 / -1;
+      padding: 64px 24px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 14px;
+    }
+
+    /* =========================================================
+       TEAM MODAL (squad + stats)
+       ========================================================= */
+    .team-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 16px;
+      overflow-y: auto;
+      background: rgba(5, 10, 21, 0.78);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      opacity: 0;
+      transition: opacity 0.25s var(--ease);
+    }
+    .team-modal.open { display: flex; opacity: 1; }
+
+    .team-modal-panel {
+      width: 100%;
+      max-width: 720px;
+      background: var(--bg-2);
+      border: 1px solid var(--border-strong);
+      border-radius: 20px;
+      overflow: hidden;
+      transform: translateY(12px);
+      transition: transform 0.3s var(--ease);
+    }
+    .team-modal.open .team-modal-panel {
+      transform: translateY(0);
+    }
+
+    /* modal header */
+    .team-modal-head {
+      position: relative;
+      padding: 24px 24px 20px;
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(0, 224, 123, 0.18), transparent 60%),
+        linear-gradient(135deg, #0a1120 0%, #050a15 100%);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .team-modal-crest {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      border: 1px solid var(--border-strong);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .team-modal-crest .fallback {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--accent);
+    }
+    .team-modal-crest img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .team-modal-title {
+      flex: 1;
+      min-width: 0;
+    }
+    .team-modal-name {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      line-height: 1.15;
+    }
+    .team-modal-meta {
+      margin-top: 4px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .team-modal-close {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      flex-shrink: 0;
+      transition: background var(--dur) var(--ease);
+    }
+    .team-modal-close:hover { background: rgba(255, 255, 255, 0.12); }
+
+    /* modal stats strip */
+    .team-modal-stats {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .team-modal-stats .stat {
+      background: var(--bg-2);
+      padding: 16px 12px;
+      text-align: center;
+    }
+
+    /* modal body */
+    .team-modal-body {
+      padding: 20px 24px 24px;
+    }
+    .team-modal-section-title {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 12px;
+    }
+
+    /* players list */
+    .players-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .player-row {
+      display: grid;
+      grid-template-columns: 40px 1fr auto auto;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+    }
+    .player-row:hover {
+      background: var(--surface-2);
+      border-color: var(--border-strong);
+    }
+    .player-num {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      background: rgba(0, 224, 123, 0.08);
+      border: 1px solid rgba(0, 224, 123, 0.25);
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    .player-info {
+      min-width: 0;
+    }
+    .player-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .player-pos {
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+    }
+    .player-mini-stats {
+      display: flex;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .player-mini-stats span strong {
+      color: var(--text);
+      font-weight: 800;
+      margin-left: 3px;
+    }
+
+    @media (max-width: 520px) {
+      .team-modal { padding: 16px 0; }
+      .team-modal-panel { border-radius: 0; max-width: 100%; }
+      .team-modal-stats { grid-template-columns: repeat(3, 1fr); }
+      .player-row {
+        grid-template-columns: 36px 1fr auto;
+      }
+      .player-mini-stats { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       NAV
+       ============================================================ -->
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="/index.html" class="nav-logo" aria-label="PCL Home">
+        <img src="/assets/images/pcl-logo.jpeg" alt="PCL — Polokwane Champions League" />
+      </a>
+
+      <div class="nav-actions">
+        <a href="/auth/login.html" class="nav-login" data-auth="logged-out">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+               stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+            <path d="M10 17l5-5-5-5" />
+            <path d="M15 12H3" />
+          </svg>
+          <span>Login</span>
+        </a>
+
+        <button type="button" class="nav-user" data-auth="logged-in" hidden aria-label="Account">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+               stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 21a8 8 0 0 1 16 0" />
+          </svg>
+        </button>
+
+        <button type="button" class="nav-menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="nav-divider"></div>
+  </header>
+
+
+  <!-- ============================================================
+       NAV DRAWER
+       ============================================================ -->
+  <div class="nav-overlay" id="navOverlay"></div>
+
+  <aside class="nav-drawer" id="navDrawer" aria-hidden="true">
+    <div class="nav-drawer-head">
+      <span class="nav-drawer-title">Menu</span>
+      <button type="button" class="nav-drawer-close" id="menuClose" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+
+    <nav class="nav-drawer-links" id="drawerLinks" aria-label="Main navigation"></nav>
+
+    <div class="nav-drawer-foot">
+      <a href="/auth/signup.html" class="btn btn-primary btn-block">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+        Become a Fan Member
+      </a>
+      <a href="/auth/register-team.html" class="btn btn-ghost btn-block">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" />
+        </svg>
+        Register a Team
+      </a>
+    </div>
+  </aside>
+
+
+  <main>
+
+    <!-- ============================================================
+         PAGE HERO
+         ============================================================ -->
+    <section class="page-hero">
+      <div class="page-hero-inner">
+        <span class="page-eyebrow">2026 Season</span>
+        <h1 class="page-title">Teams</h1>
+        <p class="page-sub">
+          Every team competing in the PCL. Browse squads, form and stats — tap any team to view the full squad and season performance.
+        </p>
+
+        <!-- toolbar -->
+        <div class="teams-toolbar">
+          <div class="teams-filters" id="teamsFilters">
+            <button class="filter-btn active" data-filter="all">All Teams</button>
+            <button class="filter-btn" data-filter="group-a">Group A</button>
+            <button class="filter-btn" data-filter="group-b">Group B</button>
+          </div>
+
+          <label class="teams-search">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7" />
+              <path d="M21 21l-4-4" />
+            </svg>
+            <input type="search" id="teamsSearch" placeholder="Search teams..." />
+          </label>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         TEAMS GRID
+         ============================================================ -->
+    <section class="teams-section">
+      <div class="container">
+        <div class="teams-grid" id="teamsGrid"></div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ============================================================
+       TEAM MODAL
+       ============================================================ -->
+  <div class="team-modal" id="teamModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="team-modal-panel">
+      <div class="team-modal-head">
+        <div class="team-modal-crest" id="modalCrest"></div>
+        <div class="team-modal-title">
+          <div class="team-modal-name" id="modalName">Team</div>
+          <div class="team-modal-meta" id="modalMeta">Coach · Group</div>
+        </div>
+        <button type="button" class="team-modal-close" id="modalClose" aria-label="Close">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="team-modal-stats" id="modalStats"></div>
+
+      <div class="team-modal-body">
+        <div class="team-modal-section-title">Squad</div>
+        <div class="players-list" id="modalPlayers"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="/assets/images/logo/pcl-logo.png" alt="PCL" class="footer-logo" />
+        <p>Polokwane Champions League — indoor football, brought to you at N1 Padel, Limpopo.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <a href="/public/tournament.html">Tournament</a>
+        <a href="/public/fixtures.html">Fixtures</a>
+        <a href="/public/shops.html">Teams</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Engage</h4>
+        <a href="/public/membership.html">Membership</a>
+        <a href="/public/tickets.html">Tickets</a>
+        <a href="/public/about.html">About</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Account</h4>
+        <a href="/auth/login.html">Login</a>
+        <a href="/auth/signup.html">Sign Up</a>
+        <a href="/auth/register-team.html">Register Team</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 Polokwane Champions League. All rights reserved.</span>
+      <span>Built for the PCL Digital Platform · MVP 1</span>
+    </div>
+  </footer>
+
+
+  <!-- ============================================================
+       SCRIPTS
+       ============================================================ -->
+  <script type="module">
+    import { NAV_LINKS } from '/js/config.js';
+
+    /* =========================================================
+       MOCK DATA
+       ========================================================= */
+    const MOCK_TEAMS = [
+      {
+        id: 1, name: 'N1 Padel FC', coach: 'S. Mokoena', group: 'group-a',
+        logo: '/assets/images/teams/n1.png',
+        stats: { played: 10, wins: 7, draws: 2, losses: 1, gf: 24, ga: 9, points: 23 },
+        players: [
+          { num: 1,  name: 'T. Mahlangu',   position: 'GK',  goals: 0,  assists: 0, apps: 10 },
+          { num: 4,  name: 'K. Ndlovu',     position: 'DEF', goals: 1,  assists: 2, apps: 10 },
+          { num: 5,  name: 'M. Sithole',    position: 'DEF', goals: 0,  assists: 1, apps: 9  },
+          { num: 8,  name: 'L. Mokoena',    position: 'MID', goals: 3,  assists: 5, apps: 10 },
+          { num: 10, name: 'B. Radebe',     position: 'MID', goals: 4,  assists: 6, apps: 10 },
+          { num: 11, name: 'S. Khumalo',    position: 'FWD', goals: 9,  assists: 3, apps: 10 },
+          { num: 9,  name: 'R. Moloi',      position: 'FWD', goals: 6,  assists: 2, apps: 9  },
+          { num: 7,  name: 'P. Dlamini',    position: 'FWD', goals: 1,  assists: 4, apps: 8  },
+        ],
+      },
+      {
+        id: 2, name: 'Limpopo Lions', coach: 'A. van Wyk', group: 'group-a',
+        logo: '/assets/images/teams/lions.png',
+        stats: { played: 10, wins: 6, draws: 1, losses: 3, gf: 21, ga: 14, points: 19 },
+        players: [
+          { num: 1,  name: 'J. Pretorius',  position: 'GK',  goals: 0,  assists: 0, apps: 10 },
+          { num: 3,  name: 'D. Mthembu',    position: 'DEF', goals: 2,  assists: 1, apps: 10 },
+          { num: 6,  name: 'N. Baloyi',     position: 'MID', goals: 3,  assists: 4, apps: 9  },
+          { num: 10, name: 'C. Mahlangu',   position: 'FWD', goals: 8,  assists: 5, apps: 10 },
+          { num: 11, name: 'T. Ngwenya',    position: 'FWD', goals: 5,  assists: 3, apps: 10 },
+        ],
+      },
+      {
+        id: 3, name: 'Polokwane United', coach: 'M. Tshabalala', group: 'group-b',
+        logo: '/assets/images/teams/pu.png',
+        stats: { played: 10, wins: 5, draws: 3, losses: 2, gf: 19, ga: 12, points: 18 },
+        players: [
+          { num: 1,  name: 'H. Sithole',    position: 'GK',  goals: 0,  assists: 0, apps: 10 },
+          { num: 2,  name: 'E. Mabaso',     position: 'DEF', goals: 0,  assists: 2, apps: 10 },
+          { num: 8,  name: 'K. Molefe',     position: 'MID', goals: 4,  assists: 6, apps: 10 },
+          { num: 9,  name: 'G. Maluleka',   position: 'FWD', goals: 7,  assists: 2, apps: 10 },
+        ],
+      },
+      {
+        id: 4, name: 'Mokopane Stars', coach: 'T. Nkosi', group: 'group-b',
+        logo: '/assets/images/teams/ms.png',
+        stats: { played: 10, wins: 4, draws: 3, losses: 3, gf: 15, ga: 13, points: 15 },
+        players: [
+          { num: 1,  name: 'S. Kekana',     position: 'GK',  goals: 0,  assists: 0, apps: 9  },
+          { num: 5,  name: 'A. Motaung',    position: 'DEF', goals: 1,  assists: 1, apps: 10 },
+          { num: 10, name: 'L. Rakgomo',    position: 'MID', goals: 5,  assists: 4, apps: 10 },
+          { num: 11, name: 'T. Mokwena',    position: 'FWD', goals: 6,  assists: 3, apps: 10 },
+        ],
+      },
+      {
+        id: 5, name: 'Seshego City', coach: 'J. Mashego', group: 'group-a',
+        logo: '/assets/images/teams/sc.png',
+        stats: { played: 10, wins: 3, draws: 4, losses: 3, gf: 14, ga: 13, points: 13 },
+        players: [
+          { num: 1,  name: 'M. Lekota',     position: 'GK',  goals: 0,  assists: 0, apps: 10 },
+          { num: 6,  name: 'R. Selowa',     position: 'MID', goals: 3,  assists: 3, apps: 10 },
+          { num: 9,  name: 'P. Mokgadi',    position: 'FWD', goals: 6,  assists: 2, apps: 10 },
+        ],
+      },
+      {
+        id: 6, name: 'Turfloop Titans', coach: 'B. Kgosana', group: 'group-b',
+        logo: '/assets/images/teams/tt.png',
+        stats: { played: 10, wins: 3, draws: 3, losses: 4, gf: 13, ga: 15, points: 12 },
+        players: [
+          { num: 1,  name: 'D. Mabuza',     position: 'GK',  goals: 0,  assists: 0, apps: 10 },
+          { num: 7,  name: 'C. Shabangu',   position: 'MID', goals: 4,  assists: 2, apps: 10 },
+          { num: 11, name: 'N. Thwala',     position: 'FWD', goals: 5,  assists: 1, apps: 10 },
+        ],
+      },
+      {
+        id: 7, name: 'Mankweng Rovers', coach: 'L. Ramaphosa', group: 'group-a',
+        logo: '/assets/images/teams/mr.png',
+        stats: { played: 10, wins: 2, draws: 3, losses: 5, gf: 11, ga: 18, points: 9 },
+        players: [
+          { num: 1,  name: 'K. Sebola',     position: 'GK',  goals: 0,  assists: 0, apps: 9  },
+          { num: 8,  name: 'M. Ngoepe',     position: 'MID', goals: 2,  assists: 3, apps: 10 },
+          { num: 9,  name: 'S. Ramovha',    position: 'FWD', goals: 4,  assists: 1, apps: 10 },
+        ],
+      },
+      {
+        id: 8, name: 'Lebowakgomo FC', coach: 'P. Chuene', group: 'group-b',
+        logo: '/assets/images/teams/lfc.png',
+        stats: { played: 10, wins: 2, draws: 2, losses: 6, gf: 10, ga: 20, points: 8 },
+        players: [
+          { num: 1,  name: 'T. Malatji',    position: 'GK',  goals: 0,  assists: 0, apps: 9  },
+          { num: 5,  name: 'B. Mogale',     position: 'DEF', goals: 1,  assists: 0, apps: 10 },
+          { num: 10, name: 'J. Ledwaba',    position: 'MID', goals: 3,  assists: 2, apps: 10 },
+        ],
+      },
+      {
+        id: 9, name: 'Ga-Rankuwa FC', coach: 'S. Mothibi', group: 'group-a',
+        logo: '/assets/images/teams/gr.png',
+        stats: { played: 10, wins: 1, draws: 2, losses: 7, gf: 8,  ga: 22, points: 5 },
+        players: [
+          { num: 1,  name: 'R. Sithole',    position: 'GK',  goals: 0,  assists: 0, apps: 9  },
+          { num: 7,  name: 'N. Mahlare',    position: 'MID', goals: 2,  assists: 1, apps: 10 },
+          { num: 9,  name: 'E. Rasethaba',  position: 'FWD', goals: 3,  assists: 0, apps: 10 },
+        ],
+      },
+      {
+        id: 10, name: 'Bochum Warriors', coach: 'K. Netshifhefhe', group: 'group-b',
+        logo: '/assets/images/teams/bw.png',
+        stats: { played: 10, wins: 0, draws: 3, losses: 7, gf: 7,  ga: 23, points: 3 },
+        players: [
+          { num: 1,  name: 'A. Mudau',      position: 'GK',  goals: 0,  assists: 0, apps: 9  },
+          { num: 8,  name: 'L. Sikhwari',   position: 'MID', goals: 1,  assists: 1, apps: 10 },
+          { num: 9,  name: 'M. Tshikhudo',  position: 'FWD', goals: 2,  assists: 0, apps: 10 },
+        ],
+      },
+    ];
+
+
+    /* =========================================================
+       ICONS
+       ========================================================= */
+    const ICONS = {
+      home:     '<path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H10v6H4a1 1 0 0 1-1-1z"/>',
+      trophy:   '<path d="M8 4h8v4a4 4 0 0 1-8 0z"/><path d="M16 5h3v2a3 3 0 0 1-3 3"/><path d="M8 5H5v2a3 3 0 0 0 3 3"/><path d="M12 12v4"/><path d="M9 20h6"/><path d="M10 20v-4h4v4"/>',
+      calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+      shield:   '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+      star:     '<path d="M12 2l2.9 6.9L22 10l-5.5 4.6L18.2 22 12 18.3 5.8 22l1.7-7.4L2 10l7.1-1.1z"/>',
+      ticket:   '<path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M13 6v12"/>',
+      info:     '<circle cx="12" cy="12" r="9"/><path d="M12 8h.01"/><path d="M11 12h1v5h1"/>',
+    };
+    const iconSVG = (name, size = 20) => `
+      <svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none"
+           stroke="currentColor" stroke-width="1.8"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        ${ICONS[name] || ''}
+      </svg>
+    `;
+    const initialsOf = (name) =>
+      name.split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+
+
+    /* =========================================================
+       DRAWER
+       ========================================================= */
+    const drawerLinks = document.getElementById('drawerLinks');
+    NAV_LINKS.forEach(link => {
+      const a = document.createElement('a');
+      a.href = link.href;
+      a.className = 'nav-drawer-link';
+      a.innerHTML = `
+        <span class="nav-drawer-icon">${iconSVG(link.icon)}</span>
+        <span class="nav-drawer-label">${link.label}</span>
+        <svg class="nav-drawer-arrow" viewBox="0 0 24 24" width="18" height="18"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 6l6 6-6 6" />
+        </svg>
+      `;
+      drawerLinks.appendChild(a);
+    });
+
+    const menuBtn   = document.getElementById('menuBtn');
+    const menuClose = document.getElementById('menuClose');
+    const drawer    = document.getElementById('navDrawer');
+    const overlay   = document.getElementById('navOverlay');
+
+    function openDrawer() {
+      drawer.classList.add('open');
+      overlay.classList.add('open');
+      menuBtn.setAttribute('aria-expanded', 'true');
+      drawer.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDrawer() {
+      drawer.classList.remove('open');
+      overlay.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      drawer.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    menuBtn.addEventListener('click', openDrawer);
+    menuClose.addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+
+    /* =========================================================
+       AUTH STATE
+       ========================================================= */
+    const loggedIn = localStorage.getItem('pcl_user') !== null;
+    document.querySelectorAll('[data-auth]').forEach(el => {
+      el.hidden = el.dataset.auth !== (loggedIn ? 'logged-in' : 'logged-out');
+    });
+
+
+    /* =========================================================
+       RENDER: TEAMS GRID
+       ========================================================= */
+    const teamsGrid = document.getElementById('teamsGrid');
+    const searchInput = document.getElementById('teamsSearch');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+
+    let currentFilter = 'all';
+    let currentQuery = '';
+
+    function crestHTML(team, size = 'lg') {
+      const fallbackClass = size === 'lg' ? 'fallback' : 'fallback';
+      return `
+        <div class="team-card-crest">
+          <span class="${fallbackClass}">${initialsOf(team.name)}</span>
+          <img src="${team.logo}" alt="" loading="lazy" onerror="this.remove()">
+        </div>
+      `;
+    }
+
+    function teamCardHTML(t) {
+      const s = t.stats;
+      const gd = s.gf - s.ga;
+      const gdStr = gd > 0 ? `+${gd}` : String(gd);
+      return `
+        <article class="team-card" data-team-id="${t.id}" tabindex="0" role="button" aria-label="View ${t.name}">
+          <div class="team-card-head">
+            ${crestHTML(t)}
+            <div class="team-card-title">
+              <div class="team-card-name">${t.name}</div>
+              <div class="team-card-coach">Coach: ${t.coach}</div>
+            </div>
+            <span class="team-card-points">${s.points} pts</span>
+          </div>
+
+          <div class="team-card-stats">
+            <div class="stat win">
+              <div class="stat-value">${s.wins}</div>
+              <div class="stat-label">Won</div>
+            </div>
+            <div class="stat draw">
+              <div class="stat-value">${s.draws}</div>
+              <div class="stat-label">Draw</div>
+            </div>
+            <div class="stat loss">
+              <div class="stat-value">${s.losses}</div>
+              <div class="stat-label">Lost</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">${gdStr}</div>
+              <div class="stat-label">GD</div>
+            </div>
+          </div>
+
+          <div class="team-card-foot">
+            <span><strong>${s.played}</strong> played · <strong>${s.gf}</strong> scored</span>
+            <span class="team-card-cta">
+              View squad
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </span>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderTeams() {
+      let list = MOCK_TEAMS;
+
+      if (currentFilter !== 'all') {
+        list = list.filter(t => t.group === currentFilter);
+      }
+      if (currentQuery.trim()) {
+        const q = currentQuery.toLowerCase();
+        list = list.filter(t =>
+          t.name.toLowerCase().includes(q) ||
+          t.coach.toLowerCase().includes(q)
+        );
+      }
+
+      if (!list.length) {
+        teamsGrid.innerHTML = `<div class="teams-empty">No teams match your search.</div>`;
+        return;
+      }
+
+      teamsGrid.innerHTML = list.map(teamCardHTML).join('');
+
+      teamsGrid.querySelectorAll('.team-card').forEach(card => {
+        card.addEventListener('click', () => openTeamModal(Number(card.dataset.teamId)));
+        card.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openTeamModal(Number(card.dataset.teamId));
+          }
+        });
+      });
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        renderTeams();
+      });
+    });
+
+    searchInput.addEventListener('input', e => {
+      currentQuery = e.target.value;
+      renderTeams();
+    });
+
+    renderTeams();
+
+
+    /* =========================================================
+       TEAM MODAL
+       ========================================================= */
+    const modal        = document.getElementById('teamModal');
+    const modalCrest   = document.getElementById('modalCrest');
+    const modalName    = document.getElementById('modalName');
+    const modalMeta    = document.getElementById('modalMeta');
+    const modalStats   = document.getElementById('modalStats');
+    const modalPlayers = document.getElementById('modalPlayers');
+    const modalClose   = document.getElementById('modalClose');
+
+    function openTeamModal(id) {
+      const t = MOCK_TEAMS.find(x => x.id === id);
+      if (!t) return;
+
+      /* crest */
+      modalCrest.innerHTML = `
+        <span class="fallback">${initialsOf(t.name)}</span>
+        <img src="${t.logo}" alt="" onerror="this.remove()">
+      `;
+
+      /* head */
+      modalName.textContent = t.name;
+      const groupLabel = t.group === 'group-a' ? 'Group A' : 'Group B';
+      modalMeta.textContent = `Coach: ${t.coach} · ${groupLabel}`;
+
+      /* stat strip */
+      const s = t.stats;
+      const gd = s.gf - s.ga;
+      const gdStr = gd > 0 ? `+${gd}` : String(gd);
+      modalStats.innerHTML = `
+        <div class="stat"><div class="stat-value">${s.played}</div><div class="stat-label">Played</div></div>
+        <div class="stat win"><div class="stat-value">${s.wins}</div><div class="stat-label">Won</div></div>
+        <div class="stat draw"><div class="stat-value">${s.draws}</div><div class="stat-label">Draw</div></div>
+        <div class="stat loss"><div class="stat-value">${s.losses}</div><div class="stat-label">Lost</div></div>
+        <div class="stat"><div class="stat-value">${gdStr}</div><div class="stat-label">GD</div></div>
+      `;
+
+      /* players */
+      if (!t.players.length) {
+        modalPlayers.innerHTML = `<div style="color:var(--text-dim);font-size:13px;padding:12px 0;">Squad not yet available.</div>`;
+      } else {
+        modalPlayers.innerHTML = t.players.map(p => `
+          <div class="player-row">
+            <div class="player-num">${p.num}</div>
+            <div class="player-info">
+              <div class="player-name">${p.name}</div>
+              <div class="player-pos">${p.position}</div>
+            </div>
+            <div class="player-mini-stats">
+              <span>Apps<strong>${p.apps}</strong></span>
+              <span>Goals<strong>${p.goals}</strong></span>
+              <span>Assists<strong>${p.assists}</strong></span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeTeamModal() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    modalClose.addEventListener('click', closeTeamModal);
+    modal.addEventListener('click', e => {
+      if (e.target === modal) closeTeamModal();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeTeamModal();
+    });
+  </script>
+
+</body>
+</html>

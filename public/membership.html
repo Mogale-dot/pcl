@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="PCL Member Hub — your QR, tickets, voting, discounts and rewards." />
+  <meta name="theme-color" content="#050a15" />
+  <title>Membership — PCL</title>
+  <link rel="stylesheet" href="/css/main.css" />
+
+  <style>
+    /* =========================================================
+       MEMBER HUB — page styles
+       ========================================================= */
+
+    /* ---------- Page hero ---------- */
+    .page-hero {
+      position: relative;
+      padding: clamp(40px, 6vw, 72px) 0 clamp(28px, 4vw, 48px);
+      background:
+    linear-gradient(
+      to right,
+      rgba(5, 10, 21, 0.92) 0%,
+      rgba(5, 10, 21, 0.78) 50%,
+      rgba(5, 10, 21, 0.92) 100%
+    ),
+    url('/assets/images/banner.jpeg') center / cover no-repeat;
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+      overflow: hidden;
+    }
+    .page-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(5,10,21,0.6) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .page-hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: var(--container);
+      margin-inline: auto;
+      padding-inline: var(--sp-5);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .hero-greet {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .hero-greet-avatar {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #00a95c);
+      color: #04120b;
+      display: grid; place-items: center;
+      font-size: 20px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+    .hero-greet-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .hero-greet-hello {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .hero-greet-name {
+      font-size: clamp(22px, 3.4vw, 32px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      line-height: 1.1;
+    }
+    .hero-greet-id {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(0, 224, 123, 0.10);
+      border: 1px solid rgba(0, 224, 123, 0.35);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    /* ---------- Section primitives ---------- */
+    .section { padding-block: clamp(32px, 5vw, 56px); }
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .section-eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .section-title {
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      line-height: 1.1;
+    }
+
+    /* ---------- Stat strip ---------- */
+    .stat-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 720px) { .stat-strip { grid-template-columns: repeat(2, 1fr); } }
+    .stat-tile {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 18px;
+      transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+    }
+    .stat-tile:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-2);
+    }
+    .stat-tile-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .stat-tile-value {
+      font-size: clamp(22px, 3vw, 28px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-top: 6px;
+      line-height: 1;
+    }
+    .stat-tile-value.accent { color: var(--accent); }
+
+    /* ---------- Dashboard grid ---------- */
+    .dash-grid {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    @media (max-width: 900px) { .dash-grid { grid-template-columns: 1fr; } }
+
+    /* ---------- Member card (left) ---------- */
+    .member-card {
+      position: relative;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(0, 224, 123, 0.14), transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(255, 214, 10, 0.10), transparent 60%),
+        linear-gradient(135deg, #0a1120 0%, #050a15 100%);
+      border: 1px solid var(--border-strong);
+      border-radius: 20px;
+      padding: 22px;
+      overflow: hidden;
+      position: sticky;
+      top: 88px;
+    }
+    @media (max-width: 900px) { .member-card { position: static; } }
+    .member-card::after {
+      content: '';
+      position: absolute;
+      inset: -20% -20% auto auto;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 224, 123, 0.20), transparent 70%);
+      pointer-events: none;
+    }
+    .member-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .member-card-brand {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .member-card-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(0, 224, 123, 0.12);
+      border: 1px solid rgba(0, 15, 224, 0.35);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .member-card-status::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    /* ---------- Mini QR in card ---------- */
+    .member-qr-mini {
+      background: #fff;
+      border-radius: 14px;
+      padding: 14px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 14px;
+      min-height: 208px;
+    }
+    .member-qr-mini-canvas {
+      width: 180px;
+      height: 180px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: #fff;
+    }
+    .member-qr-mini-canvas img,
+    .member-qr-mini-canvas canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+
+    /* ---------- Main QR CTA button ---------- */
+    .qr-cta {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 18px;
+      border-radius: 14px;
+      background: var(--accent);
+      color: #04120b;
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: background var(--dur) var(--ease), transform var(--dur) var(--ease);
+      border: none;
+      margin-bottom: 8px;
+    }
+    .qr-cta:hover { background: #14f58c; }
+    .qr-cta:active { transform: scale(0.98); }
+    .qr-cta svg { flex-shrink: 0; }
+
+    .qr-hint {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    /* meta row */
+    .member-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .member-meta-item {
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .member-meta-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .member-meta-value {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text);
+      margin-top: 3px;
+    }
+    .member-meta-value.accent { color: var(--accent); }
+
+    /* ---------- Right column panes ---------- */
+    .dash-main { display: flex; flex-direction: column; gap: 20px; }
+
+    .pane {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .pane-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .pane-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .pane-link {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .pane-link:hover { text-decoration: underline; }
+    .pane-tag {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+    }
+
+    /* ---------- Free entry banner ---------- */
+    .ticket-free {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px;
+      background: rgba(0, 224, 123, 0.06);
+      border: 1px solid rgba(0, 224, 123, 0.3);
+      border-radius: 12px;
+    }
+    .ticket-free-badge {
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #04120b;
+      flex-shrink: 0;
+    }
+    .ticket-free-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.3;
+    }
+    .ticket-free-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+
+    /* ---------- Empty state ---------- */
+    .empty-state {
+      padding: 32px 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-2);
+      border: 1px dashed var(--border-strong);
+      border-radius: 12px;
+    }
+    .empty-state-icon {
+      width: 48px; height: 48px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      background: rgba(0, 224, 123, 0.08);
+      border: 1px solid rgba(0, 224, 123, 0.25);
+      color: var(--accent);
+    }
+    .empty-state-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .empty-state-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      max-width: 320px;
+      line-height: 1.55;
+    }
+
+    /* ---------- Benefits / discounts ---------- */
+    .benefits-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 620px) { .benefits-list { grid-template-columns: 1fr; } }
+    .benefit-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: border-color var(--dur) var(--ease);
+    }
+    .benefit-row:hover { border-color: var(--border-strong); }
+    .benefit-icon {
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      border-radius: 10px;
+      background: rgba(0, 224, 123, 0.08);
+      border: 1px solid rgba(0, 224, 123, 0.25);
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .benefit-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .benefit-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+    .benefit-badge {
+      margin-left: auto;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(0, 224, 123, 0.08);
+      border: 1px solid rgba(0, 224, 123, 0.3);
+      white-space: nowrap;
+    }
+
+    /* =========================================================
+       QR MODAL (full screen)
+       ========================================================= */
+    .qr-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 400;
+      background: rgba(5, 10, 21, 0.94);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      transition: opacity 0.25s var(--ease);
+    }
+    .qr-modal.open { display: flex; opacity: 1; }
+
+    .qr-modal-inner {
+      width: 100%;
+      max-width: 420px;
+      background: var(--bg-2);
+      border: 1px solid var(--border-strong);
+      border-radius: 24px;
+      padding: 28px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      transform: translateY(10px) scale(0.98);
+      transition: transform 0.3s var(--ease);
+      text-align: center;
+      position: relative;
+    }
+    .qr-modal.open .qr-modal-inner {
+      transform: translateY(0) scale(1);
+    }
+
+    .qr-modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 40px; height: 40px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      cursor: pointer;
+      border: none;
+      transition: background var(--dur) var(--ease);
+    }
+    .qr-modal-close:hover { background: rgba(255, 255, 255, 0.16); }
+
+    .qr-modal-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .qr-modal-name {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      line-height: 1.1;
+    }
+    .qr-modal-id {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: -8px;
+    }
+    .qr-modal-code {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      display: grid;
+      place-items: center;
+      width: 100%;
+      max-width: 320px;
+      min-height: 320px;
+    }
+    .qr-modal-canvas {
+      width: 280px;
+      height: 280px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: #fff;
+    }
+    .qr-modal-canvas img,
+    .qr-modal-canvas canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+    .qr-modal-hint {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.55;
+      max-width: 320px;
+    }
+    .qr-modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      max-width: 320px;
+      margin-top: 4px;
+    }
+    .qr-modal-btn {
+      width: 100%;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background var(--dur) var(--ease);
+    }
+    .qr-modal-btn.primary {
+      background: var(--accent);
+      color: #04120b;
+    }
+    .qr-modal-btn.primary:hover { background: #14f58c; }
+    .qr-modal-btn.ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border-strong);
+    }
+    .qr-modal-btn.ghost:hover { background: rgba(255, 255, 255, 0.06); }
+
+    .qr-modal-brandline {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    @media (max-width: 520px) {
+      .qr-modal-inner { padding: 24px 18px 20px; border-radius: 20px; }
+      .qr-modal-name { font-size: 20px; }
+      .qr-modal-code { min-height: 280px; }
+      .qr-modal-canvas { width: 240px; height: 240px; }
+    }
+
+    /* loading overlay */
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 500;
+      display: grid;
+      place-items: center;
+      transition: opacity 0.3s var(--ease);
+    }
+    .loading-screen.hide { opacity: 0; pointer-events: none; }
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(0, 224, 123, 0.2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading screen -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-spinner"></div>
+  </div>
+
+
+  <!-- ============================================================
+       NAV
+       ============================================================ -->
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="/index.html" class="nav-logo" aria-label="PCL Home">
+        <img src="/assets/images/logo.jpeg" alt="PCL — Polokwane Champions League" />
+      </a>
+
+      <div class="nav-actions">
+        <a href="/auth/login.html" class="nav-login" hidden>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+               stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+            <path d="M10 17l5-5-5-5" />
+            <path d="M15 12H3" />
+          </svg>
+          <span>Login</span>
+        </a>
+
+        <button type="button" class="nav-user" aria-label="Account">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+               stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 21a8 8 0 0 1 16 0" />
+          </svg>
+        </button>
+
+        <button type="button" class="nav-menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="nav-divider"></div>
+  </header>
+
+
+  <!-- ============================================================
+       NAV DRAWER
+       ============================================================ -->
+  <div class="nav-overlay" id="navOverlay"></div>
+
+  <aside class="nav-drawer" id="navDrawer" aria-hidden="true">
+    <div class="nav-drawer-head">
+      <span class="nav-drawer-title">Menu</span>
+      <button type="button" class="nav-drawer-close" id="menuClose" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+
+    <nav class="nav-drawer-links" id="drawerLinks" aria-label="Main navigation"></nav>
+
+    <div class="nav-drawer-foot">
+      <a href="/auth/signup.html" class="btn btn-primary btn-block">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+        Become a Fan Member
+      </a>
+      <a href="/auth/register-team.html" class="btn btn-ghost btn-block">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" />
+        </svg>
+        Register a Team
+      </a>
+    </div>
+  </aside>
+
+
+  <main>
+
+    <!-- ============================================================
+         PAGE HERO
+         ============================================================ -->
+    <section class="page-hero">
+      <div class="page-hero-inner">
+        <div class="hero-greet">
+          <div class="hero-greet-avatar" id="heroAvatar">–</div>
+          <div class="hero-greet-text">
+            <span class="hero-greet-hello">Welcome back</span>
+            <span class="hero-greet-name" id="heroName">Loading…</span>
+            <span class="hero-greet-id" id="heroId">Member</span>
+          </div>
+        </div>
+        <span class="hero-badge">Active Member</span>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         MEMBER HUB
+         ============================================================ -->
+    <section class="section">
+      <div class="container">
+
+        <!-- stat strip -->
+        <div class="stat-strip">
+          <div class="stat-tile">
+            <div class="stat-tile-label">Matches attended</div>
+            <div class="stat-tile-value accent" id="statAttended">0</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-tile-label">Reward points</div>
+            <div class="stat-tile-value" id="statPoints">0</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-tile-label">Active tickets</div>
+            <div class="stat-tile-value" id="statTickets">0</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-tile-label">Tier</div>
+            <div class="stat-tile-value" id="statTier">Bronze</div>
+          </div>
+        </div>
+
+        <!-- dashboard grid -->
+        <div class="dash-grid">
+
+          <!-- LEFT: member card -->
+          <aside class="member-card">
+            <div class="member-card-top">
+              <span class="member-card-brand">PCL MEMBER</span>
+              <span class="member-card-status">Active</span>
+            </div>
+
+            <div class="member-qr-mini">
+              <div class="member-qr-mini-canvas" id="miniQr" aria-label="Membership QR"></div>
+            </div>
+
+            <button type="button" class="qr-cta" id="showQrBtn">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                   stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="1" />
+                <rect x="14" y="3" width="7" height="7" rx="1" />
+                <rect x="3" y="14" width="7" height="7" rx="1" />
+                <path d="M14 14h3v3h-3z" />
+                <path d="M20 14v.01M14 20v.01M20 20v.01M17 17v.01" />
+              </svg>
+              Show Member QR Code
+            </button>
+            <p class="qr-hint">
+              Show this at the gate and at the N1 Padel kitchen to unlock member pricing.
+            </p>
+
+            <div class="member-meta">
+              <div class="member-meta-item">
+                <div class="member-meta-label">Member since</div>
+                <div class="member-meta-value" id="metaSince">—</div>
+              </div>
+              <div class="member-meta-item">
+                <div class="member-meta-label">Matches attended</div>
+                <div class="member-meta-value accent" id="metaAttended">0</div>
+              </div>
+              <div class="member-meta-item">
+                <div class="member-meta-label">Reward points</div>
+                <div class="member-meta-value accent" id="metaPoints">0</div>
+              </div>
+              <div class="member-meta-item">
+                <div class="member-meta-label">Tier</div>
+                <div class="member-meta-value" id="metaTier">Bronze</div>
+              </div>
+            </div>
+          </aside>
+
+          <!-- RIGHT: panes -->
+          <div class="dash-main">
+
+            <!-- TICKETS -->
+            <div class="pane">
+              <div class="pane-head">
+                <div class="pane-title">Match tickets</div>
+                <button class="pane-link" type="button" id="viewAllTickets">
+                  All fixtures
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </button>
+              </div>
+
+              <div class="ticket-free">
+                <span class="ticket-free-badge">Free</span>
+                <div>
+                  <div class="ticket-free-title">Free entry for this tournament</div>
+                  <div class="ticket-free-meta">
+                    All PCL members get free entry to every match this season. Just show your QR at the gate.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- VOTING -->
+            <div class="pane">
+              <div class="pane-head">
+                <div class="pane-title">Voting</div>
+                <span class="pane-tag">Members only</span>
+              </div>
+
+              <div class="empty-state">
+                <div class="empty-state-icon">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                       stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2l2.9 6.9L22 10l-5.5 4.6L18.2 22 12 18.3 5.8 22l1.7-7.4L2 10l7.1-1.1z" />
+                  </svg>
+                </div>
+                <div class="empty-state-title">Voting will open soon</div>
+                <div class="empty-state-text">
+                  Man of the Match, Favourite Goal and other categories will go live during the tournament. You'll be able to vote here as a PCL member.
+                </div>
+              </div>
+            </div>
+
+            <!-- BENEFITS / DISCOUNTS -->
+            <div class="pane">
+              <div class="pane-head">
+                <div class="pane-title">Discounts</div>
+                <span class="pane-tag">Show QR to redeem</span>
+              </div>
+
+              <div class="benefits-list" id="benefitsList"></div>
+            </div>
+
+            <!-- ATTENDANCE -->
+            <div class="pane">
+              <div class="pane-head">
+                <div class="pane-title">Attendance history</div>
+                <span class="pane-tag">Last matches</span>
+              </div>
+
+              <div class="empty-state">
+                <div class="empty-state-icon">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                       stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 7v5l3 2" />
+                  </svg>
+                </div>
+                <div class="empty-state-title">No matches attended yet</div>
+                <div class="empty-state-text">
+                  Your attendance will appear here after the first match day. Show your QR at the gate to check in.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ============================================================
+       QR MODAL (full screen)
+       ============================================================ -->
+  <div class="qr-modal" id="qrModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="qr-modal-inner">
+      <button type="button" class="qr-modal-close" id="qrModalClose" aria-label="Close">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+
+      <span class="qr-modal-label">PCL Member</span>
+      <div class="qr-modal-name" id="qrModalName">—</div>
+      <div class="qr-modal-id" id="qrModalId">—</div>
+
+      <div class="qr-modal-code">
+        <div class="qr-modal-canvas" id="qrModalCanvas" aria-label="Membership QR code"></div>
+      </div>
+
+      <p class="qr-modal-hint">
+        Show this QR code at the gate and at the N1 Padel kitchen.
+        Staff will scan it to check you in and unlock your member discounts.
+      </p>
+
+      <div class="qr-modal-actions">
+        <button type="button" class="qr-modal-btn ghost" id="qrModalDone">Done</button>
+      </div>
+
+      <span class="qr-modal-brandline">Polokwane Champions League</span>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="/assets/images/logo.jpeg" alt="PCL" class="footer-logo" />
+        <p>Polokwane Champions League — indoor football, brought to you at N1 Padel, Limpopo.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <a href="/public/tournament.html">Tournament</a>
+        <a href="/public/fixtures.html">Fixtures</a>
+        <a href="/public/shops.html">Teams</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Engage</h4>
+        <a href="/public/membership.html">Membership</a>
+        <a href="/public/tickets.html">Tickets</a>
+        <a href="/public/about.html">About</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Account</h4>
+        <a href="/auth/login.html">Login</a>
+        <a href="/auth/signup.html">Sign Up</a>
+        <a href="/auth/register-team.html">Register Team</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 Polokwane Champions League. All rights reserved.</span>
+      <span>Built for the PCL Digital Platform · MVP 1</span>
+    </div>
+  </footer>
+
+
+  <!-- ============================================================
+       QRCODE.JS LIBRARY (same as your other app)
+       ============================================================ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
+  <!-- ============================================================
+       SCRIPTS
+       ============================================================ -->
+  <script type="module">
+    import { NAV_LINKS, CONFIG } from '/js/config.js';
+
+    const API = CONFIG.API_BASE_URL;
+
+    /* =========================================================
+       DISCOUNTS — static (same perks for all members)
+       ========================================================= */
+    const BENEFITS = [
+      { title: '15% off all food', desc: 'Hot dogs, shawarmas, ice cream at N1 Padel kitchen.', icon: 'food', badge: '15% OFF' },
+      { title: '10% off drinks', desc: 'Coffee, soft drinks and cold drinks at the bar.', icon: 'drink', badge: '10% OFF' },
+      { title: 'Free entry · group matches', desc: 'Standard group-stage matches free for members.', icon: 'ticket', badge: 'FREE' },
+    ];
+
+
+    /* =========================================================
+       ICONS
+       ========================================================= */
+    const ICONS = {
+      home:     '<path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H10v6H4a1 1 0 0 1-1-1z"/>',
+      trophy:   '<path d="M8 4h8v4a4 4 0 0 1-8 0z"/><path d="M16 5h3v2a3 3 0 0 1-3 3"/><path d="M8 5H5v2a3 3 0 0 0 3 3"/><path d="M12 12v4"/><path d="M9 20h6"/><path d="M10 20v-4h4v4"/>',
+      calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+      shield:   '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+      star:     '<path d="M12 2l2.9 6.9L22 10l-5.5 4.6L18.2 22 12 18.3 5.8 22l1.7-7.4L2 10l7.1-1.1z"/>',
+      ticket:   '<path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M13 6v12"/>',
+      info:     '<circle cx="12" cy="12" r="9"/><path d="M12 8h.01"/><path d="M11 12h1v5h1"/>',
+    };
+    const iconSVG = (name, size = 20) => `
+      <svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none"
+           stroke="currentColor" stroke-width="1.8"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        ${ICONS[name] || ''}
+      </svg>
+    `;
+
+
+    /* =========================================================
+       DRAWER
+       ========================================================= */
+    const drawerLinks = document.getElementById('drawerLinks');
+    NAV_LINKS.forEach(link => {
+      const a = document.createElement('a');
+      a.href = link.href;
+      a.className = 'nav-drawer-link';
+      a.innerHTML = `
+        <span class="nav-drawer-icon">${iconSVG(link.icon)}</span>
+        <span class="nav-drawer-label">${link.label}</span>
+        <svg class="nav-drawer-arrow" viewBox="0 0 24 24" width="18" height="18"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 6l6 6-6 6" />
+        </svg>
+      `;
+      drawerLinks.appendChild(a);
+    });
+
+    const menuBtn   = document.getElementById('menuBtn');
+    const menuClose = document.getElementById('menuClose');
+    const drawer    = document.getElementById('navDrawer');
+    const overlay   = document.getElementById('navOverlay');
+
+    function openDrawer() {
+      drawer.classList.add('open');
+      overlay.classList.add('open');
+      menuBtn.setAttribute('aria-expanded', 'true');
+      drawer.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDrawer() {
+      drawer.classList.remove('open');
+      overlay.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      drawer.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    menuBtn.addEventListener('click', openDrawer);
+    menuClose.addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+
+    /* =========================================================
+       AUTH HELPERS
+       ========================================================= */
+    function getToken() {
+      const t = localStorage.getItem('pcl_token');
+      return (t && t !== 'null' && t !== 'undefined') ? t : null;
+    }
+    function clearAuth() {
+      localStorage.removeItem('pcl_token');
+      localStorage.removeItem('pcl_refresh');
+      localStorage.removeItem('pcl_user');
+      localStorage.removeItem('pcl_role');
+    }
+
+    const loadingScreen = document.getElementById('loadingScreen');
+    function hideLoading() {
+      loadingScreen.classList.add('hide');
+    }
+
+    /* ---------- 1. Redirect to login if not authenticated ---------- */
+    const token = getToken();
+    if (!token) {
+      window.location.replace('/auth/login.html');
+      throw new Error('Not authenticated');
+    }
+
+
+    /* =========================================================
+       LOAD USER FROM BACKEND
+       ========================================================= */
+    async function loadUser() {
+      try {
+        const res = await fetch(`${API}/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (res.status === 401 || res.status === 403) {
+          clearAuth();
+          window.location.replace('/auth/login.html');
+          return null;
+        }
+
+        const json = await res.json();
+        if (!res.ok || !json.success) {
+          throw new Error(json.message || 'Failed to load user');
+        }
+        return json.data;
+      } catch (err) {
+        console.error('Failed to load user:', err);
+        return null;
+      }
+    }
+
+
+    /* =========================================================
+       RENDER HELPERS
+       ========================================================= */
+    function initialsOf(name) {
+      return (name || 'PCL')
+        .split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+    }
+
+    function formatMemberSince(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      return d.toLocaleDateString('en-ZA', { month: 'short', year: 'numeric' });
+    }
+
+    function capitalize(str) {
+      if (!str) return '';
+      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    }
+
+
+    /* =========================================================
+       QR CODE GENERATION — using qrcodejs (same as your app)
+       ========================================================= */
+    let miniQrInstance   = null;
+    let modalQrInstance  = null;
+
+    function generateQrCode(containerId, text, size) {
+      const el = document.getElementById(containerId);
+      if (!el) return null;
+
+      /* clear previous */
+      el.innerHTML = '';
+
+      if (!window.QRCode) {
+        console.warn('QRCode library not loaded');
+        return null;
+      }
+
+      return new window.QRCode(el, {
+        text: text,
+        width: size,
+        height: size,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: window.QRCode.CorrectLevel.H,
+      });
+    }
+
+    function renderQrForUser(user) {
+      const member = user?.member || {};
+      const qrData = member.qr_token || member.member_code;
+      if (!qrData) {
+        console.warn('No qr_token on member — QR cannot be generated');
+        return;
+      }
+
+      miniQrInstance  = generateQrCode('miniQr', qrData, 180);
+      modalQrInstance = generateQrCode('qrModalCanvas', qrData, 280);
+    }
+
+
+    /* =========================================================
+       RENDER USER
+       ========================================================= */
+    function renderUser(user) {
+      if (!user) return;
+
+      const initials = initialsOf(user.full_name);
+      const member = user.member || {};
+
+      /* hero */
+      document.getElementById('heroAvatar').textContent = initials;
+      document.getElementById('heroName').textContent   = user.full_name || 'Member';
+      document.getElementById('heroId').textContent     = `Member · ${member.member_code || '—'}`;
+
+      /* stat strip */
+      document.getElementById('statAttended').textContent = member.matches_attended ?? 0;
+      document.getElementById('statPoints').textContent   = member.reward_points ?? 0;
+      document.getElementById('statTickets').textContent  = 0;
+      document.getElementById('statTier').textContent     = capitalize(member.tier || 'Bronze');
+
+      /* member meta */
+      document.getElementById('metaSince').textContent     = formatMemberSince(member.joined_at);
+      document.getElementById('metaAttended').textContent  = member.matches_attended ?? 0;
+      document.getElementById('metaPoints').textContent    = member.reward_points ?? 0;
+      document.getElementById('metaTier').textContent      = capitalize(member.tier || 'Bronze');
+
+      /* QR modal header */
+      document.getElementById('qrModalName').textContent = user.full_name || 'Member';
+      document.getElementById('qrModalId').textContent   = member.member_code || '—';
+
+      /* generate the QR codes */
+      renderQrForUser(user);
+    }
+
+
+    /* =========================================================
+       RENDER: BENEFITS / DISCOUNTS
+       ========================================================= */
+    function renderBenefits() {
+      const iconFor = {
+        food:  '<path d="M12 2v6"/><path d="M8 8h8l-1 12a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/>',
+        drink: '<path d="M6 3h12l-2 8a4 4 0 0 1-8 0z"/><path d="M12 11v10"/>',
+        ticket:'<path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M13 6v12"/>',
+      };
+      const wrap = document.getElementById('benefitsList');
+      wrap.innerHTML = BENEFITS.map(b => `
+        <div class="benefit-row">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              ${iconFor[b.icon] || iconFor.ticket}
+            </svg>
+          </div>
+          <div style="min-width:0;">
+            <div class="benefit-title">${b.title}</div>
+            <div class="benefit-desc">${b.desc}</div>
+          </div>
+          <span class="benefit-badge">${b.badge}</span>
+        </div>
+      `).join('');
+    }
+
+
+    /* =========================================================
+       TICKETS → go to fixtures page
+       ========================================================= */
+    document.getElementById('viewAllTickets').addEventListener('click', () => {
+      window.location.href = '/public/fixtures.html';
+    });
+
+
+    /* =========================================================
+       QR MODAL
+       ========================================================= */
+    const qrModal      = document.getElementById('qrModal');
+    const qrModalClose = document.getElementById('qrModalClose');
+    const qrModalDone  = document.getElementById('qrModalDone');
+    const showQrBtn    = document.getElementById('showQrBtn');
+
+    function openQrModal() {
+      qrModal.classList.add('open');
+      qrModal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+
+      /* in case the modal QR was empty at page load, regenerate now */
+      const modalEl = document.getElementById('qrModalCanvas');
+      if (modalEl && !modalEl.querySelector('img, canvas')) {
+        const user = JSON.parse(localStorage.getItem('pcl_user') || 'null');
+        const member = user?.member || {};
+        const qrData = member.qr_token || member.member_code;
+        if (qrData) {
+          modalQrInstance = generateQrCode('qrModalCanvas', qrData, 280);
+        }
+      }
+    }
+    function closeQrModal() {
+      qrModal.classList.remove('open');
+      qrModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    showQrBtn.addEventListener('click', openQrModal);
+    qrModalClose.addEventListener('click', closeQrModal);
+    qrModalDone.addEventListener('click', closeQrModal);
+    qrModal.addEventListener('click', e => { if (e.target === qrModal) closeQrModal(); });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && qrModal.classList.contains('open')) closeQrModal();
+    });
+
+
+    /* =========================================================
+       INIT
+       ========================================================= */
+    (async function init() {
+      renderBenefits();
+
+      const user = await loadUser();
+
+      if (!user) {
+        clearAuth();
+        window.location.replace('/auth/login.html');
+        return;
+      }
+
+      /* cache for next visit */
+      localStorage.setItem('pcl_user', JSON.stringify(user));
+
+      renderUser(user);
+      hideLoading();
+    })();
+  </script>
+
+</body>
+</html>

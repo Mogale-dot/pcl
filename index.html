@@ -1,0 +1,2193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="PCL — Polokwane Champions League. Indoor football tournament at N1 Padel, Limpopo, South Africa." />
+  <meta name="theme-color" content="#050a15" />
+  <title>PCL — Polokwane Champions League</title>
+  <link rel="stylesheet" href="/css/main.css" />
+
+  <style>
+    /* =========================================================
+       NEW SECTION STYLES
+       (Fixtures · Stories · News · Sponsors · Food)
+       ========================================================= */
+
+    /* ---------- Section primitives ---------- */
+    .section { padding-block: clamp(48px, 7vw, 96px); } 
+    .section-fixtures {
+      position: relative;
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(5, 10, 21, 0.94) 0%,
+          rgba(5, 10, 21, 0.86) 50%,
+          rgba(5, 10, 21, 0.94) 100%
+        ),
+        url('/assets/images/banner.jpeg') center / cover no-repeat;
+      background-attachment: fixed; 
+    }
+
+    .section-fixtures::before,
+    .section-fixtures::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(
+        to right,
+        transparent 0%,
+        var(--border-strong) 50%,
+        transparent 100%
+      );
+    }
+    .section-fixtures::before { top: 0; }
+    .section-fixtures::after  { bottom: 0; }
+
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .section-eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: clamp(24px, 4vw, 40px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .section-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      transition: background var(--dur) var(--ease),
+                  color var(--dur) var(--ease),
+                  border-color var(--dur) var(--ease);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .section-link:hover {
+      background: var(--accent);
+      color: #04120b;
+      border-color: var(--accent);
+    }
+    .section-link svg { transition: transform var(--dur) var(--ease); }
+    .section-link:hover svg { transform: translateX(2px); }
+
+    /* =========================================================
+       NEXT FIXTURES
+       ========================================================= */
+    .fixtures-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 1024px) { .fixtures-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px)  { .fixtures-grid { grid-template-columns: 1fr; gap: 12px; } }
+
+    .fixture-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: border-color var(--dur) var(--ease),
+                  background var(--dur) var(--ease),
+                  transform var(--dur) var(--ease);
+    }
+    .fixture-card:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-2);
+      transform: translateY(-2px);
+    }
+
+    .fixture-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+    .fixture-meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .fixture-court { color: var(--accent); }
+
+    /* Group badge */
+    .fixture-group-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255, 214, 10, 0.1);
+      border: 1px solid rgba(255, 214, 10, 0.35);
+      color: var(--accent-2);
+    }
+    .fixture-group-badge.group-b {
+      background: rgba(0, 120, 255, 0.1);
+      border-color: rgba(0, 120, 255, 0.35);
+      color: #7cb2ff;
+    }
+
+    .fixture-body {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 8px;
+    }
+    .fixture-team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+      min-width: 0;
+    }
+    .fixture-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    .fixture-vs {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      color: var(--text-dim);
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+
+    .team-crest {
+      position: relative;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      border: 1px solid var(--border-strong);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .team-crest-fallback {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+      z-index: 0;
+    }
+    .team-crest img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ---------- Fixtures actions ---------- */
+    .fixtures-actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 28px;
+    }
+    .btn-view-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 24px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #04120b;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      border: none;
+      cursor: pointer;
+      transition: background var(--dur) var(--ease), transform var(--dur) var(--ease);
+    }
+    .btn-view-more:hover { background: #14f58c; }
+    .btn-view-more:active { transform: scale(0.98); }
+
+    /* =========================================================
+       STORIES — Instagram style rail
+       ========================================================= */
+    .stories-rail {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+      padding-block: 12px 20px;
+      padding-inline: max(24px, calc((100vw - 1240px) / 2 + 24px));
+      cursor: grab;
+      user-select: none;
+    }
+    .stories-rail::-webkit-scrollbar { display: none; }
+    .stories-rail:active { cursor: grabbing; }
+
+    .story {
+      flex-shrink: 0;
+      width: 96px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      scroll-snap-align: start;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+    .story-ring {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      padding: 3px;
+      background: conic-gradient(
+       from 180deg,
+        #0a44e4 0deg,
+        #120380 120deg,
+        #030e5f 240deg,
+        #022066 360deg
+      );
+      display: grid;
+      place-items: center;
+      transition: transform var(--dur) var(--ease);
+    }
+    .story:hover .story-ring { transform: scale(1.05); }
+    .story:active .story-ring { transform: scale(0.96); }
+
+    .story-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      background: var(--bg);
+      border: 3px solid var(--bg);
+      display: grid;
+      place-items: center;
+    }
+    .story-inner img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .story-fallback {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      z-index: 0;
+    }
+    .story-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      max-width: 92px;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* =========================================================
+       STORY VIEWER
+       ========================================================= */
+    .story-viewer {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: #000;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.25s var(--ease);
+    }
+    .story-viewer.open { display: block; opacity: 1; }
+
+    .story-viewer-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      max-width: 480px;
+      margin-inline: auto;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .story-bars {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      gap: 4px;
+      z-index: 4;
+    }
+    .story-bar {
+      flex: 1;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.28);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .story-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: #fff;
+      border-radius: 2px;
+    }
+    .story-bar.done .story-bar-fill { width: 100%; }
+    .story-bar.active .story-bar-fill {
+      animation: storyFill var(--story-duration, 5000ms) linear forwards;
+    }
+    @keyframes storyFill {
+      from { width: 0%; }
+      to   { width: 100%; }
+    }
+
+    .story-viewer-head {
+      position: absolute;
+      top: 26px;
+      left: 14px;
+      right: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 4;
+      color: #fff;
+    }
+    .story-viewer-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      font-size: 12px;
+      font-weight: 800;
+      color: #fff;
+      position: relative;
+    }
+    .story-viewer-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: relative;
+      z-index: 1;
+    }
+    .story-viewer-title {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    }
+    .story-viewer-close {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.35);
+      color: #fff;
+      transition: background var(--dur) var(--ease);
+    }
+    .story-viewer-close:hover { background: rgba(0, 0, 0, 0.6); }
+
+    .story-viewer-media {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background: #000;
+    }
+    .story-viewer-slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      transition: opacity 0.3s var(--ease);
+      pointer-events: none;
+    }
+    .story-viewer-slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .story-viewer-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .story-viewer-video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+    }
+
+    .story-tap {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      z-index: 3;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+    }
+    .story-tap.prev { left: 0; }
+    .story-tap.next { right: 0; }
+
+    @media (max-width: 520px) {
+      .story-viewer-inner { max-width: 100%; }
+    }
+
+    /* =========================================================
+       NEWS
+       ========================================================= */
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 900px) { .news-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px) { .news-grid { grid-template-columns: 1fr; } }
+
+    .news-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color var(--dur) var(--ease),
+                  transform var(--dur) var(--ease);
+    }
+    .news-card:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-3px);
+    }
+    .news-image {
+      position: relative;
+      aspect-ratio: 16 / 10;
+      background: var(--surface-2);
+      overflow: hidden; 
+      height: 300px;
+    }
+    .news-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s var(--ease);
+    }
+    .news-card:hover .news-image img { transform: scale(1.05); }
+
+    .news-body {
+      padding: 20px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .news-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .news-category { color: var(--accent); }
+    .news-dot { color: var(--text-dim); }
+    .news-date { color: var(--text-dim); }
+
+    .news-title {
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+    .news-card:hover .news-title { color: var(--accent); }
+
+    /* =========================================================
+       SPONSORS
+       ========================================================= */
+    .section-sponsors { padding-block: clamp(40px, 5vw, 64px); }
+
+    .sponsors-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      max-width: 700px;
+      margin-inline: auto;
+    }
+
+    .sponsor-logo {
+      aspect-ratio: 16 / 9;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: border-color var(--dur) var(--ease),
+                  background var(--dur) var(--ease),
+                  transform var(--dur) var(--ease);
+    }
+    .sponsor-logo:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-2);
+      transform: translateY(-2px);
+    }
+    .sponsor-logo img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: grayscale(1) opacity(0.7);
+      transition: filter var(--dur) var(--ease);
+    }
+    .sponsor-logo:hover img {
+      filter: grayscale(0) opacity(1);
+    }
+    .sponsor-fallback {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* =========================================================
+       FOOD
+       ========================================================= */
+    .section-food {
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(255, 100, 60, 0.08), transparent 60%),
+        radial-gradient(ellipse at 80% 70%, rgba(0, 224, 123, 0.06), transparent 60%),
+        var(--bg-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .food-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) { .food-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .food-grid { grid-template-columns: 1fr 1fr; gap: 12px; } }
+
+    .food-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color var(--dur) var(--ease),
+                  transform var(--dur) var(--ease);
+    }
+    .food-card:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-3px);
+    }
+
+    .food-image {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      background: var(--surface-2);
+      overflow: hidden;
+      height: 200px;
+    }
+    .food-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s var(--ease);
+    }
+    .food-card:hover .food-image img { transform: scale(1.06); }
+
+    .food-emoji {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      background: rgba(5, 10, 21, 0.75);
+      backdrop-filter: blur(6px);
+      border-radius: 50%;
+      font-size: 18px;
+      z-index: 2;
+    }
+
+    .food-body {
+      padding: 14px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .food-name {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+    .food-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .food-price {
+      margin-top: 4px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+    }
+
+    .food-foot {
+      margin-top: 24px;
+      padding: 14px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .food-foot svg { color: var(--accent); flex-shrink: 0; }
+    .food-foot strong { color: var(--text); font-weight: 700; }
+
+    /* =========================================================
+       PROFILE DRAWER
+       ========================================================= */
+    .profile-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--dur) var(--ease), visibility var(--dur) var(--ease);
+      z-index: 998;
+    }
+    .profile-overlay.open { opacity: 1; visibility: visible; }
+
+    .profile-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100dvh;
+      width: min(100%, 400px);
+      background: var(--bg-2);
+      border-left: 1px solid var(--border);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.4s var(--ease);
+      overflow-y: auto;
+    }
+    .profile-drawer.open { transform: translateX(0); }
+
+    .profile-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--border);
+    }
+    .profile-head-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .profile-close {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--r-md);
+      color: var(--text);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: background var(--dur) var(--ease);
+    }
+    .profile-close:hover { background: rgba(255, 255, 255, 0.06); }
+
+    .profile-body {
+      padding: 24px 22px 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .profile-avatar {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #00a95c);
+      color: #04120b;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      overflow: hidden;
+      border: 3px solid rgba(0, 224, 123, 0.2);
+    }
+    .profile-avatar img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .profile-name {
+      font-size: 19px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-align: center;
+      line-height: 1.15;
+    }
+    .profile-email {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+      word-break: break-all;
+    }
+    .profile-role {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: rgba(0, 224, 123, 0.10);
+      border: 1px solid rgba(0, 224, 123, 0.35);
+      color: var(--accent);
+      margin-top: 2px;
+    }
+
+    .profile-member-code {
+      width: 100%;
+      margin-top: 6px;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .profile-member-code-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .profile-member-code-value {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+      font-family: monospace;
+    }
+
+    .profile-links {
+      padding: 12px 0;
+    }
+    .profile-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 22px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background var(--dur) var(--ease), padding-left var(--dur) var(--ease);
+    }
+    .profile-link:hover {
+      background: rgba(255, 255, 255, 0.03);
+      padding-left: 26px;
+    }
+    .profile-link svg {
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .profile-link-arrow {
+      margin-left: auto;
+      color: var(--text-dim);
+    }
+
+    .profile-foot {
+      margin-top: auto;
+      padding: 20px 22px;
+      border-top: 1px solid var(--border);
+    }
+    .profile-logout {
+      width: 100%;
+      padding: 13px 18px;
+      border-radius: 12px;
+      background: rgba(255, 77, 94, 0.08);
+      border: 1px solid rgba(255, 77, 94, 0.35);
+      color: #ff8a95;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background var(--dur) var(--ease);
+    }
+    .profile-logout:hover { background: rgba(255, 77, 94, 0.14); }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       NAV BAR
+       ============================================================ -->
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+
+      <a href="/index.html" class="nav-logo" aria-label="PCL Home">
+        <img src="/assets/images/logo.jpeg" alt="PCL — Polokwane Champions League" />
+      </a>
+
+      <div class="nav-actions">
+
+        <a href="/auth/login.html" class="nav-login" id="navLoginBtn" hidden>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+               stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+            <path d="M10 17l5-5-5-5" />
+            <path d="M15 12H3" />
+          </svg>
+          <span>Login</span>
+        </a>
+
+        <button type="button" class="nav-user" id="navProfileBtn" hidden aria-label="Account">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+               stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 21a8 8 0 0 1 16 0" />
+          </svg>
+        </button>
+
+        <button type="button" class="nav-menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+      </div>
+    </div>
+
+    <div class="nav-divider"></div>
+  </header>
+
+
+  <!-- ============================================================
+       NAV DRAWER
+       ============================================================ -->
+  <div class="nav-overlay" id="navOverlay"></div>
+
+  <aside class="nav-drawer" id="navDrawer" aria-hidden="true">
+    <div class="nav-drawer-head">
+      <span class="nav-drawer-title">Menu</span>
+      <button type="button" class="nav-drawer-close" id="menuClose" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+
+    <nav class="nav-drawer-links" id="drawerLinks" aria-label="Main navigation"></nav>
+
+    <div class="nav-drawer-foot">
+      <a href="/auth/signup.html" class="btn btn-primary btn-block">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+        Become a Fan Member
+      </a>
+      <a href="/auth/register-team.html" class="btn btn-ghost btn-block">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" />
+        </svg>
+        Register a Team
+      </a>
+    </div>
+  </aside>
+
+
+  <!-- ============================================================
+       PROFILE DRAWER
+       ============================================================ -->
+  <div class="profile-overlay" id="profileOverlay"></div>
+
+  <aside class="profile-drawer" id="profileDrawer" aria-hidden="true">
+    <div class="profile-head">
+      <span class="profile-head-title">My Account</span>
+      <button type="button" class="profile-close" id="profileClose" aria-label="Close">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="profile-body">
+      <div class="profile-avatar" id="profileAvatar">PCL</div>
+      <div class="profile-name" id="profileName">Member</div>
+      <div class="profile-email" id="profileEmail">member@example.com</div>
+      <span class="profile-role" id="profileRole">Member</span>
+
+      <div class="profile-member-code" id="profileMemberCodeBox" hidden>
+        <span class="profile-member-code-label">Member Code</span>
+        <span class="profile-member-code-value" id="profileMemberCode">PCL-2026-0001</span>
+      </div>
+    </div>
+
+    <nav class="profile-links" id="profileLinks"></nav>
+
+    <div class="profile-foot">
+      <button type="button" class="profile-logout" id="profileLogout">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <path d="M16 17l5-5-5-5" />
+          <path d="M21 12H9" />
+        </svg>
+        Sign out
+      </button>
+    </div>
+  </aside>
+
+
+  <main>
+
+    <!-- ============================================================
+         HERO GALLERY
+         ============================================================ -->
+    <section class="hero" id="hero" aria-roledescription="carousel" aria-label="PCL highlights">
+
+      <div class="hero-track" id="heroTrack">
+
+        <article class="hero-slide slide-1">
+          <img class="hero-media"
+               src="/assets/images/hero/hero-1.jpeg"
+               alt="" loading="eager" decoding="async" />
+          <div class="hero-content">
+            <span class="hero-eyebrow">2026 Season</span>
+            <h1 class="hero-title">The PCL Tournament Returns</h1>
+            <p class="hero-sub">Indoor football. Real competition. N1 Padel, Polokwane.</p>
+          </div>
+        </article>
+
+        <article class="hero-slide slide-2">
+          <video class="hero-media"
+                 autoplay muted loop playsinline preload="metadata"
+                 poster="/assets/images/hero/hero-1.jpeg">
+            <source src="/assets/images/hero/hero-2.mp4" type="video/mp4" />
+          </video>
+          <div class="hero-content">
+            <span class="hero-eyebrow">Match Day</span>
+            <h1 class="hero-title">Every Goal. Every Moment.</h1>
+            <p class="hero-sub">Relive the best of the PCL — photos, videos and stories.</p>
+            <div class="hero-cta">
+              <a href="/public/tournament.html" class="btn btn-primary">
+                Explore Tournament
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <article class="hero-slide slide-3">
+          <img class="hero-media"
+               src="/assets/images/hero/hero-3.jpeg"
+               alt="" loading="lazy" decoding="async" />
+          <div class="hero-content">
+            <span class="hero-eyebrow">Fan Membership</span>
+            <h1 class="hero-title">Join the PCL Family</h1>
+            <p class="hero-sub">Vote for Man of the Match. Unlock rewards. Be part of it.</p>
+            <div class="hero-cta">
+              <a href="/public/membership.html" class="btn btn-primary">
+                Become a Member
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <article class="hero-slide slide-4">
+          <video class="hero-media"
+                 autoplay muted loop playsinline preload="metadata"
+                 poster="/assets/images/hero/hero-3.jpeg">
+            <source src="/assets/images/hero/hero5.mp4" type="video/mp4" />
+          </video>
+          <div class="hero-content">
+            <span class="hero-eyebrow">Teams &amp; Players</span>
+            <h1 class="hero-title">Follow Your Favourites</h1>
+            <p class="hero-sub">Every team. Every player. Every stat.</p>
+            <div class="hero-cta">
+              <a href="/public/shops.html" class="btn btn-primary">
+                Explore Teams
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </article>  
+
+      </div>
+
+      <button type="button" class="hero-arrow hero-prev" id="heroPrev" aria-label="Previous slide">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M15 6l-6 6 6 6" />
+        </svg>
+      </button>
+
+      <button type="button" class="hero-arrow hero-next" id="heroNext" aria-label="Next slide">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 6l6 6-6 6" />
+        </svg>
+      </button>
+
+      <div class="hero-dots" id="heroDots" role="tablist" aria-label="Slide selection"></div>
+
+      <div class="hero-progress"><div class="hero-progress-bar" id="heroProgress"></div></div>
+
+    </section>
+
+
+    <!-- ============================================================
+         NEXT FIXTURES — first 6
+         ============================================================ -->
+    <section class="section section-fixtures" aria-labelledby="fixturesTitle">
+      <div class="container">
+        <header class="section-head">
+          <div>
+            <span class="section-eyebrow">Upcoming</span>
+            <h2 class="section-title" id="fixturesTitle">Next Fixtures</h2>
+          </div>
+          <a href="/public/fixtures.html" class="section-link">
+            View all
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </a>
+        </header>
+
+        <div class="fixtures-grid" id="fixturesGrid"></div>
+
+        <div class="fixtures-actions">
+          <a href="/public/fixtures.html" class="btn-view-more">
+            View full schedule &amp; standings
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                 stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         STORIES — Instagram style rail
+         ============================================================ -->
+    <section class="section section-stories" aria-labelledby="storiesTitle">
+      <div class="container">
+        <header class="section-head">
+          <div>
+            <span class="section-eyebrow">Match Day</span>
+            <h2 class="section-title" id="storiesTitle">Stories</h2>
+          </div>
+          <a href="/public/about.html" class="section-link">
+            See all
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </a>
+        </header>
+      </div>
+
+      <div class="stories-rail" id="storiesRail" role="list"></div>
+    </section>
+
+
+    <!-- ============================================================
+         NEWS
+         ============================================================ -->
+    <section class="section section-news" aria-labelledby="newsTitle">
+      <div class="container">
+        <header class="section-head">
+          <div>
+            <span class="section-eyebrow">Latest</span>
+            <h2 class="section-title" id="newsTitle">News</h2>
+          </div>
+          <a href="/public/about.html" class="section-link">
+            All stories
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </a>
+        </header>
+
+        <div class="news-grid" id="newsGrid"></div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         SPONSORS & PARTNERS
+         ============================================================ -->
+    <section class="section section-sponsors" aria-labelledby="sponsorsTitle">
+      <div class="container">
+        <header class="section-head" style="margin-bottom:20px; justify-content:center; text-align:center;">
+          <div>
+            <span class="section-eyebrow">Backed by</span>
+            <h2 class="section-title" id="sponsorsTitle">Sponsors &amp; Partners</h2>
+          </div>
+        </header>
+
+        <div class="sponsors-strip" id="sponsorsStrip"></div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         FOOD & REFRESHMENTS @ N1 PADEL
+         ============================================================ -->
+    <section class="section section-food" aria-labelledby="foodTitle">
+      <div class="container">
+        <header class="section-head">
+          <div>
+            <span class="section-eyebrow">At N1 Padel</span>
+            <h2 class="section-title" id="foodTitle">Food &amp; Refreshments</h2>
+          </div>
+        </header>
+
+        <div class="food-grid" id="foodGrid"></div>
+
+        <div class="food-foot">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+               stroke="currentColor" stroke-width="1.8"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 2v6" />
+            <path d="M8 8h8l-1 12a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z" />
+          </svg>
+          <span>
+            All items available at the <strong>N1 Padel</strong> kitchen &amp; bar throughout match days.
+            Show your <strong>PCL Fan Membership</strong> for member pricing.
+          </span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ============================================================
+       STORY VIEWER
+       ============================================================ -->
+  <div class="story-viewer" id="storyViewer" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="story-viewer-inner">
+
+      <div class="story-bars" id="storyBars"></div>
+
+      <div class="story-viewer-head">
+        <div class="story-viewer-avatar" id="storyViewerAvatar">PCL</div>
+        <div class="story-viewer-title" id="storyViewerTitle">Story</div>
+        <button type="button" class="story-viewer-close" id="storyViewerClose" aria-label="Close story">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="story-viewer-media" id="storyViewerMedia"></div>
+
+      <button type="button" class="story-tap prev" id="storyTapPrev" aria-label="Previous image"></button>
+      <button type="button" class="story-tap next" id="storyTapNext" aria-label="Next image"></button>
+
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="/assets/images/logo.jpeg" alt="PCL" class="footer-logo" />
+        <p>Polokwane Champions League — indoor football, brought to you at N1 Padel, Limpopo.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <a href="/public/tournament.html">Tournament</a>
+        <a href="/public/fixtures.html">Fixtures</a>
+        <a href="/public/shops.html">Teams</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Engage</h4>
+        <a href="/public/membership.html">Membership</a>
+        <a href="/public/tickets.html">Tickets</a>
+        <a href="/public/about.html">About</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Account</h4>
+        <a href="/auth/login.html">Login</a>
+        <a href="/auth/signup.html">Sign Up</a>
+        <a href="/auth/register-team.html">Register Team</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 Polokwane Champions League. All rights reserved.</span>
+      <span>Built for the PCL Digital Platform · MVP 1</span>
+    </div>
+  </footer>
+
+
+  <!-- ============================================================
+       SCRIPTS
+       ============================================================ -->
+  <script type="module">
+    import { NAV_LINKS } from '/js/config.js';
+
+    /* =========================================================
+       TEAMS — Elite 6ix
+       ========================================================= */
+    const TEAMS = {
+      brighton:   { name: 'Brighton',       logo: '/assets/images/teams/bri.jpeg' },
+      choko:      { name: 'Choko Choko',    logo: '/assets/images/teams/choko.jpeg'    },
+      sunday:     { name: 'Sunday Ballers', logo: '/assets/images/teams/sunday.jpeg'   },
+      clutch:     { name: 'Clutch FC',      logo: '/assets/images/teams/clutch.jpeg'   },
+      maafter:    { name: 'Ma After 9',     logo: '/assets/images/teams/after9.jpeg'  },
+      newcastle:  { name: 'Newcastle',      logo: '/assets/images/teams/new.jpeg' },
+    };
+
+    /* =========================================================
+       FIXTURES — first 6 (mixed Group A + B)
+       ========================================================= */ 
+       
+    const FIXTURES_FIRST_6 = [
+      { id: 1, group: 'A', court: 'Court A', date: 'Sat 12 Oct · 10:00',
+        teamA: TEAMS.choko,    teamB: TEAMS.sunday },
+
+      { id: 7, group: 'B', court: 'Court A', date: 'Sat 12 Oct · 12:30',
+        teamA: TEAMS.newcastle, teamB: TEAMS.maafter },
+
+      { id: 2, group: 'A', court: 'Court B', date: 'Sat 12 Oct · 11:30',
+        teamA: TEAMS.brighton, teamB: TEAMS.choko },
+
+      { id: 8, group: 'B', court: 'Court B', date: 'Sat 12 Oct · 15:30',
+        teamA: TEAMS.clutch,    teamB: TEAMS.newcastle },
+
+      { id: 3, group: 'A', court: 'Court A', date: 'Sat 12 Oct · 14:00',
+        teamA: TEAMS.sunday,   teamB: TEAMS.brighton },
+
+      { id: 9, group: 'B', court: 'Court A', date: 'Sat 12 Oct · 17:00',
+        teamA: TEAMS.maafter,   teamB: TEAMS.clutch },
+    ];
+
+
+    /* =========================================================
+       STORIES
+       ========================================================= */
+    const MOCK_STORIES = [
+      {
+        id: 1,
+        label: 'N1 Padel FC',
+        thumb: '/assets/images/stories/pc4.jpeg',
+        color: '#00e07b',
+        items: [
+          { type: 'image', src: '/assets/images/stories/pc1.jpeg' },
+          { type: 'video', src: '/assets/images/stories/pc3.mp4', poster: '/assets/images/stories/pc4.jpeg' },
+          { type: 'image', src: '/assets/images/stories/pc2.jpeg' },
+        ],
+      },
+      {
+        id: 2,
+        label: 'Fans',
+        thumb: '/assets/images/stories/fan4.jpeg',
+        color: '#ffd60a',
+        items: [
+          { type: 'image', src: '/assets/images/stories/fan4.jpeg' },
+          { type: 'image', src: '/assets/images/stories/fan1.jpeg' },
+          { type: 'image', src: '/assets/images/stories/fan2.jpeg' },
+          { type: 'image', src: '/assets/images/stories/fan3.jpeg' },
+          { type: 'image', src: '/assets/images/stories/fan5.jpeg' },
+          { type: 'image', src: '/assets/images/stories/fan6.jpeg' },
+          { type: 'image', src: '/assets/images/stories/fan7.jpeg' },
+          { type: 'video', src: '/assets/images/stories/fan8.mp4', poster: '/assets/images/stories/fan4.jpeg' },
+          { type: 'video', src: '/assets/images/stories/fan9.mp4', poster: '/assets/images/stories/fan4.jpeg' },
+          { type: 'video', src: '/assets/images/stories/fan10.mp4', poster: '/assets/images/stories/fan4.jpeg' },
+        ],
+      },
+      {
+        id: 3,
+        label: 'Highlights',
+        thumb: '/assets/images/logo.jpeg',
+        color: '#ff4d5e',
+        items: [
+          { type: 'video', src: '/assets/videos/stories/h3.mp4', poster: '/assets/images/logo.jpeg' },
+          { type: 'image', src: '/assets/images/stories/h1.jpeg' },
+          { type: 'video', src: '/assets/images/stories/h2.mp4', poster: '/assets/images/logo.jpeg' },
+          { type: 'video', src: '/assets/images/stories/h3.mp4', poster: '/assets/images/logo.jpeg' },
+          { type: 'video', src: '/assets/images/stories/h4.mp4', poster: '/assets/images/logo.jpeg' },
+          { type: 'video', src: '/assets/images/stories/h5.mp4', poster: '/assets/images/logo.jpeg' },
+          { type: 'video', src: '/assets/images/stories/h6.mp4', poster: '/assets/images/logo.jpeg' },
+        ],
+      },
+      {
+        id: 6,
+        label: 'Awards',
+        thumb: '/assets/images/logo.jpeg',
+        color: '#f97316',
+        items: [
+          { type: 'image', src: '/assets/images/stories/pc1.jpeg' },
+          { type: 'image', src: '/assets/images/stories/award1.jpeg' },
+          { type: 'image', src: '/assets/images/stories/award3.jpeg' },
+        ],
+      },
+    ];
+
+    /* =========================================================
+       NEWS
+       ========================================================= */
+    const MOCK_NEWS = [
+      { id: 1, category: 'Match Report', date: '01 Oct 2026',
+        title: 'This season will be fire !! - said Madam CEO',
+        image: '/assets/images/news/photo1.jpeg' },
+      { id: 2, category: 'Announcement', date: '05 Oct 2026',
+        title: 'Kings FC will miss the action on the weekend due to late registration',
+        image: '/assets/images/news/photo2.jpeg' },
+      { id: 3, category: 'Fan Zone', date: '06 Oct 2026',
+        title: 'Fan Membership is now open — vote for Man of the Match',
+        image: '/assets/images/news/photo3.jpeg' },
+      { id: 4, category: 'Fan Zone', date: '09 Oct 2026',
+        title: 'General is wins the last season Ballondor',
+        image: '/assets/images/news/photo5.jpeg' },
+      { id: 5, category: 'Fan Zone', date: '09 Oct 2026',
+        title: 'Kings FC top goal scorer will miss the action on the weekend',
+        image: '/assets/images/news/photo4.jpeg' },
+    ];
+
+    /* =========================================================
+       SPONSORS
+       ========================================================= */
+    const MOCK_SPONSORS = [
+      { name: 'N1 Padel',        url: 'https://n1padel.co.za', logo: '/assets/images/sponsors/n1.png' },
+      { name: 'Delight Softies', url: '#',                     logo: '/assets/images/delight.png'     },
+    ];
+
+    /* =========================================================
+       FOOD
+       ========================================================= */
+    const MOCK_FOOD = [
+      {
+        name: 'Pizza',
+        desc: 'Classic boerie-style pizza with your choice of sauces.',
+        price: 'R45',
+        emoji: '',
+        image: '/assets/images/food/pizza.jpeg',
+      },
+      {
+        name: 'Shawarma',
+        desc: 'Chicken or beef shawarma, freshly wrapped on order.',
+        price: 'R70',
+        emoji: '',
+        image: '/assets/images/food/shawarma.jpeg',
+      },
+      {
+        name: 'Coffee',
+        desc: 'Freshly brewed filter coffee — hot and strong.',
+        price: 'R25',
+        emoji: '',
+        image: '/assets/images/food/hotc.jpeg',
+      },
+      {
+        name: 'Ice Cream',
+        desc: 'Soft-serve cone or cup — the match-day classic.',
+        price: 'R30',
+        emoji: '',
+        image: '/assets/images/food/icecream.jpeg',
+      },
+    ];
+
+
+    /* =========================================================
+       ICONS
+       ========================================================= */
+    const ICONS = {
+      home:     '<path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H10v6H4a1 1 0 0 1-1-1z"/>',
+      trophy:   '<path d="M8 4h8v4a4 4 0 0 1-8 0z"/><path d="M16 5h3v2a3 3 0 0 1-3 3"/><path d="M8 5H5v2a3 3 0 0 0 3 3"/><path d="M12 12v4"/><path d="M9 20h6"/><path d="M10 20v-4h4v4"/>',
+      calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+      shield:   '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+      star:     '<path d="M12 2l2.9 6.9L22 10l-5.5 4.6L18.2 22 12 18.3 5.8 22l1.7-7.4L2 10l7.1-1.1z"/>',
+      ticket:   '<path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M13 6v12"/>',
+      info:     '<circle cx="12" cy="12" r="9"/><path d="M12 8h.01"/><path d="M11 12h1v5h1"/>',
+    };
+
+    const iconSVG = (name, size = 20) => `
+      <svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none"
+           stroke="currentColor" stroke-width="1.8"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        ${ICONS[name] || ''}
+      </svg>
+    `;
+
+    const initialsOf = (name) =>
+      name.split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+
+
+    /* =========================================================
+       DRAWER
+       ========================================================= */
+    const drawerLinks = document.getElementById('drawerLinks');
+    NAV_LINKS.forEach(link => {
+      const a = document.createElement('a');
+      a.href = link.href;
+      a.className = 'nav-drawer-link';
+      a.innerHTML = `
+        <span class="nav-drawer-icon">${iconSVG(link.icon)}</span>
+        <span class="nav-drawer-label">${link.label}</span>
+        <svg class="nav-drawer-arrow" viewBox="0 0 24 24" width="18" height="18"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 6l6 6-6 6" />
+        </svg>
+      `;
+      drawerLinks.appendChild(a);
+    });
+
+    const menuBtn   = document.getElementById('menuBtn');
+    const menuClose = document.getElementById('menuClose');
+    const drawer    = document.getElementById('navDrawer');
+    const overlay   = document.getElementById('navOverlay');
+
+    function openDrawer() {
+      drawer.classList.add('open');
+      overlay.classList.add('open');
+      menuBtn.setAttribute('aria-expanded', 'true');
+      drawer.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDrawer() {
+      drawer.classList.remove('open');
+      overlay.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      drawer.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    menuBtn.addEventListener('click', openDrawer);
+    menuClose.addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+
+    /* =========================================================
+       AUTH
+       ========================================================= */
+    const loginBtn   = document.getElementById('navLoginBtn');
+    const profileBtn = document.getElementById('navProfileBtn');
+
+    const profileDrawer  = document.getElementById('profileDrawer');
+    const profileOverlay = document.getElementById('profileOverlay');
+    const profileClose   = document.getElementById('profileClose');
+    const profileLogout  = document.getElementById('profileLogout');
+    const profileLinks   = document.getElementById('profileLinks');
+
+    function getToken() {
+      const t = localStorage.getItem('pcl_token');
+      return (t && t !== 'null' && t !== 'undefined') ? t : null;
+    }
+    function getCachedUser() {
+      try {
+        const raw = localStorage.getItem('pcl_user');
+        return raw ? JSON.parse(raw) : null;
+      } catch {
+        return null;
+      }
+    }
+    function clearAuth() {
+      localStorage.removeItem('pcl_token');
+      localStorage.removeItem('pcl_refresh');
+      localStorage.removeItem('pcl_user');
+      localStorage.removeItem('pcl_role');
+    }
+
+    const ROLE_LABELS = {
+      admin:   'Administrator',
+      captain: 'Team Captain',
+      player:  'Player',
+      member:  'Member',
+    };
+
+    function buildProfileLinks(role) {
+      const links = [];
+
+      if (role === 'admin') {
+        links.push({
+          href: '/admin/index.html',
+          label: 'Admin Dashboard',
+          icon: '<rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/>',
+        });
+      }
+
+      if (role === 'member') {
+        links.push({
+          href: '/public/membership.html',
+          label: 'Member Hub',
+          icon: '<path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M13 6v12"/>',
+        });
+        links.push({
+          href: '/public/tickets.html',
+          label: 'My Tickets',
+          icon: '<path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M13 6v12"/>',
+        });
+      }
+
+      if (role === 'captain') {
+        links.push({
+          href: '/public/shops.html',
+          label: 'My Team',
+          icon: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+        });
+      }
+
+      links.push({
+        href: '/public/membership.html',
+        label: 'Membership',
+        icon: '<path d="M12 2l2.9 6.9L22 10l-5.5 4.6L18.2 22 12 18.3 5.8 22l1.7-7.4L2 10l7.1-1.1z"/>',
+      });
+
+      return links;
+    }
+
+    function renderProfile(user) {
+      if (!user) return;
+
+      const initials = (user.full_name || user.name || 'PCL')
+        .split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+
+      document.getElementById('profileAvatar').textContent = initials;
+      document.getElementById('profileName').textContent   = user.full_name || user.name || 'Member';
+      document.getElementById('profileEmail').textContent  = user.email || '';
+      document.getElementById('profileRole').textContent   = ROLE_LABELS[user.role] || 'Member';
+
+      const codeBox = document.getElementById('profileMemberCodeBox');
+      if (user.role === 'member' && user.member?.member_code) {
+        codeBox.hidden = false;
+        document.getElementById('profileMemberCode').textContent = user.member.member_code;
+      } else {
+        codeBox.hidden = true;
+      }
+
+      const links = buildProfileLinks(user.role);
+      profileLinks.innerHTML = links.map(l => `
+        <a href="${l.href}" class="profile-link">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+               stroke="currentColor" stroke-width="1.8"
+               stroke-linecap="round" stroke-linejoin="round">
+            ${l.icon}
+          </svg>
+          <span>${l.label}</span>
+          <svg class="profile-link-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none"
+               stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 6l6 6-6 6" />
+          </svg>
+        </a>
+      `).join('');
+    }
+
+    function setLoggedInUI(user) {
+      loginBtn.hidden = true;
+      profileBtn.hidden = false;
+      if (user) renderProfile(user);
+    }
+
+    function setLoggedOutUI() {
+      loginBtn.hidden = false;
+      profileBtn.hidden = true;
+    }
+
+    function syncAuthUI() {
+      const t = getToken();
+      const u = getCachedUser();
+      if (t && u) setLoggedInUI(u);
+      else setLoggedOutUI();
+    }
+
+    function openProfile() {
+      profileDrawer.classList.add('open');
+      profileOverlay.classList.add('open');
+      profileDrawer.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeProfile() {
+      profileDrawer.classList.remove('open');
+      profileOverlay.classList.remove('open');
+      profileDrawer.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    profileBtn.addEventListener('click', openProfile);
+    profileClose.addEventListener('click', closeProfile);
+    profileOverlay.addEventListener('click', closeProfile);
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && profileDrawer.classList.contains('open')) closeProfile();
+    });
+
+    syncAuthUI();
+
+    /* local-only logout */
+    profileLogout.addEventListener('click', () => {
+      clearAuth();
+      closeProfile();
+      setLoggedOutUI();
+      window.location.href = '/index.html';
+    });
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'pcl_token' || e.key === 'pcl_user') syncAuthUI();
+    });
+
+
+    /* =========================================================
+       HERO CAROUSEL
+       ========================================================= */
+    const track      = document.getElementById('heroTrack');
+    const slides     = track.querySelectorAll('.hero-slide');
+    const dotsWrap   = document.getElementById('heroDots');
+    const prevBtn    = document.getElementById('heroPrev');
+    const nextBtn    = document.getElementById('heroNext');
+    const progress   = document.getElementById('heroProgress');
+
+    const TOTAL = slides.length;
+    const DURATION = 7000;
+    let current = 0;
+    let timer = null;
+    let startX = 0;
+    let isDragging = false;
+
+    slides.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'hero-dot';
+      dot.setAttribute('role', 'tab');
+      dot.setAttribute('aria-label', `Slide ${i + 1}`);
+      dot.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(dot);
+    });
+    const dots = dotsWrap.querySelectorAll('.hero-dot');
+
+    function syncVideos() {
+      slides.forEach((slide, i) => {
+        const video = slide.querySelector('video.hero-media');
+        if (!video) return;
+        if (i === current) {
+          video.currentTime = 0;
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }
+
+    function goTo(i) {
+      current = (i + TOTAL) % TOTAL;
+      track.style.transform = `translateX(-${current * 100}%)`;
+      dots.forEach((d, idx) => d.classList.toggle('active', idx === current));
+      syncVideos();
+      restartProgress();
+      restartAutoplay();
+    }
+    const next = () => goTo(current + 1);
+    const prev = () => goTo(current - 1);
+
+    prevBtn.addEventListener('click', prev);
+    nextBtn.addEventListener('click', next);
+
+    function restartAutoplay() {
+      clearInterval(timer);
+      timer = setInterval(next, DURATION);
+    }
+    function restartProgress() {
+      progress.style.transition = 'none';
+      progress.style.width = '0%';
+      void progress.offsetWidth;
+      progress.style.transition = `width ${DURATION}ms linear`;
+      progress.style.width = '100%';
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      const activeVideo = slides[current]?.querySelector('video.hero-media');
+      if (document.hidden) {
+        clearInterval(timer);
+        activeVideo?.pause();
+      } else {
+        restartAutoplay();
+        activeVideo?.play().catch(() => {});
+      }
+    });
+
+    track.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+    }, { passive: true });
+    track.addEventListener('touchend', e => {
+      if (!isDragging) return;
+      const diff = startX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) diff > 0 ? next() : prev();
+      isDragging = false;
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft')  prev();
+      if (e.key === 'ArrowRight') next();
+    });
+
+    goTo(0);
+
+
+    /* =========================================================
+       RENDER: NEXT FIXTURES
+       ========================================================= */
+    function crestHTML(team) {
+      return `
+        <div class="team-crest">
+          <span class="team-crest-fallback">${initialsOf(team.name)}</span>
+          ${team.logo ? `<img src="${team.logo}" alt="" loading="lazy" onerror="this.remove()">` : ''}
+        </div>
+      `;
+    }
+
+    function fixtureCardHTML(f) {
+      const groupClass = f.group === 'A' ? '' : ' group-b';
+
+      return `
+        <article class="fixture-card" data-id="${f.id}">
+          <div class="fixture-meta">
+            <span class="fixture-meta-item">
+              <span class="fixture-group-badge${groupClass}">Group ${f.group}</span>
+            </span>
+            <span class="fixture-meta-item fixture-court">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none"
+                   stroke="currentColor" stroke-width="1.8"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="16" rx="1"/>
+                <path d="M12 4v16"/>
+                <path d="M3 12h18"/>
+              </svg>
+              ${f.court}
+            </span>
+            <span class="fixture-meta-item">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none"
+                   stroke="currentColor" stroke-width="1.8"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 7v5l3 2"/>
+              </svg>
+              ${f.date}
+            </span>
+          </div>
+
+          <div class="fixture-body">
+            <div class="fixture-team">
+              ${crestHTML(f.teamA)}
+              <span class="fixture-name">${f.teamA.name}</span>
+            </div>
+            <span class="fixture-vs">VS</span>
+            <div class="fixture-team">
+              ${crestHTML(f.teamB)}
+              <span class="fixture-name">${f.teamB.name}</span>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    document.getElementById('fixturesGrid').innerHTML =
+      FIXTURES_FIRST_6.map(fixtureCardHTML).join('');
+
+
+    /* =========================================================
+       RENDER: STORIES RAIL
+       ========================================================= */
+    function storyHTML(s) {
+      return `
+        <button type="button" class="story" data-story-id="${s.id}" role="listitem" aria-label="${s.label}">
+          <span class="story-ring">
+            <span class="story-inner" style="background:${s.color}22">
+              <img src="${s.thumb}" alt="" loading="lazy" onerror="this.remove()">
+              <span class="story-fallback" style="color:${s.color}">${initialsOf(s.label)}</span>
+            </span>
+          </span>
+          <span class="story-label">${s.label}</span>
+        </button>
+      `;
+    }
+
+    const storiesRail = document.getElementById('storiesRail');
+    storiesRail.innerHTML = MOCK_STORIES.map(storyHTML).join('');
+
+    let railDown = false, railStartX = 0, railScroll = 0, railMoved = false;
+    storiesRail.addEventListener('mousedown', e => {
+      railDown = true; railMoved = false;
+      railStartX = e.pageX;
+      railScroll = storiesRail.scrollLeft;
+      storiesRail.style.cursor = 'grabbing';
+    });
+    window.addEventListener('mouseup', () => {
+      railDown = false;
+      storiesRail.style.cursor = '';
+    });
+    window.addEventListener('mousemove', e => {
+      if (!railDown) return;
+      const walk = e.pageX - railStartX;
+      if (Math.abs(walk) > 4) railMoved = true;
+      storiesRail.scrollLeft = railScroll - walk;
+    });
+    storiesRail.addEventListener('click', e => {
+      if (railMoved) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+
+
+    /* =========================================================
+       STORY VIEWER
+       ========================================================= */
+    const viewer       = document.getElementById('storyViewer');
+    const viewerBars   = document.getElementById('storyBars');
+    const viewerMedia  = document.getElementById('storyViewerMedia');
+    const viewerTitle  = document.getElementById('storyViewerTitle');
+    const viewerAvatar = document.getElementById('storyViewerAvatar');
+    const viewerClose  = document.getElementById('storyViewerClose');
+    const tapPrev      = document.getElementById('storyTapPrev');
+    const tapNext      = document.getElementById('storyTapNext');
+
+    const SLIDE_MS = 5000;
+
+    let activeStory = null;
+    let activeIndex = 0;
+    let viewerTimer = null;
+    let activeVideoEl = null;
+
+    function openStoryViewer(storyId) {
+      const story = MOCK_STORIES.find(s => s.id === storyId);
+      if (!story) return;
+
+      activeStory = story;
+      activeIndex = 0;
+
+      viewerTitle.textContent = story.label;
+      viewerAvatar.innerHTML = `
+        <img src="${story.thumb}" alt="" onerror="this.remove()">
+        <span>${initialsOf(story.label)}</span>
+      `;
+
+      viewerBars.innerHTML = story.items.map((_, i) => `
+        <div class="story-bar" data-index="${i}"><div class="story-bar-fill"></div></div>
+      `).join('');
+
+      viewerMedia.innerHTML = story.items.map((item, i) => {
+        if (item.type === 'video') {
+          return `
+            <div class="story-viewer-slide ${i === 0 ? 'active' : ''}" data-index="${i}" data-type="video">
+              <video class="story-viewer-video"
+                     src="${item.src}"
+                     ${item.poster ? `poster="${item.poster}"` : ''}
+                     playsinline
+                     preload="metadata"
+                     muted></video>
+            </div>
+          `;
+        }
+        return `
+          <div class="story-viewer-slide ${i === 0 ? 'active' : ''}" data-index="${i}" data-type="image">
+            <img src="${item.src}" alt="" onerror="this.style.display='none'">
+          </div>
+        `;
+      }).join('');
+
+      viewer.classList.add('open');
+      viewer.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+
+      showSlide(0);
+    }
+
+    function closeStoryViewer() {
+      if (activeVideoEl) {
+        activeVideoEl.pause();
+        activeVideoEl = null;
+      }
+      viewer.classList.remove('open');
+      viewer.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      clearTimeout(viewerTimer);
+      activeStory = null;
+      activeIndex = 0;
+    }
+
+    function showSlide(index) {
+      if (!activeStory) return;
+
+      const slides = viewerMedia.querySelectorAll('.story-viewer-slide');
+      const bars   = viewerBars.querySelectorAll('.story-bar');
+
+      if (index < 0) {
+        const idx = MOCK_STORIES.findIndex(s => s.id === activeStory.id);
+        const prevStory = MOCK_STORIES[idx - 1];
+        if (prevStory) { closeStoryViewer(); openStoryViewer(prevStory.id); }
+        else closeStoryViewer();
+        return;
+      }
+      if (index >= slides.length) {
+        const idx = MOCK_STORIES.findIndex(s => s.id === activeStory.id);
+        const nextStory = MOCK_STORIES[idx + 1];
+        if (nextStory) { closeStoryViewer(); openStoryViewer(nextStory.id); }
+        else closeStoryViewer();
+        return;
+      }
+
+      if (activeVideoEl) {
+        activeVideoEl.pause();
+        activeVideoEl.currentTime = 0;
+        activeVideoEl = null;
+      }
+
+      activeIndex = index;
+
+      slides.forEach((el, i) => el.classList.toggle('active', i === index));
+
+      bars.forEach((bar, i) => {
+        bar.classList.remove('active', 'done');
+        const fill = bar.querySelector('.story-bar-fill');
+        fill.style.animation = 'none';
+        void fill.offsetWidth;
+        if (i < index) bar.classList.add('done');
+      });
+
+      const currentSlide = slides[index];
+      const currentBar   = bars[index];
+      const isVideo      = currentSlide.dataset.type === 'video';
+
+      clearTimeout(viewerTimer);
+
+      if (isVideo) {
+        const video = currentSlide.querySelector('video');
+        activeVideoEl = video;
+
+        video.currentTime = 0;
+        video.muted = true;
+        video.play().catch(() => {});
+
+        const applyVideoDuration = () => {
+          const dur = isFinite(video.duration) && video.duration > 0
+            ? video.duration * 1000
+            : 8000;
+          currentBar.style.setProperty('--story-duration', dur + 'ms');
+          currentBar.classList.add('active');
+        };
+
+        if (video.readyState >= 1) {
+          applyVideoDuration();
+        } else {
+          video.addEventListener('loadedmetadata', applyVideoDuration, { once: true });
+        }
+
+        video.onended = () => showSlide(index + 1);
+
+      } else {
+        currentBar.style.setProperty('--story-duration', SLIDE_MS + 'ms');
+        currentBar.classList.add('active');
+        viewerTimer = setTimeout(() => showSlide(index + 1), SLIDE_MS);
+      }
+    }
+
+    storiesRail.querySelectorAll('.story').forEach(btn => {
+      btn.addEventListener('click', () => {
+        openStoryViewer(Number(btn.dataset.storyId));
+      });
+    });
+
+    tapPrev.addEventListener('click', () => showSlide(activeIndex - 1));
+    tapNext.addEventListener('click', () => showSlide(activeIndex + 1));
+    viewerClose.addEventListener('click', closeStoryViewer);
+
+    document.addEventListener('keydown', e => {
+      if (!viewer.classList.contains('open')) return;
+      if (e.key === 'Escape') closeStoryViewer();
+      if (e.key === 'ArrowLeft')  showSlide(activeIndex - 1);
+      if (e.key === 'ArrowRight') showSlide(activeIndex + 1);
+    });
+
+
+    /* =========================================================
+       RENDER: NEWS
+       ========================================================= */
+    function newsCardHTML(n) {
+      return `
+        <a href="#" class="news-card" data-id="${n.id}">
+          <div class="news-image">
+            <img src="${n.image}" alt="" loading="lazy" onerror="this.style.display='none'">
+          </div>
+          <div class="news-body">
+            <div class="news-meta">
+              <span class="news-category">${n.category}</span>
+              <span class="news-dot">•</span>
+              <span class="news-date">${n.date}</span>
+            </div>
+            <h3 class="news-title">${n.title}</h3>
+          </div>
+        </a>
+      `;
+    }
+
+    document.getElementById('newsGrid').innerHTML =
+      MOCK_NEWS.map(newsCardHTML).join('');
+
+
+    /* =========================================================
+       RENDER: SPONSORS
+       ========================================================= */
+    function sponsorHTML(s) {
+      return `
+        <a href="${s.url}" class="sponsor-logo" target="_blank" rel="noopener" aria-label="${s.name}">
+          <img src="${s.logo}" alt="${s.name}" loading="lazy"
+               onerror="this.style.display='none'; this.parentNode.insertAdjacentHTML('beforeend', '<span class=&quot;sponsor-fallback&quot;>${s.name}</span>');">
+        </a>
+      `;
+    }
+
+    document.getElementById('sponsorsStrip').innerHTML =
+      MOCK_SPONSORS.map(sponsorHTML).join('');
+
+
+    /* =========================================================
+       RENDER: FOOD & REFRESHMENTS
+       ========================================================= */
+    function foodCardHTML(f) {
+      return `
+        <article class="food-card">
+          <div class="food-image">
+            <img src="${f.image}" alt="${f.name}" loading="lazy" onerror="this.style.display='none'">
+            <span class="food-emoji" aria-hidden="true">${f.emoji}</span>
+          </div>
+          <div class="food-body">
+            <h3 class="food-name">${f.name}</h3>
+            <p class="food-desc">${f.desc}</p>
+            <span class="food-price">${f.price}</span>
+          </div>
+        </article>
+      `;
+    }
+
+    document.getElementById('foodGrid').innerHTML =
+      MOCK_FOOD.map(foodCardHTML).join('');
+  </script>
+
+</body>
+</html>
