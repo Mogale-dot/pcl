@@ -375,6 +375,152 @@
     }
 
     /* =========================================================
+       GOLDEN BOOT — top scorers
+       ========================================================= */
+    .golden-boot-section {
+      position: relative;
+      padding-block: clamp(48px, 6vw, 88px);
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(0, 224, 123, 0.06), transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(0, 120, 255, 0.08), transparent 60%),
+        var(--bg-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .golden-boot-wrap {
+      max-width: 640px;
+      margin-inline: auto;
+      padding: 0 var(--sp-5);
+    }
+
+    .gb-head {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .gb-title {
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #7cb2ff;
+      text-shadow:
+        0 0 12px rgba(0, 120, 255, 0.4),
+        0 0 24px rgba(0, 120, 255, 0.2);
+      margin-bottom: 6px;
+      line-height: 1;
+    }
+
+    .gb-sub {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    /* Row list */
+    .gb-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .gb-row {
+      display: grid;
+      grid-template-columns: 40px 44px 1fr 44px;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: rgba(12, 20, 40, 0.7);
+      transition: background var(--dur) var(--ease);
+    }
+    .gb-row:hover {
+      background: rgba(20, 30, 55, 0.85);
+    }
+    .gb-row.leader {
+      background: rgba(0, 120, 255, 0.08);
+    }
+    .gb-row.leader:hover {
+      background: rgba(0, 120, 255, 0.14);
+    }
+
+    /* Pos */
+    .gb-pos {
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--text);
+      text-align: center;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .gb-row.leader .gb-pos {
+      color: #7cb2ff;
+    }
+
+    /* Crest */
+    .gb-crest {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      font-size: 10px;
+      font-weight: 900;
+      color: var(--accent);
+    }
+    .gb-crest img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Name */
+    .gb-name {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Goals */
+    .gb-goals {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: #7cb2ff;
+      text-align: right;
+      line-height: 1;
+    }
+    .gb-row.leader .gb-goals {
+      color: #4a9eff;
+      text-shadow: 0 0 12px rgba(74, 158, 255, 0.5);
+    }
+
+    @media (max-width: 480px) {
+      .gb-row {
+        grid-template-columns: 30px 36px 1fr 34px;
+        gap: 10px;
+        padding: 12px 14px;
+      }
+      .gb-pos { font-size: 16px; }
+      .gb-name { font-size: 13px; }
+      .gb-goals { font-size: 18px; }
+      .gb-crest { width: 30px; height: 30px; }
+    }
+
+    /* =========================================================
        TEAM MODAL (squad + stats)
        ========================================================= */
     .team-modal {
@@ -696,6 +842,21 @@
       </div>
     </section>
 
+
+    <!-- ============================================================
+         GOLDEN BOOT — top scorers
+         ============================================================ -->
+    <section class="golden-boot-section" id="goldenBoot">
+      <div class="golden-boot-wrap">
+        <div class="gb-head">
+          <h2 class="gb-title">Golden Boot</h2>
+          <div class="gb-sub">Top goal scorers · Elite IX</div>
+        </div>
+
+        <div class="gb-list" id="gbList"></div>
+      </div>
+    </section>
+
   </main>
 
 
@@ -741,8 +902,8 @@
       <div class="footer-col">
         <h4>Explore</h4>
        
-       
-       
+        
+        
       </div>
 
       <div class="footer-col">
@@ -774,7 +935,7 @@
     import { NAV_LINKS } from '/js/config.js';
 
     /* =========================================================
-       MOCK DATA
+       MOCK DATA — teams
        ========================================================= */
     const MOCK_TEAMS = [
       {
@@ -863,7 +1024,7 @@
         photo: '/assets/images/teams/tt-team.jpg',
         stats: { played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0, points: 0 },
         players: [
-          { num: 1,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
+          { num: 1,  name: '',   position: '',  goals: 0,  assists: 0, apps: 0 },
           { num: 2,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
           { num: 3,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
           { num: 4,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
@@ -873,6 +1034,20 @@
          { num: 8,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
         ],
       },
+    ];
+
+    /* =========================================================
+       MOCK DATA — Golden Boot top scorers
+       ========================================================= */
+    const MOCK_TOP_SCORERS = [
+      { name: 'Pule',    team: 'Choko Choko',     logo: '/assets/images/teams/choko.jpeg',   goals: 4 },
+      { name: 'Gupta',   team: 'Sunday Ballers',  logo: '/assets/images/teams/sunday.jpeg',  goals: 4 },
+      { name: 'Chicken', team: 'Newcastle FC',    logo: '/assets/images/teams/new.jpeg',     goals: 2 },
+      { name: 'Lukaku',  team: 'Newcastle FC',    logo: '/assets/images/teams/new.jpeg',     goals: 2 },
+      { name: 'Toni',    team: 'Ma After 9',      logo: '/assets/images/teams/after9.jpeg',  goals: 2 },
+      { name: 'Ace',     team: 'Choko Choko',     logo: '/assets/images/teams/choko.jpeg',   goals: 2 },
+      { name: 'Thabang', team: 'Sunday Ballers',  logo: '/assets/images/teams/sunday.jpeg',  goals: 2 },
+      { name: 'Theo',    team: 'Sunday Ballers',  logo: '/assets/images/teams/sunday.jpeg',  goals: 2 },
     ];
 
 
@@ -1078,6 +1253,46 @@
     });
 
     renderTeams();
+
+
+    /* =========================================================
+       RENDER: GOLDEN BOOT
+       ========================================================= */
+    function renderGoldenBoot() {
+      /* Sort by goals desc, then alphabetically */
+      const scorers = MOCK_TOP_SCORERS
+        .slice()
+        .sort((a, b) => {
+          if (b.goals !== a.goals) return b.goals - a.goals;
+          return a.name.localeCompare(b.name);
+        });
+
+      /* Compute the position number with tie handling */
+      let lastGoals = null;
+      let lastPos = 0;
+
+      const wrap = document.getElementById('gbList');
+      wrap.innerHTML = scorers.map((s, i) => {
+        if (s.goals !== lastGoals) {
+          lastPos = i + 1;
+          lastGoals = s.goals;
+        }
+        const isLeader = lastPos === 1;
+
+        return `
+          <div class="gb-row${isLeader ? ' leader' : ''}">
+            <div class="gb-pos">${lastPos}</div>
+            <div class="gb-crest">
+              ${s.logo ? `<img src="${s.logo}" alt="" onerror="this.remove()">` : initialsOf(s.name)}
+            </div>
+            <div class="gb-name">${s.name}</div>
+            <div class="gb-goals">${s.goals}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    renderGoldenBoot();
 
 
     /* =========================================================

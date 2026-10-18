@@ -109,7 +109,7 @@
        STANDINGS — compact
        ========================================================= */
     .standings-section {
-      padding-block: clamp(28px, 4vw, 44px) clamp(16px, 2vw, 24px);
+      padding-block: clamp(25px, 4vw, 44px) clamp(16px, 2vw, 24px);
     }
 
     .standings-grid {
@@ -117,7 +117,7 @@
       grid-template-columns: 1fr 1fr;
       gap: 16px;
     }
-    @media (max-width: 960px) { .standings-grid { grid-template-columns: 1fr; gap: 24px; } }
+    @media (max-width: 940px) { .standings-grid { grid-template-columns: 1fr; gap: 24px; } }
 
     .group-block {
       display: flex;
@@ -150,7 +150,7 @@
 
     .standings-table {
       width: 100%;
-      min-width: 380px;
+      min-width: 310px;
       border-collapse: collapse;
       font-size: 12px;
     }
@@ -1142,25 +1142,25 @@
        STANDINGS — fresh season
        ========================================================= */
     const STANDINGS_A = [
-      { team: TEAMS.brighton, p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
-      { team: TEAMS.choko,    p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
-      { team: TEAMS.sunday,   p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
+      { team: TEAMS.brighton, p: 2, w: 0, d: 0, l: 2, gf: 6, ga: 9 },
+      { team: TEAMS.choko,    p: 2, w: 1, d: 0, l: 1, gf: 8, ga: 5 },
+      { team: TEAMS.sunday,   p: 2, w: 2, d: 0, l: 0, gf: 9, ga: 5 },
     ];
 
     const STANDINGS_B = [
-      { team: TEAMS.clutch,    p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
-      { team: TEAMS.maafter,   p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
-      { team: TEAMS.newcastle, p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
+      { team: TEAMS.clutch,    p: 2, w: 2, d: 0, l: 0, gf: 6, ga: 1 },
+      { team: TEAMS.maafter,   p: 2, w: 0, d: 1, l: 1, gf: 2, ga: 2 },
+      { team: TEAMS.newcastle, p: 2, w: 0, d: 1, l: 1, gf: 3, ga: 6 },
     ];
 
     /* =========================================================
        FIXTURES
        ========================================================= */
     const FIXTURES_A = [
-      { id: 1, group: 'A', court: 'Court A', date: 'Sat 12 Oct · 10:00',
+      { id: 1, group: 'A', court: 'Court A', date: 'Sun 18 Oct · 10:00',
         teamA: TEAMS.choko,    teamB: TEAMS.clutch },
      
-      { id: 3, group: 'A', court: 'Court A', date: 'Sat 12 Oct · 14:00',
+      { id: 3, group: 'A', court: 'Court A', date: 'Sun 18 Oct · 14:00',
         teamA: TEAMS.sunday,   teamB: TEAMS.maafter },
       
     ];
