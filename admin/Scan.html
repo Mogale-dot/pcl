@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#050a15" />
+  <title>Gate Scanner — PCL Admin</title>
+  <link rel="stylesheet" href="/css/main.css" />
+
+  <style>
+    /* =========================================================
+       GATE SCANNER — full-screen camera UI
+       ========================================================= */
+
+    body.gate-body {
+      background: #000;
+      overflow: hidden;
+    }
+
+    .gate-shell {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      background: #050a15;
+    }
+
+    /* ---------- Top bar ---------- */
+    .gate-top {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px;
+      background: rgba(5, 10, 21, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .gate-top-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .gate-top-logo {
+      height: 32px;
+      width: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .gate-top-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .gate-top-sub {
+      font-size: 11px;
+      color: var(--text-dim);
+      font-weight: 600;
+      margin-top: 1px;
+    }
+
+    .gate-count {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(0, 224, 123, 0.1);
+      border: 1px solid rgba(0, 224, 123, 0.35);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .gate-count::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    /* ---------- Camera viewport ---------- */
+    .gate-cam {
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .gate-cam video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Scanning overlay frame */
+    .gate-frame {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .gate-frame-box {
+      position: relative;
+      width: min(75vw, 320px);
+      aspect-ratio: 1 / 1;
+    }
+
+    .gate-frame-box::before,
+    .gate-frame-box::after,
+    .gate-frame-corner-1,
+    .gate-frame-corner-2 {
+      content: '';
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-color: var(--accent);
+      border-style: solid;
+      border-width: 0;
+    }
+
+    /* Top-left corner */
+    .gate-frame-box::before {
+      top: 0;
+      left: 0;
+      border-top-width: 3px;
+      border-left-width: 3px;
+      border-top-left-radius: 12px;
+    }
+
+    /* Top-right corner */
+    .gate-frame-box::after {
+      top: 0;
+      right: 0;
+      border-top-width: 3px;
+      border-right-width: 3px;
+      border-top-right-radius: 12px;
+    }
+
+    /* Bottom-left */
+    .gate-frame-corner-1 {
+      bottom: 0;
+      left: 0;
+      border-bottom-width: 3px;
+      border-left-width: 3px;
+      border-bottom-left-radius: 12px;
+    }
+
+    /* Bottom-right */
+    .gate-frame-corner-2 {
+      bottom: 0;
+      right: 0;
+      border-bottom-width: 3px;
+      border-right-width: 3px;
+      border-bottom-right-radius: 12px;
+    }
+
+    /* Scanning line */
+    .gate-scanline {
+      position: absolute;
+      left: 6%;
+      right: 6%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      box-shadow: 0 0 12px var(--accent);
+      top: 10%;
+      animation: scanline 2.2s ease-in-out infinite;
+    }
+    @keyframes scanline {
+      0%, 100% { top: 10%; opacity: 0.3; }
+      50%      { top: 88%; opacity: 1; }
+    }
+
+    .gate-hint {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+      padding: 10px 20px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      white-space: nowrap;
+    }
+
+    /* ---------- Camera error / permission ---------- */
+    .gate-error {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      padding: 32px;
+      text-align: center;
+      background: var(--bg);
+    }
+    .gate-error.show { display: flex; }
+    .gate-error-icon {
+      width: 64px;
+      height: 64px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(255, 77, 94, 0.1);
+      border: 1px solid rgba(255, 77, 94, 0.35);
+      color: var(--danger);
+    }
+    .gate-error-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .gate-error-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 320px;
+    }
+    .gate-error-btn {
+      padding: 12px 24px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #04120b;
+      font-size: 14px;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* =========================================================
+       RESULT OVERLAY — full-screen feedback
+       ========================================================= */
+    .gate-result {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      transition: opacity 0.3s var(--ease);
+    }
+    .gate-result.show { display: flex; opacity: 1; }
+
+    .gate-result.in {
+      background:
+        radial-gradient(ellipse at 50% 30%, rgba(0, 224, 123, 0.35), transparent 60%),
+        linear-gradient(135deg, #062416 0%, #021a0e 100%);
+    }
+    .gate-result.out {
+      background:
+        radial-gradient(ellipse at 50% 30%, rgba(255, 140, 0, 0.35), transparent 60%),
+        linear-gradient(135deg, #2a1402 0%, #1a0d02 100%);
+    }
+    .gate-result.error {
+      background:
+        radial-gradient(ellipse at 50% 30%, rgba(255, 77, 94, 0.35), transparent 60%),
+        linear-gradient(135deg, #2a0608 0%, #1a0204 100%);
+    }
+
+    .gate-result-card {
+      position: relative;
+      width: 100%;
+      max-width: 440px;
+      background: rgba(10, 17, 32, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 28px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+      animation: resultIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    @keyframes resultIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .gate-result-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .gate-result.in .gate-result-status {
+      background: rgba(0, 224, 123, 0.15);
+      border: 1px solid rgba(0, 224, 123, 0.4);
+      color: var(--accent);
+    }
+    .gate-result.out .gate-result-status {
+      background: rgba(255, 140, 0, 0.15);
+      border: 1px solid rgba(255, 140, 0, 0.4);
+      color: #ff8c00;
+    }
+    .gate-result.error .gate-result-status {
+      background: rgba(255, 77, 94, 0.15);
+      border: 1px solid rgba(255, 77, 94, 0.4);
+      color: #ff8a95;
+    }
+
+    .gate-result-avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #00a95c);
+      color: #04120b;
+      display: grid;
+      place-items: center;
+      font-size: 36px;
+      font-weight: 900;
+      overflow: hidden;
+      border: 4px solid rgba(255, 255, 255, 0.15);
+    }
+    .gate-result-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gate-result-name {
+      font-size: 24px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+    .gate-result-code {
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.6);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-top: -8px;
+      font-family: monospace;
+    }
+
+    .gate-result-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      width: 100%;
+      margin-top: 6px;
+    }
+    .gate-result-meta-item {
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: left;
+    }
+    .gate-result-meta-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 4px;
+    }
+    .gate-result-meta-value {
+      font-size: 16px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.01em;
+    }
+    .gate-result-meta-value.accent { color: var(--accent); }
+    .gate-result-meta-value.warn   { color: #ff8c00; }
+
+    .gate-result-message {
+      font-size: 15px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.75);
+      margin-top: 4px;
+    }
+
+    .gate-result-done {
+      width: 100%;
+      padding: 14px 20px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background var(--dur) var(--ease);
+    }
+    .gate-result-done:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    /* ---------- Loading spinner ---------- */
+    .gate-result.loading .gate-result-card { display: none; }
+    .gate-loading {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      color: #fff;
+    }
+    .gate-result.loading .gate-loading { display: flex; }
+    .gate-loading-spinner {
+      width: 44px;
+      height: 44px;
+      border: 4px solid rgba(255, 255, 255, 0.15);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .gate-loading-text {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body class="gate-body">
+
+  <div class="gate-shell">
+
+    <!-- ============================================================
+         TOP BAR
+         ============================================================ -->
+    <header class="gate-top">
+      <div class="gate-top-left">
+        <img src="/assets/images/logo.jpeg" alt="PCL" class="gate-top-logo" />
+        <div>
+          <div class="gate-top-title">Gate Scanner</div>
+          <div class="gate-top-sub">Elite 6ix · 2026</div>
+        </div>
+      </div>
+
+      <div class="gate-count" id="insideCount">0 inside</div>
+    </header>
+
+    <!-- ============================================================
+         CAMERA VIEWPORT
+         ============================================================ -->
+    <div class="gate-cam">
+      <video id="camera" autoplay muted playsinline></video>
+
+      <div class="gate-frame">
+        <div class="gate-frame-box">
+          <div class="gate-frame-corner-1"></div>
+          <div class="gate-frame-corner-2"></div>
+          <div class="gate-scanline"></div>
+        </div>
+      </div>
+
+      <div class="gate-hint">Point the camera at a member's QR code</div>
+
+      <!-- Error state -->
+      <div class="gate-error" id="gateError">
+        <div class="gate-error-icon">
+          <svg viewBox="0 0 24 24" width="32" height="32" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 8v5M12 16v.01" />
+          </svg>
+        </div>
+        <div class="gate-error-title">Camera not available</div>
+        <div class="gate-error-text" id="gateErrorText">
+          Please allow camera access to scan member QR codes.
+        </div>
+        <button class="gate-error-btn" id="gateRetryBtn">Try again</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============================================================
+       RESULT OVERLAY
+       ============================================================ -->
+  <div class="gate-result" id="gateResult">
+    <div class="gate-result-card">
+      <div class="gate-result-status" id="resultStatus">IN</div>
+      <div class="gate-result-avatar" id="resultAvatar">–</div>
+      <div class="gate-result-name" id="resultName">–</div>
+      <div class="gate-result-code" id="resultCode">–</div>
+
+      <div class="gate-result-meta">
+        <div class="gate-result-meta-item">
+          <div class="gate-result-meta-label">Total visits</div>
+          <div class="gate-result-meta-value accent" id="resultVisits">0</div>
+        </div>
+        <div class="gate-result-meta-item">
+          <div class="gate-result-meta-label">Reward points</div>
+          <div class="gate-result-meta-value accent" id="resultPoints">0</div>
+        </div>
+      </div>
+
+      <div class="gate-result-message" id="resultMessage">–</div>
+
+      <button class="gate-result-done" id="resultDone">Scan next member</button>
+    </div>
+
+    <div class="gate-loading">
+      <div class="gate-loading-spinner"></div>
+      <div class="gate-loading-text">Checking member…</div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       QR LIBRARY — jsQR
+       ============================================================ -->
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+
+  <!-- ============================================================
+       SCRIPTS
+       ============================================================ -->
+  <script type="module">
+    import { CONFIG } from '/js/config.js';
+
+    const API = CONFIG.API_BASE_URL;
+
+    /* =========================================================
+       AUTH CHECK
+       ========================================================= */
+    function getToken() {
+      const t = localStorage.getItem('pcl_token');
+      return (t && t !== 'null' && t !== 'undefined') ? t : null;
+    }
+
+    const token = getToken();
+    if (!token) {
+      window.location.replace('/auth/login.html');
+      throw new Error('Not authenticated');
+    }
+
+    /* =========================================================
+       DOM REFS
+       ========================================================= */
+    const video         = document.getElementById('camera');
+    const gateError     = document.getElementById('gateError');
+    const gateErrorText = document.getElementById('gateErrorText');
+    const gateRetryBtn  = document.getElementById('gateRetryBtn');
+    const gateResult    = document.getElementById('gateResult');
+    const resultStatus  = document.getElementById('resultStatus');
+    const resultAvatar  = document.getElementById('resultAvatar');
+    const resultName    = document.getElementById('resultName');
+    const resultCode    = document.getElementById('resultCode');
+    const resultVisits  = document.getElementById('resultVisits');
+    const resultPoints  = document.getElementById('resultPoints');
+    const resultMessage = document.getElementById('resultMessage');
+    const resultDone    = document.getElementById('resultDone');
+    const insideCount   = document.getElementById('insideCount');
+
+    /* =========================================================
+       STATE
+       ========================================================= */
+    let stream = null;
+    let scanning = false;
+    let processing = false;
+    let cooldown = false;
+    let lastScannedToken = null;
+    let canvas = null;
+    let ctx = null;
+    let rafId = null;
+
+    /* =========================================================
+       START CAMERA
+       ========================================================= */
+    async function startCamera() {
+      gateError.classList.remove('show');
+
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment' },
+          audio: false,
+        });
+        video.srcObject = stream;
+        await video.play();
+
+        /* Prepare canvas for frame analysis */
+        canvas = document.createElement('canvas');
+        ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+        scanning = true;
+        tick();
+      } catch (err) {
+        console.error('Camera error:', err);
+        let msg = 'Could not access camera. Please allow camera access.';
+
+        if (err.name === 'NotAllowedError') {
+          msg = 'Camera permission was denied. Enable it in your browser settings and refresh.';
+        } else if (err.name === 'NotFoundError') {
+          msg = 'No camera found on this device.';
+        } else if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+          msg = 'Camera requires HTTPS. Please use a secure connection.';
+        }
+
+        gateErrorText.textContent = msg;
+        gateError.classList.add('show');
+      }
+    }
+
+    /* =========================================================
+       SCAN LOOP — reads frames from video
+       ========================================================= */
+    function tick() {
+      if (!scanning || !stream) return;
+
+      if (video.readyState === video.HAVE_ENOUGH_DATA && !cooldown) {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        try {
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const code = window.jsQR(
+            imageData.data,
+            imageData.width,
+            imageData.height,
+            { inversionAttempts: 'dontInvert' }
+          );
+
+          if (code && code.data) {
+            handleScan(code.data);
+          }
+        } catch (err) {
+          /* Frame read error — ignore, try next frame */
+        }
+      }
+
+      rafId = requestAnimationFrame(tick);
+    }
+
+    /* =========================================================
+       HANDLE SCAN — send token to backend
+       ========================================================= */
+    async function handleScan(qrToken) {
+      if (processing || cooldown) return;
+      if (qrToken === lastScannedToken) return; /* ignore same-frame duplicates */
+
+      processing = true;
+      lastScannedToken = qrToken;
+      cooldown = true;
+
+      /* Show loading overlay */
+      gateResult.className = 'gate-result show loading';
+
+      try {
+        const res = await fetch(`${API}/gate/scan`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ qrToken }),
+        });
+
+        const json = await res.json();
+
+        if (!res.ok || !json.success) {
+          showError(json.message || 'Scan failed');
+          return;
+        }
+
+        showResult(json.data);
+
+      } catch (err) {
+        console.error('Scan error:', err);
+        showError('Network error. Please try again.');
+      } finally {
+        processing = false;
+        /* Release cooldown after 2.5s so staff can scan next member */
+        setTimeout(() => {
+          cooldown = false;
+          lastScannedToken = null;
+        }, 2500);
+      }
+    }
+
+    /* =========================================================
+       SHOW RESULT — IN / OUT
+       ========================================================= */
+    function showResult(data) {
+      const isIn = data.direction === 'in';
+      const m = data.member;
+
+      gateResult.className = `gate-result show ${isIn ? 'in' : 'out'}`;
+
+      resultStatus.textContent = isIn ? 'IN' : 'OUT';
+      resultName.textContent   = m.full_name || 'Member';
+      resultCode.textContent   = m.member_code || '—';
+      resultVisits.textContent = data.total_visits ?? 0;
+      resultPoints.textContent = data.reward_points ?? 0;
+
+      /* Avatar — image or initials */
+      if (m.avatar_url) {
+        resultAvatar.innerHTML = `<img src="${m.avatar_url}" alt="" onerror="this.parentNode.textContent='${initials(m.full_name)}'">`;
+      } else {
+        resultAvatar.textContent = initials(m.full_name);
+      }
+
+      resultMessage.textContent = isIn
+        ? `Welcome in · ${new Date().toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' })}`
+        : `Checked out · ${new Date().toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' })}`;
+
+      /* Refresh inside count */
+      refreshInsideCount();
+    }
+
+    /* =========================================================
+       SHOW ERROR
+       ========================================================= */
+    function showError(message) {
+      gateResult.className = 'gate-result show error';
+
+      resultStatus.textContent = 'ERROR';
+      resultName.textContent   = 'Scan Failed';
+      resultCode.textContent   = '';
+      resultVisits.textContent = '–';
+      resultPoints.textContent = '–';
+      resultAvatar.textContent = '!';
+      resultMessage.textContent = message;
+    }
+
+    /* =========================================================
+       CLOSE RESULT OVERLAY
+       ========================================================= */
+    resultDone.addEventListener('click', () => {
+      gateResult.className = 'gate-result';
+    });
+
+    /* Auto-close after 4 seconds on success */
+    const originalShowResult = showResult;
+    showResult = function (data) {
+      originalShowResult(data);
+      setTimeout(() => {
+        if (gateResult.classList.contains('show') && !gateResult.classList.contains('loading')) {
+          gateResult.className = 'gate-result';
+        }
+      }, 4000);
+    };
+
+    /* =========================================================
+       INSIDE COUNT
+       ========================================================= */
+    async function refreshInsideCount() {
+      try {
+        const res = await fetch(`${API}/gate/inside-count`, {
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+        const json = await res.json();
+        if (res.ok && json.success) {
+          insideCount.textContent = `${json.data.inside} inside`;
+        }
+      } catch { /* silent */ }
+    }
+
+    /* =========================================================
+       HELPERS
+       ========================================================= */
+    function initials(name) {
+      if (!name) return '?';
+      return name.split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+    }
+
+    /* =========================================================
+       RETRY CAMERA
+       ========================================================= */
+    gateRetryBtn.addEventListener('click', () => {
+      if (stream) {
+        stream.getTracks().forEach(t => t.stop());
+      }
+      startCamera();
+    });
+
+    /* =========================================================
+       CLEANUP
+       ========================================================= */
+    window.addEventListener('beforeunload', () => {
+      scanning = false;
+      if (rafId) cancelAnimationFrame(rafId);
+      if (stream) stream.getTracks().forEach(t => t.stop());
+    });
+
+    /* =========================================================
+       INIT
+       ========================================================= */
+    refreshInsideCount();
+    startCamera();
+  </script>
+
+</body>
+</html>

@@ -336,6 +336,114 @@
     }
     .ov-stat-value.accent { color: var(--accent); }
 
+    /* ---------- Gate scanner card ---------- */
+    .gate-card {
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(0, 224, 123, 0.12), transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(0, 120, 255, 0.08), transparent 60%),
+        var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 22px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: center;
+    }
+    @media (max-width: 720px) {
+      .gate-card { grid-template-columns: 1fr; }
+    }
+
+    .gate-card-left {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .gate-card-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .gate-card-eyebrow::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0.4; }
+    }
+    .gate-card-title {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      line-height: 1.15;
+    }
+    .gate-card-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .gate-card-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .gate-card-stat {
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+    }
+    .gate-card-stat-label {
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+    .gate-card-stat-value {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--text);
+    }
+    .gate-card-stat-value.inside { color: var(--accent); }
+    .gate-card-stat-value.in     { color: #7cb2ff; }
+    .gate-card-stat-value.out    { color: #ff8c00; }
+
+    .gate-open-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 24px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #04120b;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      transition: background var(--dur) var(--ease), transform var(--dur) var(--ease);
+      white-space: nowrap;
+    }
+    .gate-open-btn:hover { background: #14f58c; }
+    .gate-open-btn:active { transform: scale(0.98); }
+
     /* ---------- Tables ---------- */
     .tbl-wrap { overflow-x: auto; }
     .tbl {
@@ -435,6 +543,8 @@
     .tag.approved { background: rgba(0, 224, 123, 0.1); color: var(--accent); border: 1px solid rgba(0, 224, 123, 0.35); }
     .tag.rejected { background: rgba(255, 77, 94, 0.1); color: var(--danger); border: 1px solid rgba(255, 77, 94, 0.35); }
     .tag.info     { background: rgba(0, 120, 255, 0.1); color: #7cb2ff; border: 1px solid rgba(0, 120, 255, 0.35); }
+    .tag.in       { background: rgba(0, 224, 123, 0.1); color: var(--accent); border: 1px solid rgba(0, 224, 123, 0.35); }
+    .tag.out      { background: rgba(255, 140, 0, 0.1); color: #ff8c00; border: 1px solid rgba(255, 140, 0, 0.35); }
 
     /* ---------- Sections show/hide ---------- */
     .page-section { display: none; }
@@ -692,6 +802,22 @@
       </div>
 
       <div>
+        <div class="side-group-label">Gate</div>
+        <nav class="side-nav">
+          <button class="side-nav-item" data-tab="gate">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7" rx="1"/>
+              <rect x="14" y="3" width="7" height="7" rx="1"/>
+              <rect x="3" y="14" width="7" height="7" rx="1"/>
+              <path d="M14 14h3v3h-3z"/>
+            </svg>
+            Gate Scanner
+          </button>
+        </nav>
+      </div>
+
+      <div>
         <div class="side-group-label">System</div>
         <nav class="side-nav">
           <button class="side-nav-item" data-tab="settings">
@@ -820,6 +946,43 @@
             </div>
           </div>
 
+          <!-- Gate scanner card -->
+          <div class="gate-card">
+            <div class="gate-card-left">
+              <span class="gate-card-eyebrow">Gate is open</span>
+              <div class="gate-card-title">Scan members at the gate</div>
+              <div class="gate-card-sub">
+                Open the camera scanner to check members in and out. Their attendance is logged automatically.
+              </div>
+
+              <div class="gate-card-stats">
+                <div class="gate-card-stat">
+                  <div class="gate-card-stat-label">Inside now</div>
+                  <div class="gate-card-stat-value inside" id="gateInside">0</div>
+                </div>
+                <div class="gate-card-stat">
+                  <div class="gate-card-stat-label">In today</div>
+                  <div class="gate-card-stat-value in" id="gateIn">0</div>
+                </div>
+                <div class="gate-card-stat">
+                  <div class="gate-card-stat-label">Out today</div>
+                  <div class="gate-card-stat-value out" id="gateOut">0</div>
+                </div>
+              </div>
+            </div>
+
+            <a href="/admin/scan.html" class="gate-open-btn">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="1"/>
+                <rect x="14" y="3" width="7" height="7" rx="1"/>
+                <rect x="3" y="14" width="7" height="7" rx="1"/>
+                <path d="M14 14h3v3h-3z"/>
+              </svg>
+              Open scanner
+            </a>
+          </div>
+
           <div class="panel">
             <div class="panel-head">
               <div>
@@ -841,6 +1004,79 @@
               <div class="panel-title">Recent activity</div>
             </div>
             <div id="activityList"></div>
+          </div>
+        </section>
+
+
+        <!-- ============================================================
+             GATE SCANNER
+             ============================================================ -->
+        <section class="page-section" id="tab-gate">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-title">Gate scanner</div>
+                <div class="panel-sub">Open the full-screen camera to scan member QR codes.</div>
+              </div>
+            </div>
+
+            <div class="gate-card">
+              <div class="gate-card-left">
+                <span class="gate-card-eyebrow">Live</span>
+                <div class="gate-card-title">Check members in &amp; out</div>
+                <div class="gate-card-sub">
+                  The scanner toggles each member between IN and OUT every time they scan. All scans are logged.
+                </div>
+
+                <div class="gate-card-stats">
+                  <div class="gate-card-stat">
+                    <div class="gate-card-stat-label">Inside now</div>
+                    <div class="gate-card-stat-value inside" id="gateTabInside">0</div>
+                  </div>
+                  <div class="gate-card-stat">
+                    <div class="gate-card-stat-label">In today</div>
+                    <div class="gate-card-stat-value in" id="gateTabIn">0</div>
+                  </div>
+                  <div class="gate-card-stat">
+                    <div class="gate-card-stat-label">Out today</div>
+                    <div class="gate-card-stat-value out" id="gateTabOut">0</div>
+                  </div>
+                </div>
+              </div>
+
+              <a href="/admin/scan.html" class="gate-open-btn">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="7" height="7" rx="1"/>
+                  <rect x="14" y="3" width="7" height="7" rx="1"/>
+                  <rect x="3" y="14" width="7" height="7" rx="1"/>
+                  <path d="M14 14h3v3h-3z"/>
+                </svg>
+                Open scanner
+              </a>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-title">Today's scans</div>
+                <div class="panel-sub">Live feed of every scan at the gate.</div>
+              </div>
+            </div>
+            <div class="tbl-wrap">
+              <table class="tbl">
+                <thead>
+                  <tr>
+                    <th>Member</th>
+                    <th>Member code</th>
+                    <th>Direction</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody id="gateBody"></tbody>
+              </table>
+            </div>
           </div>
         </section>
 
@@ -1129,6 +1365,10 @@
 
 
   <script type="module">
+    import { CONFIG } from '/js/config.js';
+
+    const API = CONFIG.API_BASE_URL;
+
     /* =========================================================
        MOCK DATA
        ========================================================= */
@@ -1183,6 +1423,13 @@
       { text: 'Fixture added: <strong>Seshego City vs Turfloop Titans</strong>', time: '1d ago' },
     ];
 
+    let GATE_SCANS = [
+      { id: 1, name: 'Thabo Mokoena',   code: 'PCL-2026-0001', direction: 'in',  time: '10:42' },
+      { id: 2, name: 'Lerato Dlamini',  code: 'PCL-2026-0002', direction: 'in',  time: '10:48' },
+      { id: 3, name: 'Sipho Ndlovu',    code: 'PCL-2026-0003', direction: 'out', time: '11:15' },
+      { id: 4, name: 'Bongani Khumalo', code: 'PCL-2026-0004', direction: 'in',  time: '11:22' },
+    ];
+
 
     /* =========================================================
        HELPERS
@@ -1196,6 +1443,11 @@
     const findTeam = (id) => TEAMS.find(t => t.id === id);
     const points = (s) => s.w * 3 + s.d;
 
+    function getToken() {
+      const t = localStorage.getItem('pcl_token');
+      return (t && t !== 'null' && t !== 'undefined') ? t : null;
+    }
+
     /* =========================================================
        TAB NAVIGATION
        ========================================================= */
@@ -1207,6 +1459,7 @@
       players:    'Players',
       fixtures:   'Fixtures',
       results:    'Results & Stats',
+      gate:       'Gate Scanner',
       settings:   'Settings',
     };
 
@@ -1214,6 +1467,12 @@
       $$('.side-nav-item').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
       $$('.page-section').forEach(s => s.classList.toggle('active', s.id === `tab-${tab}`));
       $('#topTitle').textContent = TITLES[tab] || 'Admin';
+
+      /* Refresh gate stats when switching to gate tab */
+      if (tab === 'gate') {
+        loadGateStats();
+      }
+
       closeSide();
     }
 
@@ -1244,6 +1503,79 @@
     }
     sideToggle?.addEventListener('click', openSide);
     sideOverlay?.addEventListener('click', closeSide);
+
+
+    /* =========================================================
+       GATE STATS (from backend)
+       ========================================================= */
+    async function loadGateStats() {
+      const token = getToken();
+
+      /* Update all three stat elements in overview AND gate tab */
+      const setStats = (inside, inT, outT) => {
+        ['gateInside', 'gateTabInside'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = inside;
+        });
+        ['gateIn', 'gateTabIn'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = inT;
+        });
+        ['gateOut', 'gateTabOut'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = outT;
+        });
+      };
+
+      if (!token) {
+        /* No token — show mock numbers */
+        setStats(4, 4, 1);
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API}/gate/inside-count`, {
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+        const json = await res.json();
+        if (res.ok && json.success) {
+          setStats(
+            json.data.inside ?? 0,
+            json.data.in_today ?? 0,
+            json.data.out_today ?? 0
+          );
+        }
+      } catch {
+        /* offline — keep last values */
+      }
+    }
+
+    /* Load on page open + every 30s */
+    loadGateStats();
+    setInterval(loadGateStats, 30000);
+
+
+    /* =========================================================
+       GATE SCAN LOG
+       ========================================================= */
+    function renderGateScans() {
+      const body = $('#gateBody');
+      if (!body) return;
+
+      if (!GATE_SCANS.length) {
+        body.innerHTML = `<tr><td colspan="4" class="empty">No scans yet today.</td></tr>`;
+        return;
+      }
+
+      body.innerHTML = GATE_SCANS.map(s => `
+        <tr>
+          <td class="name">${s.name}</td>
+          <td><span style="font-family:monospace;font-size:12px;">${s.code}</span></td>
+          <td><span class="tag ${s.direction === 'in' ? 'in' : 'out'}">${s.direction === 'in' ? 'IN' : 'OUT'}</span></td>
+          <td>${s.time}</td>
+        </tr>
+      `).join('');
+    }
 
 
     /* =========================================================
@@ -1749,7 +2081,6 @@
             const scoreA = Number($('#rA').value) || 0;
             const scoreB = Number($('#rB').value) || 0;
 
-            /* if editing an existing played match, subtract previous contribution */
             if (f.played) {
               applyResult(a, f.scoreA, f.scoreB, -1);
               applyResult(b, f.scoreB, f.scoreA, -1);
@@ -1827,11 +2158,10 @@
 
 
     /* =========================================================
-       SEARCH (decorative for now — filters the current table)
+       SEARCH
        ========================================================= */
     $('#topSearch').addEventListener('input', e => {
       const q = e.target.value.toLowerCase().trim();
-      /* simple: filter visible rows */
       $$('.tbl tbody tr').forEach(row => {
         row.style.display = !q || row.textContent.toLowerCase().includes(q) ? '' : 'none';
       });
@@ -1848,6 +2178,7 @@
     renderPlayers();
     renderFixtures();
     renderResults();
+    renderGateScans();
   </script>
 
 </body>
