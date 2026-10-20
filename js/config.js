@@ -8,8 +8,7 @@ export const CONFIG = {
   APP_FULL_NAME: 'Polokwane Champions League',
   VERSION: '1.0.0-mvp1',
 
-  API_BASE_URL: 'https://YOUR-RENDER-SERVICE.onrender.com/api',
-  
+  API_BASE_URL: 'https://premier-server.onrender.com/api',
 
   FEATURES: {
     auth: false,
@@ -20,9 +19,7 @@ export const CONFIG = {
 };
 
 
-/* ---------- Main navigation ----------
-   `icon` matches a key in the ICONS map (see index.html).
------------------------------------------ */
+
 export const NAV_LINKS = [
   { icon: 'home',        label: 'Home',        href: '/index.html' },
  
