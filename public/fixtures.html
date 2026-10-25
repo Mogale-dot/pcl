@@ -1129,45 +1129,71 @@
     /* =========================================================
        TEAMS
        ========================================================= */
-    const TEAMS = {
-      brighton:   { name: 'Brighton',       logo: '/assets/images/teams/bri.jpeg' },
+     const TEAMS = {
+      Kings :   { name: 'Kings fc ',       logo: '/assets/images/teams/kings.jpeg' },
       choko:      { name: 'Choko Choko',    logo: '/assets/images/teams/choko.jpeg'    },
       sunday:     { name: 'Sunday Ballers', logo: '/assets/images/teams/sunday.jpeg'   },
-      clutch:     { name: 'Clutch FC',      logo: '/assets/images/teams/clutch.jpeg'   },
-      maafter:    { name: 'Ma After 9',     logo: '/assets/images/teams/after9.jpeg'  },
+      Enfocado:     { name: 'Enfocado',    logo: '/assets/images/teams/Enfocado.jpeg'    },
+      majita:    { name: 'Majita  United',     logo: '/assets/images/teams/majita.jpeg'  },
       newcastle:  { name: 'Newcastle',      logo: '/assets/images/teams/new.jpeg' },
     };
 
     /* =========================================================
        STANDINGS — fresh season
        ========================================================= */
-    const STANDINGS_A = [
-      { team: TEAMS.brighton, p: 2, w: 0, d: 0, l: 2, gf: 6, ga: 9 },
-      { team: TEAMS.choko,    p: 2, w: 1, d: 0, l: 1, gf: 8, ga: 5 },
-      { team: TEAMS.sunday,   p: 2, w: 2, d: 0, l: 0, gf: 9, ga: 5 },
+    const STANDINGS_A = [ 
+
+     { team: TEAMS.Enfocado, p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
+      { team: TEAMS.Kings, p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
+      { team: TEAMS.majita,   p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
     ];
 
     const STANDINGS_B = [
-      { team: TEAMS.clutch,    p: 2, w: 2, d: 0, l: 0, gf: 6, ga: 1 },
-      { team: TEAMS.maafter,   p: 2, w: 0, d: 1, l: 1, gf: 2, ga: 2 },
-      { team: TEAMS.newcastle, p: 2, w: 0, d: 1, l: 1, gf: 3, ga: 6 },
+      { team: TEAMS.choko,  p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
+      { team: TEAMS.newcastle,  p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
+      { team: TEAMS.sunday, p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
     ];
 
     /* =========================================================
        FIXTURES
        ========================================================= */
-    const FIXTURES_A = [
-      { id: 1, group: 'A', court: 'Court A', date: 'Sun 18 Oct · 10:00',
-        teamA: TEAMS.choko,    teamB: TEAMS.clutch },
-     
-      { id: 3, group: 'A', court: 'Court A', date: 'Sun 18 Oct · 14:00',
-        teamA: TEAMS.sunday,   teamB: TEAMS.maafter },
-      
-    ];
+    
 
+
+        
+    const FIXTURES_A = [  
+
+    { id: 1, group: 'A', court: 'Court A', date: 'Sun 25 Oct · 18:00',
+        teamA: TEAMS.Enfocado,    teamB: TEAMS.Kings },
+      { id: 2, group: 'A', court: 'Court A', date: 'Sun 25 Oct · 18:30',
+        teamA: TEAMS.Enfocado,   teamB: TEAMS.majita },
+         { id: 3, group: 'A', court: 'Court A', date: 'Sun 25 Oct · 19:00',
+        teamA: TEAMS.Kings,   teamB: TEAMS.majita },
+
+      { id: 4, group: 'A', court: 'Court A', date: 'Sun 25 Oct · 18:00',
+        teamA: TEAMS.choko,    teamB: TEAMS.newcastle },
+      { id: 5, group: 'A', court: 'Court A', date: 'Sun 25 Oct · 18:30',
+        teamA: TEAMS.choko,   teamB: TEAMS.sunday },
+         { id: 6, group: 'A', court: 'Court A', date: 'Sun 25 Oct · 19:00',
+        teamA: TEAMS.newcastle,   teamB: TEAMS.sunday },
+
+    ]; 
+
+    const FIXTURES_B = [  
+
+    
+
+      { id: 1, group: 'B', court: 'Court A', date: 'Sun 25 Oct · 18:00',
+        teamA: TEAMS.choko,    teamB: TEAMS.newcastle },
+      { id: 2, group: 'B', court: 'Court A', date: 'Sun 25 Oct · 18:30',
+        teamA: TEAMS.choko,   teamB: TEAMS.sunday },
+         { id: 3, group: 'B', court: 'Court A', date: 'Sun 25 Oct · 19:00',
+        teamA: TEAMS.newcastle,   teamB: TEAMS.sunday },
+
+    ];
   
 
-    const ALL_FIXTURES = [...FIXTURES_A];
+    const ALL_FIXTURES = [...FIXTURES_A , ...FIXTURES_B];
 
 
     /* =========================================================
