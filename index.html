@@ -570,50 +570,31 @@
     /* =========================================================
        SPONSORS
        ========================================================= */
-    .section-sponsors { padding-block: clamp(40px, 5vw, 64px); }
+   
 
-    .sponsors-strip {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 16px;
-      max-width: 700px;
-      margin-inline: auto;
-    }
+   
 
     .sponsor-logo {
-      aspect-ratio: 16 / 9;
+      
       display: grid;
       place-items: center;
-      padding: 20px;
-      background: var(--surface);
+      margin-top:10px  ;
+     
       border: 1px solid var(--border);
-      border-radius: 12px;
-      transition: border-color var(--dur) var(--ease),
-                  background var(--dur) var(--ease),
-                  transform var(--dur) var(--ease);
+      border-radius: 22px;
+      
     }
-    .sponsor-logo:hover {
-      border-color: var(--border-strong);
-      background: var(--surface-2);
-      transform: translateY(-2px);
-    }
+   
     .sponsor-logo img {
       max-width: 100%;
-      max-height: 100%;
+      max-height: 100%;  
+      
       object-fit: contain;
-      filter: grayscale(1) opacity(0.7);
-      transition: filter var(--dur) var(--ease);
+      
+     
+    
     }
-    .sponsor-logo:hover img {
-      filter: grayscale(0) opacity(1);
-    }
-    .sponsor-fallback {
-      font-size: 14px;
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
+    
 
     /* =========================================================
        FOOD
@@ -1315,7 +1296,7 @@
     <div class="footer-inner">
       <div class="footer-brand">
         <img src="/assets/images/logo.jpeg" alt="PCL" class="footer-logo" />
-        <p>Polokwane Champions League — indoor football, brought to you at N1 Padel, Limpopo.</p>
+        <p>Premier Champions League — indoor football, brought to you at N1 Padel, Limpopo.</p>
       </div>
 
       <div class="footer-col">
@@ -1463,7 +1444,7 @@
         title: 'Fan Membership is now open — vote for Man of the Match',
         image: '/assets/images/news/photo3.jpeg' },
        { id: 6, category: 'Fan Zone', date: '18 Oct 2026',
-        title: 'Gupta  wins the last season Ballondor , scorring 8 goals and 4 assist - 12 GC',
+        title: 'Gupta  wins the last season Golden ball award , scorring 8 goals and 4 assist - 12 GC',
         image: '/assets/images/news/gupta.jpeg' },
       { id: 5, category: 'Fan Zone', date: '18 Oct 2026',
         title: 'Kings FC are to  be without their top   defender ,Mr Famous Faces Long Road Back After Achilles Rupture',
@@ -1475,8 +1456,8 @@
        SPONSORS
        ========================================================= */
     const MOCK_SPONSORS = [
-      { name: 'N1 Padel',        url: 'https://n1padel.co.za', logo: '/assets/images/sponsors/n1.png' },
-      { name: 'Delight Softies', url: '#',                     logo: '/assets/images/delight.png'     },
+      { name: 'N1 Padel',        url: 'https://n1padel.co.za', logo: '/assets/images/n1.jpeg' },
+      { name: 'Delight Softies', url: '#',                     logo: '/assets/images/delight.jpeg'     },
     ];
 
     /* =========================================================
