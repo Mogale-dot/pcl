@@ -159,6 +159,11 @@
       border-color: rgba(0, 120, 255, 0.35);
       color: #7cb2ff;
     }
+    .fixture-group-badge.knockout {
+      background: rgba(0, 224, 123, 0.1);
+      border-color: rgba(0, 224, 123, 0.35);
+      color: var(--accent);
+    }
 
     .fixture-body {
       display: grid;
@@ -193,6 +198,13 @@
       padding: 4px 8px;
       border: 1px solid var(--border);
       border-radius: 999px;
+    }
+    .fixture-score {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+      line-height: 1;
     }
 
     .team-crest {
@@ -249,6 +261,151 @@
     }
     .btn-view-more:hover { background: #14f58c; }
     .btn-view-more:active { transform: scale(0.98); }
+
+    /* =========================================================
+       GOLDEN BOOT RACE (NEW)
+       ========================================================= */
+    .gb-race-section {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .gb-race-head {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .gb-race-title {
+      font-size: clamp(22px, 3.4vw, 32px);
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #7cb2ff;
+      text-shadow: 0 0 12px rgba(0, 120, 255, 0.25);
+      margin-bottom: 6px;
+      line-height: 1;
+    }
+    .gb-race-sub {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .gb-race-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 14px;
+      overflow: hidden;
+      max-width: 640px;
+      margin-inline: auto;
+    }
+
+    .gb-race-row {
+      display: grid;
+      grid-template-columns: 44px 44px 1fr auto;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      background: rgba(12, 20, 40, 0.7);
+      transition: background var(--dur) var(--ease);
+    }
+    .gb-race-row:hover { background: rgba(20, 30, 55, 0.9); }
+    .gb-race-row.leader { background: rgba(0, 120, 255, 0.08); }
+    .gb-race-row.leader:hover { background: rgba(0, 120, 255, 0.14); }
+
+    .gb-race-pos {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--text);
+      text-align: center;
+      line-height: 1;
+    }
+    .gb-race-row.leader .gb-race-pos { color: #7cb2ff; }
+
+    .gb-race-crest {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      font-size: 10px;
+      font-weight: 900;
+      color: var(--accent);
+    }
+    .gb-race-crest img { width: 100%; height: 100%; object-fit: cover; }
+
+    .gb-race-info { min-width: 0; }
+    .gb-race-name {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--text);
+      line-height: 1.1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .gb-race-team {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 2px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .gb-race-goals {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      font-size: 26px;
+      font-weight: 900;
+      color: #7cb2ff;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .gb-race-row.leader .gb-race-goals {
+      color: #4a9eff;
+      text-shadow: 0 0 14px rgba(74, 158, 255, 0.4);
+    }
+    .gb-race-goals-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--text-dim);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .gb-race-empty {
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 13px;
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 14px;
+      max-width: 640px;
+      margin-inline: auto;
+    }
+
+    @media (max-width: 520px) {
+      .gb-race-row {
+        grid-template-columns: 32px 34px 1fr auto;
+        gap: 10px;
+        padding: 12px 14px;
+      }
+      .gb-race-pos { font-size: 16px; }
+      .gb-race-crest { width: 32px; height: 32px; }
+      .gb-race-name { font-size: 13px; }
+      .gb-race-goals { font-size: 22px; }
+    }
 
     /* =========================================================
        STORIES — Instagram style rail
@@ -570,31 +727,18 @@
     /* =========================================================
        SPONSORS
        ========================================================= */
-   
-
-   
-
     .sponsor-logo {
-      
       display: grid;
       place-items: center;
-      margin-top:10px  ;
-     
+      margin-top:10px;
       border: 1px solid var(--border);
       border-radius: 22px;
-      
     }
-   
     .sponsor-logo img {
       max-width: 100%;
-      max-height: 100%;  
-      
+      max-height: 100%;
       object-fit: contain;
-      
-     
-    
     }
-    
 
     /* =========================================================
        FOOD
@@ -895,6 +1039,15 @@
       transition: background var(--dur) var(--ease);
     }
     .profile-logout:hover { background: rgba(255, 77, 94, 0.14); }
+
+    /* Loading */
+    .fixtures-loading, .gb-race-loading {
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 13px;
+      grid-column: 1 / -1;
+    }
   </style>
 </head>
 <body>
@@ -1149,7 +1302,9 @@
           </a>
         </header>
 
-        <div class="fixtures-grid" id="fixturesGrid"></div>
+        <div class="fixtures-grid" id="fixturesGrid">
+          <div class="fixtures-loading">Loading fixtures...</div>
+        </div>
 
         <div class="fixtures-actions">
           <a href="/public/fixtures.html" class="btn-view-more">
@@ -1159,6 +1314,23 @@
               <path d="M5 12h14M13 6l6 6-6 6" />
             </svg>
           </a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         GOLDEN BOOT RACE — top 3
+         ============================================================ -->
+    <section class="section gb-race-section" aria-labelledby="gbRaceTitle">
+      <div class="container">
+        <div class="gb-race-head">
+          <h2 class="gb-race-title" id="gbRaceTitle">Golden Boot Race</h2>
+          <div class="gb-race-sub">Top 3 Goal Scorers · Elite 6ix</div>
+        </div>
+
+        <div class="gb-race-list" id="gbRaceList">
+          <div class="gb-race-empty">Loading top scorers...</div>
         </div>
       </div>
     </section>
@@ -1332,45 +1504,13 @@
        SCRIPTS
        ============================================================ -->
   <script type="module">
-    import { NAV_LINKS } from '/js/config.js';
+    import { NAV_LINKS, CONFIG } from '/js/config.js';
+
+    const API = CONFIG.API_BASE_URL;
 
     /* =========================================================
-       TEAMS — Elite 6ix
-       ========================================================= */
-    const TEAMS = {
-      Kings :   { name: 'Kings fc ',       logo: '/assets/images/teams/kings.jpeg' },
-      choko:      { name: 'Choko Choko',    logo: '/assets/images/teams/choko.jpeg'    },
-      sunday:     { name: 'Sunday Ballers', logo: '/assets/images/teams/sunday.jpeg'   },
-      Enfocado:     { name: 'Enfocado',    logo: '/assets/images/teams/Enfocado.jpeg'    },
-      majita:    { name: 'Majita  United',     logo: '/assets/images/teams/majita.jpeg'  },
-      newcastle:  { name: 'Newcastle',      logo: '/assets/images/teams/new.jpeg' },
-    };
-
-    /* =========================================================
-       FIXTURES — first 6 (mixed Group A + B)
-       ========================================================= */ 
-       
-    const FIXTURES_FIRST_6 = [  
-
-    { id: 1, group: 'A', court: 'Court A', date: 'Sun 25 Oct · 18:00',
-        teamA: TEAMS.Enfocado,    teamB: TEAMS.Kings },
-      { id: 2, group: 'A', court: 'Court A', date: 'Sun 25 Oct · 18:30',
-        teamA: TEAMS.Enfocado,   teamB: TEAMS.majita },
-         { id: 3, group: 'A', court: 'Court A', date: 'Sun 25 Oct · 19:00',
-        teamA: TEAMS.Kings,   teamB: TEAMS.majita },
-
-      { id: 4, group: 'A', court: 'Court A', date: 'Sun 25 Oct · 18:00',
-        teamA: TEAMS.choko,    teamB: TEAMS.newcastle },
-      { id: 5, group: 'A', court: 'Court A', date: 'Sun 25 Oct · 18:30',
-        teamA: TEAMS.choko,   teamB: TEAMS.sunday },
-         { id: 6, group: 'A', court: 'Court A', date: 'Sun 25 Oct · 19:00',
-        teamA: TEAMS.newcastle,   teamB: TEAMS.sunday },
-
-    ];
-
-
-    /* =========================================================
-       STORIES
+       MOCK STORIES / NEWS / SPONSORS / FOOD
+       (these stay static for now — you can wire them up later)
        ========================================================= */
     const MOCK_STORIES = [
       {
@@ -1430,68 +1570,32 @@
       },
     ];
 
-    /* =========================================================
-       NEWS
-       ========================================================= */
     const MOCK_NEWS = [
       { id: 1, category: 'Match Report', date: '01 Oct 2026',
         title: 'This season will be fire !! - said Madam CEO',
         image: '/assets/images/news/photo1.jpeg' },
-      { id: 2, category: 'Announcement', date: '05 Oct 2026',
-        title: 'Kings FC  are back  in action this weekend ',
-        image: '/assets/images/news/photo2.jpeg' },
-      { id: 3, category: 'Fan Zone', date: '18 Oct 2026',
+      
+      { id: 2, category: 'Fan Zone', date: '18 Oct 2026',
         title: 'Fan Membership is now open — vote for Man of the Match',
         image: '/assets/images/news/photo3.jpeg' },
-       { id: 6, category: 'Fan Zone', date: '18 Oct 2026',
+       { id: 4, category: 'Fan Zone', date: '18 Oct 2026',
         title: 'Gupta  wins the last season Golden ball award , scorring 8 goals and 4 assist - 12 GC',
         image: '/assets/images/news/gupta.jpeg' },
       { id: 5, category: 'Fan Zone', date: '18 Oct 2026',
         title: 'Kings FC are to  be without their top   defender ,Mr Famous Faces Long Road Back After Achilles Rupture',
         image: '/assets/images/stories/famous.jpeg' },
-        
     ];
 
-    /* =========================================================
-       SPONSORS
-       ========================================================= */
     const MOCK_SPONSORS = [
       { name: 'N1 Padel',        url: 'https://n1padel.co.za', logo: '/assets/images/n1.jpeg' },
-      { name: 'Delight Softies', url: '#',                     logo: '/assets/images/delight.jpeg'     },
+      { name: 'Delight Softies', url: '#',                     logo: '/assets/images/delight.jpeg' },
     ];
 
-    /* =========================================================
-       FOOD
-       ========================================================= */
     const MOCK_FOOD = [
-      {
-        name: 'Pizza',
-        desc: 'Classic boerie-style pizza with your choice of sauces.',
-        price: 'R45',
-        emoji: '',
-        image: '/assets/images/food/pizza.jpeg',
-      },
-      {
-        name: 'Shawarma',
-        desc: 'Chicken or beef shawarma, freshly wrapped on order.',
-        price: 'R70',
-        emoji: '',
-        image: '/assets/images/food/shawarma.jpeg',
-      },
-      {
-        name: 'Coffee',
-        desc: 'Freshly brewed filter coffee — hot and strong.',
-        price: 'R25',
-        emoji: '',
-        image: '/assets/images/food/hotc.jpeg',
-      },
-      {
-        name: 'Ice Cream',
-        desc: 'Soft-serve cone or cup — the match-day classic.',
-        price: 'R30',
-        emoji: '',
-        image: '/assets/images/food/icecream.jpeg',
-      },
+      { name: 'Pizza',    desc: 'Classic boerie-style pizza with your choice of sauces.', price: 'R45', emoji: '', image: '/assets/images/food/pizza.jpeg' },
+      { name: 'Shawarma', desc: 'Chicken or beef shawarma, freshly wrapped on order.',   price: 'R70', emoji: '', image: '/assets/images/food/shawarma.jpeg' },
+      { name: 'Coffee',   desc: 'Freshly brewed filter coffee — hot and strong.',        price: 'R25', emoji: '', image: '/assets/images/food/hotc.jpeg' },
+      { name: 'Ice Cream',desc: 'Soft-serve cone or cup — the match-day classic.',       price: 'R30', emoji: '', image: '/assets/images/food/icecream.jpeg' },
     ];
 
 
@@ -1586,9 +1690,7 @@
       try {
         const raw = localStorage.getItem('pcl_user');
         return raw ? JSON.parse(raw) : null;
-      } catch {
-        return null;
-      }
+      } catch { return null; }
     }
     function clearAuth() {
       localStorage.removeItem('pcl_token');
@@ -1833,8 +1935,29 @@
 
 
     /* =========================================================
-       RENDER: NEXT FIXTURES
+       RENDER: NEXT FIXTURES (real backend)
        ========================================================= */
+    async function loadFixtures() {
+      const grid = document.getElementById('fixturesGrid');
+      try {
+        const res = await fetch(`${API}/teams/public/fixtures`);
+        const json = await res.json();
+        
+        if (!res.ok || !json.success || !json.data || !json.data.length) {
+          grid.innerHTML = `<div class="fixtures-loading">No fixtures scheduled yet.</div>`;
+          return;
+        }
+
+        // Take first 6
+        const fixtures = json.data.slice(0, 6);
+        grid.innerHTML = fixtures.map(fixtureCardHTML).join('');
+
+      } catch (err) {
+        console.error('Failed to load fixtures:', err);
+        grid.innerHTML = `<div class="fixtures-loading">Unable to load fixtures.</div>`;
+      }
+    }
+
     function crestHTML(team) {
       return `
         <div class="team-crest">
@@ -1845,13 +1968,23 @@
     }
 
     function fixtureCardHTML(f) {
-      const groupClass = f.group === 'A' ? '' : ' group-b';
+      const groupClass = f.group_name === 'A' ? '' :
+                         f.group_name === 'B' ? ' group-b' :
+                         f.group_name ? ' knockout' : '';
+      const groupLabel = f.group_name === 'A' ? 'Group A' :
+                         f.group_name === 'B' ? 'Group B' :
+                         f.stage ? f.stage.replace('_', ' ').toUpperCase() : '—';
+
+      const hasScore = f.status === 'completed' && f.score_a !== null && f.score_b !== null;
+      const centerMarkup = hasScore
+        ? `<span class="fixture-score">${f.score_a} – ${f.score_b}</span>`
+        : `<span class="fixture-vs">VS</span>`;
 
       return `
         <article class="fixture-card" data-id="${f.id}">
           <div class="fixture-meta">
             <span class="fixture-meta-item">
-              <span class="fixture-group-badge${groupClass}">Group ${f.group}</span>
+              <span class="fixture-group-badge${groupClass}">${groupLabel}</span>
             </span>
             <span class="fixture-meta-item fixture-court">
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none"
@@ -1861,7 +1994,7 @@
                 <path d="M12 4v16"/>
                 <path d="M3 12h18"/>
               </svg>
-              ${f.court}
+              ${f.court || 'Court A'}
             </span>
             <span class="fixture-meta-item">
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none"
@@ -1870,27 +2003,76 @@
                 <circle cx="12" cy="12" r="9"/>
                 <path d="M12 7v5l3 2"/>
               </svg>
-              ${f.date}
+              ${new Date(f.match_date).toLocaleDateString('en-ZA', { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
             </span>
           </div>
 
           <div class="fixture-body">
             <div class="fixture-team">
-              ${crestHTML(f.teamA)}
-              <span class="fixture-name">${f.teamA.name}</span>
+              ${crestHTML({ name: f.team_a_name, logo: f.team_a_logo })}
+              <span class="fixture-name">${f.team_a_name}</span>
             </div>
-            <span class="fixture-vs">VS</span>
+            ${centerMarkup}
             <div class="fixture-team">
-              ${crestHTML(f.teamB)}
-              <span class="fixture-name">${f.teamB.name}</span>
+              ${crestHTML({ name: f.team_b_name, logo: f.team_b_logo })}
+              <span class="fixture-name">${f.team_b_name}</span>
             </div>
           </div>
         </article>
       `;
     }
 
-    document.getElementById('fixturesGrid').innerHTML =
-      FIXTURES_FIRST_6.map(fixtureCardHTML).join('');
+
+    /* =========================================================
+       RENDER: GOLDEN BOOT RACE (top 3)
+       ========================================================= */
+    async function loadGoldenBootRace() {
+      const wrap = document.getElementById('gbRaceList');
+      try {
+        const res = await fetch(`${API}/players/public`);
+        const json = await res.json();
+
+        if (!res.ok || !json.success || !json.data) {
+          wrap.innerHTML = `<div class="gb-race-empty">No goals scored yet.</div>`;
+          return;
+        }
+
+        // Filter players with goals > 0, sort, take top 3
+        const top3 = json.data
+          .filter(p => (p.total_goals || 0) > 0)
+          .sort((a, b) => {
+            if ((b.total_goals || 0) !== (a.total_goals || 0))
+              return (b.total_goals || 0) - (a.total_goals || 0);
+            return (b.total_assists || 0) - (a.total_assists || 0);
+          })
+          .slice(0, 3);
+
+        if (!top3.length) {
+          wrap.innerHTML = `<div class="gb-race-empty">No goals scored yet.</div>`;
+          return;
+        }
+
+        wrap.innerHTML = top3.map((p, i) => `
+          <div class="gb-race-row${i === 0 ? ' leader' : ''}">
+            <div class="gb-race-pos">${i + 1}</div>
+            <div class="gb-race-crest">
+              ${p.team_logo ? `<img src="${p.team_logo}" alt="" onerror="this.remove()">` : initialsOf(p.full_name)}
+            </div>
+            <div class="gb-race-info">
+              <div class="gb-race-name">${p.full_name}</div>
+              <div class="gb-race-team">${p.team_name || '—'}</div>
+            </div>
+            <div class="gb-race-goals">
+              ${p.total_goals}
+              <span class="gb-race-goals-label">${p.total_goals === 1 ? 'goal' : 'goals'}</span>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('Failed to load Golden Boot Race:', err);
+        wrap.innerHTML = `<div class="gb-race-empty">Unable to load top scorers.</div>`;
+      }
+    }
 
 
     /* =========================================================
@@ -2167,6 +2349,13 @@
 
     document.getElementById('foodGrid').innerHTML =
       MOCK_FOOD.map(foodCardHTML).join('');
+
+
+    /* =========================================================
+       INIT
+       ========================================================= */
+    loadFixtures();
+    loadGoldenBootRace();
   </script>
 
 </body>

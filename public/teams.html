@@ -13,20 +13,14 @@
        TEAMS PAGE — page-specific styles
        ========================================================= */
 
-    /* ---------- Page hero strip ---------- */
     .page-hero {
       position: relative;
       padding: clamp(48px, 8vw, 96px) 0 clamp(32px, 5vw, 56px);
       background:
-    linear-gradient(
-      to right,
-      rgba(5, 10, 21, 0.92) 0%,
-      rgba(5, 10, 21, 0.78) 50%,
-      rgba(5, 10, 21, 0.92) 100%
-    ),
-    url('/assets/images/banner.jpeg') center / cover no-repeat;
-  backdrop-filter: saturate(180%) blur(14px);
-  -webkit-backdrop-filter: saturate(180%) blur(14px);
+        linear-gradient(to right, rgba(5,10,21,0.92) 0%, rgba(5,10,21,0.78) 50%, rgba(5,10,21,0.92) 100%),
+        url('/assets/images/banner.jpeg') center / cover no-repeat;
+      backdrop-filter: saturate(180%) blur(14px);
+      -webkit-backdrop-filter: saturate(180%) blur(14px);
       border-bottom: 1px solid var(--border);
       overflow: hidden;
     }
@@ -34,11 +28,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(
-        to top,
-        rgba(5, 10, 21, 0.6) 0%,
-        transparent 60%
-      );
+      background: linear-gradient(to top, rgba(5,10,21,0.6) 0%, transparent 60%);
       pointer-events: none;
     }
     .page-hero-inner {
@@ -76,7 +66,6 @@
       line-height: 1.55;
     }
 
-    /* ---------- Toolbar (filters + search) ---------- */
     .teams-toolbar {
       display: flex;
       flex-wrap: wrap;
@@ -103,15 +92,8 @@
                   color var(--dur) var(--ease),
                   border-color var(--dur) var(--ease);
     }
-    .filter-btn:hover {
-      color: var(--text);
-      border-color: rgba(255,255,255,0.3);
-    }
-    .filter-btn.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #04120b;
-    }
+    .filter-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.3); }
+    .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #04120b; }
 
     .teams-search {
       position: relative;
@@ -128,19 +110,15 @@
       outline: none;
       transition: border-color var(--dur) var(--ease);
     }
-    .teams-search input:focus {
-      border-color: var(--accent);
-    }
+    .teams-search input:focus { border-color: var(--accent); }
     .teams-search svg {
       position: absolute;
-      left: 12px;
-      top: 50%;
+      left: 12px; top: 50%;
       transform: translateY(-50%);
       color: var(--text-dim);
       pointer-events: none;
     }
 
-    /* ---------- Teams grid ---------- */
     .teams-section {
       padding-block: clamp(32px, 5vw, 64px) clamp(64px, 8vw, 96px);
     }
@@ -153,7 +131,6 @@
     @media (max-width: 1024px) { .teams-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 640px)  { .teams-grid { grid-template-columns: 1fr; gap: 14px; } }
 
-    /* ---------- Team card ---------- */
     .team-card {
       position: relative;
       background: var(--surface);
@@ -192,8 +169,7 @@
     }
     .team-card-crest {
       position: relative;
-      width: 60px;
-      height: 60px;
+      width: 60px; height: 60px;
       border-radius: 50%;
       background: var(--surface-2);
       border: 1px solid var(--border-strong);
@@ -212,17 +188,9 @@
       color: var(--accent);
       letter-spacing: 0.04em;
     }
-    .team-card-crest img {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .team-card-title {
-      flex: 1;
-      min-width: 0;
-    }
+    .team-card-crest img { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: cover; }
+
+    .team-card-title { flex: 1; min-width: 0; }
     .team-card-name {
       font-size: 17px;
       font-weight: 800;
@@ -241,7 +209,6 @@
       white-space: nowrap;
     }
 
-    /* points pill */
     .team-card-points {
       padding: 6px 10px;
       border-radius: 999px;
@@ -256,7 +223,6 @@
       flex-shrink: 0;
     }
 
-    /* ---------- TEAM PHOTO BANNER ---------- */
     .team-card-photo {
       position: relative;
       width: 100%;
@@ -267,29 +233,19 @@
       border: 1px solid var(--border);
     }
     .team-card-photo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
       transition: transform 0.6s var(--ease);
     }
-    .team-card:hover .team-card-photo img {
-      transform: scale(1.04);
-    }
-    /* subtle bottom gradient so it blends into the card */
+    .team-card:hover .team-card-photo img { transform: scale(1.04); }
     .team-card-photo::after {
       content: '';
       position: absolute;
       inset: auto 0 0 0;
       height: 40%;
-      background: linear-gradient(
-        to top,
-        rgba(5, 10, 21, 0.55) 0%,
-        transparent 100%
-      );
+      background: linear-gradient(to top, rgba(5, 10, 21, 0.55) 0%, transparent 100%);
       pointer-events: none;
     }
-    /* fallback when photo is missing */
     .team-card-photo-fallback {
       position: absolute;
       inset: 0;
@@ -300,15 +256,9 @@
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--text-dim);
-      background:
-        repeating-linear-gradient(
-          45deg,
-          rgba(255,255,255,0.02) 0 10px,
-          rgba(255,255,255,0.04) 10px 20px
-        );
+      background: repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0 10px, rgba(255,255,255,0.04) 10px 20px);
     }
 
-    /* stat row */
     .team-card-stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -317,9 +267,7 @@
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
     }
-    .stat {
-      text-align: center;
-    }
+    .stat { text-align: center; }
     .stat-value {
       font-size: 16px;
       font-weight: 800;
@@ -338,7 +286,6 @@
     .stat.loss .stat-value { color: var(--danger); }
     .stat.draw .stat-value { color: var(--accent-2); }
 
-    /* footer of card */
     .team-card-foot {
       display: flex;
       align-items: center;
@@ -346,10 +293,7 @@
       font-size: 12px;
       color: var(--text-muted);
     }
-    .team-card-foot strong {
-      color: var(--text);
-      font-weight: 700;
-    }
+    .team-card-foot strong { color: var(--text); font-weight: 700; }
     .team-card-cta {
       display: inline-flex;
       align-items: center;
@@ -358,14 +302,9 @@
       font-weight: 700;
       color: var(--accent);
     }
-    .team-card-cta svg {
-      transition: transform var(--dur) var(--ease);
-    }
-    .team-card:hover .team-card-cta svg {
-      transform: translateX(3px);
-    }
+    .team-card-cta svg { transition: transform var(--dur) var(--ease); }
+    .team-card:hover .team-card-cta svg { transform: translateX(3px); }
 
-    /* ---------- Empty state ---------- */
     .teams-empty {
       grid-column: 1 / -1;
       padding: 64px 24px;
@@ -375,7 +314,7 @@
     }
 
     /* =========================================================
-       GOLDEN BOOT — top scorers
+       GOLDEN BOOT
        ========================================================= */
     .golden-boot-section {
       position: relative;
@@ -387,31 +326,22 @@
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
     }
-
     .golden-boot-wrap {
       max-width: 640px;
       margin-inline: auto;
       padding: 0 var(--sp-5);
     }
-
-    .gb-head {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-
+    .gb-head { text-align: center; margin-bottom: 32px; }
     .gb-title {
       font-size: clamp(28px, 5vw, 44px);
       font-weight: 900;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       color: #7cb2ff;
-      text-shadow:
-        0 0 12px rgba(0, 120, 255, 0.4),
-        0 0 24px rgba(0, 120, 255, 0.2);
+      text-shadow: 0 0 12px rgba(0, 120, 255, 0.4), 0 0 24px rgba(0, 120, 255, 0.2);
       margin-bottom: 6px;
       line-height: 1;
     }
-
     .gb-sub {
       font-size: 12px;
       font-weight: 700;
@@ -419,8 +349,6 @@
       text-transform: uppercase;
       color: var(--text-dim);
     }
-
-    /* Row list */
     .gb-list {
       display: flex;
       flex-direction: column;
@@ -429,7 +357,6 @@
       border-radius: 12px;
       overflow: hidden;
     }
-
     .gb-row {
       display: grid;
       grid-template-columns: 40px 44px 1fr 44px;
@@ -439,17 +366,9 @@
       background: rgba(12, 20, 40, 0.7);
       transition: background var(--dur) var(--ease);
     }
-    .gb-row:hover {
-      background: rgba(20, 30, 55, 0.85);
-    }
-    .gb-row.leader {
-      background: rgba(0, 120, 255, 0.08);
-    }
-    .gb-row.leader:hover {
-      background: rgba(0, 120, 255, 0.14);
-    }
-
-    /* Pos */
+    .gb-row:hover { background: rgba(20, 30, 55, 0.85); }
+    .gb-row.leader { background: rgba(0, 120, 255, 0.08); }
+    .gb-row.leader:hover { background: rgba(0, 120, 255, 0.14); }
     .gb-pos {
       font-size: 18px;
       font-weight: 900;
@@ -458,14 +377,9 @@
       letter-spacing: -0.02em;
       line-height: 1;
     }
-    .gb-row.leader .gb-pos {
-      color: #7cb2ff;
-    }
-
-    /* Crest */
+    .gb-row.leader .gb-pos { color: #7cb2ff; }
     .gb-crest {
-      width: 34px;
-      height: 34px;
+      width: 34px; height: 34px;
       border-radius: 50%;
       background: var(--surface);
       border: 1px solid var(--border-strong);
@@ -476,13 +390,7 @@
       font-weight: 900;
       color: var(--accent);
     }
-    .gb-crest img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* Name */
+    .gb-crest img { width: 100%; height: 100%; object-fit: cover; }
     .gb-name {
       font-size: 15px;
       font-weight: 800;
@@ -493,8 +401,6 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-
-    /* Goals */
     .gb-goals {
       font-size: 20px;
       font-weight: 900;
@@ -503,17 +409,16 @@
       text-align: right;
       line-height: 1;
     }
-    .gb-row.leader .gb-goals {
-      color: #4a9eff;
-      text-shadow: 0 0 12px rgba(74, 158, 255, 0.5);
+    .gb-row.leader .gb-goals { color: #4a9eff; text-shadow: 0 0 12px rgba(74, 158, 255, 0.5); }
+    .gb-empty {
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 13px;
     }
 
     @media (max-width: 480px) {
-      .gb-row {
-        grid-template-columns: 30px 36px 1fr 34px;
-        gap: 10px;
-        padding: 12px 14px;
-      }
+      .gb-row { grid-template-columns: 30px 36px 1fr 34px; gap: 10px; padding: 12px 14px; }
       .gb-pos { font-size: 16px; }
       .gb-name { font-size: 13px; }
       .gb-goals { font-size: 18px; }
@@ -521,7 +426,7 @@
     }
 
     /* =========================================================
-       TEAM MODAL (squad + stats)
+       TEAM MODAL
        ========================================================= */
     .team-modal {
       position: fixed;
@@ -550,11 +455,8 @@
       transform: translateY(12px);
       transition: transform 0.3s var(--ease);
     }
-    .team-modal.open .team-modal-panel {
-      transform: translateY(0);
-    }
+    .team-modal.open .team-modal-panel { transform: translateY(0); }
 
-    /* modal header */
     .team-modal-head {
       position: relative;
       padding: 24px 24px 20px;
@@ -567,8 +469,7 @@
       gap: 16px;
     }
     .team-modal-crest {
-      width: 72px;
-      height: 72px;
+      width: 72px; height: 72px;
       border-radius: 50%;
       background: var(--surface-2);
       border: 1px solid var(--border-strong);
@@ -587,17 +488,8 @@
       font-weight: 900;
       color: var(--accent);
     }
-    .team-modal-crest img {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .team-modal-title {
-      flex: 1;
-      min-width: 0;
-    }
+    .team-modal-crest img { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: cover; }
+    .team-modal-title { flex: 1; min-width: 0; }
     .team-modal-name {
       font-size: 22px;
       font-weight: 900;
@@ -605,14 +497,9 @@
       color: var(--text);
       line-height: 1.15;
     }
-    .team-modal-meta {
-      margin-top: 4px;
-      font-size: 13px;
-      color: var(--text-muted);
-    }
+    .team-modal-meta { margin-top: 4px; font-size: 13px; color: var(--text-muted); }
     .team-modal-close {
-      width: 40px;
-      height: 40px;
+      width: 40px; height: 40px;
       display: grid;
       place-items: center;
       border-radius: 50%;
@@ -620,10 +507,11 @@
       color: var(--text);
       flex-shrink: 0;
       transition: background var(--dur) var(--ease);
+      border: none;
+      cursor: pointer;
     }
     .team-modal-close:hover { background: rgba(255, 255, 255, 0.12); }
 
-    /* modal stats strip */
     .team-modal-stats {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -637,10 +525,7 @@
       text-align: center;
     }
 
-    /* modal body */
-    .team-modal-body {
-      padding: 20px 24px 24px;
-    }
+    .team-modal-body { padding: 20px 24px 24px; }
     .team-modal-section-title {
       font-size: 11px;
       font-weight: 800;
@@ -650,12 +535,7 @@
       margin-bottom: 12px;
     }
 
-    /* players list */
-    .players-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+    .players-list { display: flex; flex-direction: column; gap: 8px; }
     .player-row {
       display: grid;
       grid-template-columns: 40px 1fr auto auto;
@@ -667,13 +547,9 @@
       border-radius: 12px;
       transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
     }
-    .player-row:hover {
-      background: var(--surface-2);
-      border-color: var(--border-strong);
-    }
+    .player-row:hover { background: var(--surface-2); border-color: var(--border-strong); }
     .player-num {
-      width: 32px;
-      height: 32px;
+      width: 32px; height: 32px;
       display: grid;
       place-items: center;
       background: rgba(0, 224, 123, 0.08);
@@ -683,9 +559,7 @@
       font-weight: 800;
       color: var(--accent);
     }
-    .player-info {
-      min-width: 0;
-    }
+    .player-info { min-width: 0; }
     .player-name {
       font-size: 14px;
       font-weight: 700;
@@ -708,28 +582,22 @@
       color: var(--text-muted);
       white-space: nowrap;
     }
-    .player-mini-stats span strong {
-      color: var(--text);
-      font-weight: 800;
-      margin-left: 3px;
-    }
+    .player-mini-stats span strong { color: var(--text); font-weight: 800; margin-left: 3px; }
+
+    .modal-loading { padding: 40px 20px; text-align: center; color: var(--text-dim); font-size: 13px; }
 
     @media (max-width: 520px) {
       .team-modal { padding: 16px 0; }
       .team-modal-panel { border-radius: 0; max-width: 100%; }
       .team-modal-stats { grid-template-columns: repeat(3, 1fr); }
-      .player-row {
-        grid-template-columns: 36px 1fr auto;
-      }
+      .player-row { grid-template-columns: 36px 1fr auto; }
       .player-mini-stats { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ============================================================
-       NAV
-       ============================================================ -->
+  <!-- NAV -->
   <header class="nav" id="nav">
     <div class="nav-inner">
       <a href="/index.html" class="nav-logo" aria-label="PCL Home">
@@ -763,10 +631,7 @@
     <div class="nav-divider"></div>
   </header>
 
-
-  <!-- ============================================================
-       NAV DRAWER
-       ============================================================ -->
+  <!-- NAV DRAWER -->
   <div class="nav-overlay" id="navOverlay"></div>
 
   <aside class="nav-drawer" id="navDrawer" aria-hidden="true">
@@ -800,12 +665,9 @@
     </div>
   </aside>
 
-
   <main>
 
-    <!-- ============================================================
-         PAGE HERO
-         ============================================================ -->
+    <!-- PAGE HERO -->
     <section class="page-hero">
       <div class="page-hero-inner">
         <span class="page-eyebrow">2026 Season</span>
@@ -817,7 +679,6 @@
         <div class="teams-toolbar">
           <div class="teams-filters" id="teamsFilters">
             <button class="filter-btn active" data-filter="all">All Teams</button>
-            
           </div>
 
           <label class="teams-search">
@@ -826,43 +687,38 @@
               <circle cx="11" cy="11" r="7" />
               <path d="M21 21l-4-4" />
             </svg>
-            <input type="search" id="teamsSearch" placeholder="Search teams,players ..." />
+            <input type="search" id="teamsSearch" placeholder="Search teams, players..." />
           </label>
         </div>
       </div>
     </section>
 
-
-    <!-- ============================================================
-         TEAMS GRID
-         ============================================================ -->
+    <!-- TEAMS GRID -->
     <section class="teams-section">
       <div class="container">
-        <div class="teams-grid" id="teamsGrid"></div>
+        <div class="teams-grid" id="teamsGrid">
+          <div class="teams-empty">Loading teams...</div>
+        </div>
       </div>
     </section>
 
-
-    <!-- ============================================================
-         GOLDEN BOOT — top scorers
-         ============================================================ -->
+    <!-- GOLDEN BOOT -->
     <section class="golden-boot-section" id="goldenBoot">
       <div class="golden-boot-wrap">
         <div class="gb-head">
           <h2 class="gb-title">Golden Boot</h2>
-          <div class="gb-sub">Top goal scorers · Elite IX</div>
+          <div class="gb-sub">Top goal scorers · Elite 6ix</div>
         </div>
 
-        <div class="gb-list" id="gbList"></div>
+        <div class="gb-list" id="gbList">
+          <div class="gb-empty">Loading top scorers...</div>
+        </div>
       </div>
     </section>
 
   </main>
 
-
-  <!-- ============================================================
-       TEAM MODAL
-       ============================================================ -->
+  <!-- TEAM MODAL -->
   <div class="team-modal" id="teamModal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="team-modal-panel">
       <div class="team-modal-head">
@@ -888,10 +744,7 @@
     </div>
   </div>
 
-
-  <!-- ============================================================
-       FOOTER
-       ============================================================ -->
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-brand">
@@ -901,16 +754,11 @@
 
       <div class="footer-col">
         <h4>Explore</h4>
-       
-        
-        
       </div>
 
       <div class="footer-col">
         <h4>Engage</h4>
         <a href="/public/membership.html">Membership</a>
-        
-        
       </div>
 
       <div class="footer-col">
@@ -927,164 +775,17 @@
     </div>
   </footer>
 
-
-  <!-- ============================================================
-       SCRIPTS
-       ============================================================ -->
   <script type="module">
-    import { NAV_LINKS } from '/js/config.js';
+    import { NAV_LINKS, CONFIG } from '/js/config.js';
+    const API = CONFIG.API_BASE_URL;
 
     /* =========================================================
-       MOCK DATA — teams
+       STATE
        ========================================================= */
-    const MOCK_TEAMS = [
-      {
-        id: 1, name: 'Choko  Choko FC', coach: '-', group: 'group-a',
-        logo:  '/assets/images/teams/choko.jpeg',
-        photo: '/assets/images/teams/choko1.jpeg',
-        stats: { played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0, points: 0 },
-        players: [
-          { num: 1,  name: 'Gene',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 2,  name: 'Mj',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 3,  name: 'Dinza',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 4,  name: 'Pule',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 5,  name: 'Mokeri',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 6,  name: 'Klaas',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-         { num: 7,  name: 'Ace',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-         
-        ],
-      },
-      {
-        id: 2, name: 'Newcastle Fc', coach: 'Fire', group: 'group-b',
-        logo:  '/assets/images/teams/new.jpeg',
-        photo: '/assets/images/teams/new1.jpeg',
-      stats: { played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0, points: 0 },
-        players: [
-          { num: 1,  name: 'Sihle',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 2,  name: 'Velf',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 3,  name: 'Neo',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 4,  name: 'Mosboy',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 5,  name: 'Xavi',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 6,  name: 'Sweetpops',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-         { num: 7,  name: 'Madura',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-        
-        ],
-      },
-      {
-        id: 3, name: 'Sunday Ballers', coach: '', group: 'group-a',
-        logo:  '/assets/images/teams/sunday.jpeg',
-        photo:'/assets/images/teams/sunday1.jpeg',
-        stats: { played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0, points: 0 },
-        players: [
-          { num: 1,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 2,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 3,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 4,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 5,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 6,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-         { num: 7,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-         { num: 8,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-        ],
-      },
-      {
-        id: 4, name: 'Clutch Fc', coach: '', group: 'group-b',
-        logo:  '/assets/images/teams/clutch.jpeg',
-        photo: '/assets/images/teams/clutchh.jpeg',
-        stats: { played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0, points: 0 },
-        players: [
-          { num: 1,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 2,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 3,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 4,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 5,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 6,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-         { num: 7,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-         { num: 8,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-        ],
-      },
-      {
-        id: 5, name: 'Ma  After  9', coach: '', group: 'group-b',
-       logo:  '/assets/images/teams/after9.jpeg',
-        photo: '/assets/images/teams/after 9.jpeg',
-       stats: { played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0, points: 0 },
-        players: [
-          { num: 1,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 2,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 3,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 4,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 5,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 6,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-         { num: 7,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-         { num: 8,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-        ],
-      },
-      {
-        id: 6, name: 'Brighton Fc', coach: '', group: 'group-a',
-        logo:  '/assets/images/teams/bri.jpeg',
-        photo: '/assets/images/teams/brighton.jpeg',
-        stats: { played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0, points: 0 },
-        players: [
-          { num: 1,  name: '',   position: '',  goals: 0,  assists: 0, apps: 0 },
-          { num: 2,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 3,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 4,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 5,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 6,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-         { num: 7,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-         { num: 8,  name: '-',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-        ],
-      }, 
-       {
-        id: 7, name: 'Kings Fc', coach: '', group: 'group-a',
-        logo:  '/assets/images/teams/kings.jpeg',
-        photo: '/assets/images/teams/kingsfc.jpeg',
-        stats: { played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0, points: 0 },
-        players: [
-          { num: 1,  name: 'Catch ',   position: 'GP',  goals: 0,  assists: 0, apps: 0 },
-          { num: 2,  name: 'Mulo',   position: '',  goals: 0,  assists: 0, apps: 0 },
-          { num: 3,  name: 'Polo',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 4,  name: 'Kombo',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 5,  name: 'Hleti',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 6,  name: 'Austin',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-         { num: 7,  name: 'Nuraz',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-         { num: 8,  name: 'Mogale',   position: '-',  goals: 0,  assists: 0, apps: 0 }, 
-          { num: 9,  name: 'Mandla',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-         { num: 10,  name: 'Gundo jr ',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-        ],
-      }, 
-        {
-        id: 8, name: 'Majita united', coach: '', group: 'group-a',
-        logo:  '/assets/images/teams/majita.jpeg',
-        photo: '/assets/images/teams/kingsfdc.jpeg',
-        stats: { played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0, points: 0 },
-        players: [
-          { num: 1,  name: 'Gundo',   position: 'C',  goals: 0,  assists: 0, apps: 0 },
-          { num: 2,  name: 'Gift',   position: '',  goals: 0,  assists: 0, apps: 0 },
-          { num: 3,  name: 'Ngoni',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 4,  name: 'chico',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 5,  name: 'Ashwin',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-          { num: 6,  name: 'Tshupstar',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-         { num: 7,  name: 'Shaba',   position: '-',  goals: 0,  assists: 0, apps: 0 },
-         { num: 8,  name: 'Katlego',   position: '-',  goals: 0,  assists: 0, apps: 0 }, 
-          
-        ],
-      },
-    ];
-
-    /* =========================================================
-       MOCK DATA — Golden Boot top scorers
-       ========================================================= */
-    const MOCK_TOP_SCORERS = [
-      { name: 'Pule',    team: 'Choko Choko',     logo: '/assets/images/teams/choko.jpeg',   goals: 8 },
-      { name: 'Gupta',   team: 'Sunday Ballers',  logo: '/assets/images/teams/sunday.jpeg',  goals: 7 },
-      { name: 'Chicken', team: 'Newcastle FC',    logo: '/assets/images/teams/new.jpeg',     goals: 2 },
-      { name: 'Lukaku',  team: 'Newcastle FC',    logo: '/assets/images/teams/new.jpeg',     goals: 2 },
-      { name: 'Toni',    team: 'Ma After 9',      logo: '/assets/images/teams/after9.jpeg',  goals: 2 },
-      { name: 'Ace',     team: 'Choko Choko',     logo: '/assets/images/teams/choko.jpeg',   goals: 2 },
-      { name: 'Thabang', team: 'Sunday Ballers',  logo: '/assets/images/teams/sunday.jpeg',  goals: 2 },
-      { name: 'Theo',    team: 'Sunday Ballers',  logo: '/assets/images/teams/sunday.jpeg',  goals: 2 },
-    ];
-
+    let TEAMS = [];
+    let TOP_SCORERS = [];
+    let currentFilter = 'all';
+    let currentQuery = '';
 
     /* =========================================================
        ICONS
@@ -1107,7 +808,6 @@
     `;
     const initialsOf = (name) =>
       name.split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase();
-
 
     /* =========================================================
        DRAWER
@@ -1153,7 +853,6 @@
     overlay.addEventListener('click', closeDrawer);
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
 
-
     /* =========================================================
        AUTH STATE
        ========================================================= */
@@ -1162,22 +861,54 @@
       el.hidden = el.dataset.auth !== (loggedIn ? 'logged-in' : 'logged-out');
     });
 
+    /* =========================================================
+       LOAD: Teams + Golden Boot
+       ========================================================= */
+    async function loadTeams() {
+      try {
+        const res = await fetch(`${API}/teams/public/teams`);
+        const json = await res.json();
+        if (res.ok && json.success) {
+          TEAMS = json.data;
+          renderTeams();
+        }
+      } catch (err) {
+        console.error('Failed to load teams:', err);
+        document.getElementById('teamsGrid').innerHTML =
+          `<div class="teams-empty">Failed to load teams.</div>`;
+      }
+    }
+
+    async function loadGoldenBoot() {
+      try {
+        const res = await fetch(`${API}/players/public`);
+        const json = await res.json();
+        if (res.ok && json.success) {
+          // Filter players with goals, sort desc
+          TOP_SCORERS = json.data
+            .filter(p => p.total_goals > 0)
+            .sort((a, b) => {
+              if (b.total_goals !== a.total_goals) return b.total_goals - a.total_goals;
+              return (b.total_assists || 0) - (a.total_assists || 0);
+            })
+            .slice(0, 20); // top 20
+          renderGoldenBoot();
+        }
+      } catch (err) {
+        console.error('Failed to load Golden Boot:', err);
+        document.getElementById('gbList').innerHTML =
+          `<div class="gb-empty">Failed to load top scorers.</div>`;
+      }
+    }
 
     /* =========================================================
-       RENDER: TEAMS GRID
+       RENDER: TEAMS
        ========================================================= */
-    const teamsGrid = document.getElementById('teamsGrid');
-    const searchInput = document.getElementById('teamsSearch');
-    const filterBtns = document.querySelectorAll('.filter-btn');
-
-    let currentFilter = 'all';
-    let currentQuery = '';
-
     function crestHTML(team) {
       return `
         <div class="team-card-crest">
           <span class="fallback">${initialsOf(team.name)}</span>
-          <img src="${team.logo}" alt="" loading="lazy" onerror="this.remove()">
+          ${team.logo ? `<img src="${team.logo}" alt="" loading="lazy" onerror="this.remove()">` : ''}
         </div>
       `;
     }
@@ -1186,39 +917,38 @@
       return `
         <div class="team-card-photo">
           <span class="team-card-photo-fallback">${team.name}</span>
-          <img src="${team.photo}" alt="${team.name} team photo" loading="lazy" onerror="this.remove()">
+          ${team.photo ? `<img src="${team.photo}" alt="${team.name} team photo" loading="lazy" onerror="this.remove()">` : ''}
         </div>
       `;
     }
 
     function teamCardHTML(t) {
-      const s = t.stats;
-      const gd = s.gf - s.ga;
-      const gdStr = gd > 0 ? `+${gd}` : String(gd);
+      const s = t.stats || { played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0, gd: 0, points: 0 };
+      const gdStr = s.gd > 0 ? `+${s.gd}` : String(s.gd ?? 0);
       return `
         <article class="team-card" data-team-id="${t.id}" tabindex="0" role="button" aria-label="View ${t.name}">
           <div class="team-card-head">
             ${crestHTML(t)}
             <div class="team-card-title">
               <div class="team-card-name">${t.name}</div>
-              <div class="team-card-coach">Coach: ${t.coach}</div>
+              <div class="team-card-coach">Coach: ${t.coach || '—'}</div>
             </div>
-            <span class="team-card-points">${s.points} pts</span>
+            <span class="team-card-points">${s.points ?? 0} pts</span>
           </div>
 
           ${photoHTML(t)}
 
           <div class="team-card-stats">
             <div class="stat win">
-              <div class="stat-value">${s.wins}</div>
+              <div class="stat-value">${s.wins ?? 0}</div>
               <div class="stat-label">Won</div>
             </div>
             <div class="stat draw">
-              <div class="stat-value">${s.draws}</div>
+              <div class="stat-value">${s.draws ?? 0}</div>
               <div class="stat-label">Draw</div>
             </div>
             <div class="stat loss">
-              <div class="stat-value">${s.losses}</div>
+              <div class="stat-value">${s.losses ?? 0}</div>
               <div class="stat-label">Lost</div>
             </div>
             <div class="stat">
@@ -1228,7 +958,7 @@
           </div>
 
           <div class="team-card-foot">
-            <span><strong>${s.played}</strong> played · <strong>${s.gf}</strong> scored</span>
+            <span><strong>${s.played ?? 0}</strong> played · <strong>${s.gf ?? 0}</strong> scored</span>
             <span class="team-card-cta">
               View squad
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none"
@@ -1242,75 +972,72 @@
     }
 
     function renderTeams() {
-      let list = MOCK_TEAMS;
+      let list = TEAMS;
 
       if (currentFilter !== 'all') {
-        list = list.filter(t => t.group === currentFilter);
+        // If your teams have a group field, filter by it; else skip
+        list = list.filter(t => (t.group || '').includes(currentFilter));
       }
       if (currentQuery.trim()) {
         const q = currentQuery.toLowerCase();
         list = list.filter(t =>
-          t.name.toLowerCase().includes(q) ||
-          t.coach.toLowerCase().includes(q)
+          (t.name || '').toLowerCase().includes(q) ||
+          (t.coach || '').toLowerCase().includes(q)
         );
       }
 
+      const grid = document.getElementById('teamsGrid');
+
       if (!list.length) {
-        teamsGrid.innerHTML = `<div class="teams-empty">No teams match your search.</div>`;
+        grid.innerHTML = `<div class="teams-empty">No teams match your search.</div>`;
         return;
       }
 
-      teamsGrid.innerHTML = list.map(teamCardHTML).join('');
+      grid.innerHTML = list.map(teamCardHTML).join('');
 
-      teamsGrid.querySelectorAll('.team-card').forEach(card => {
-        card.addEventListener('click', () => openTeamModal(Number(card.dataset.teamId)));
+      grid.querySelectorAll('.team-card').forEach(card => {
+        card.addEventListener('click', () => openTeamModal(card.dataset.teamId));
         card.addEventListener('keydown', e => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            openTeamModal(Number(card.dataset.teamId));
+            openTeamModal(card.dataset.teamId);
           }
         });
       });
     }
 
-    filterBtns.forEach(btn => {
+    document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        filterBtns.forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentFilter = btn.dataset.filter;
         renderTeams();
       });
     });
 
-    searchInput.addEventListener('input', e => {
+    document.getElementById('teamsSearch').addEventListener('input', e => {
       currentQuery = e.target.value;
       renderTeams();
     });
-
-    renderTeams();
-
 
     /* =========================================================
        RENDER: GOLDEN BOOT
        ========================================================= */
     function renderGoldenBoot() {
-      /* Sort by goals desc, then alphabetically */
-      const scorers = MOCK_TOP_SCORERS
-        .slice()
-        .sort((a, b) => {
-          if (b.goals !== a.goals) return b.goals - a.goals;
-          return a.name.localeCompare(b.name);
-        });
+      const wrap = document.getElementById('gbList');
 
-      /* Compute the position number with tie handling */
+      if (!TOP_SCORERS.length) {
+        wrap.innerHTML = `<div class="gb-empty">No goals scored yet.</div>`;
+        return;
+      }
+
       let lastGoals = null;
       let lastPos = 0;
 
-      const wrap = document.getElementById('gbList');
-      wrap.innerHTML = scorers.map((s, i) => {
-        if (s.goals !== lastGoals) {
+      wrap.innerHTML = TOP_SCORERS.map((s, i) => {
+        if (s.total_goals !== lastGoals) {
           lastPos = i + 1;
-          lastGoals = s.goals;
+          lastGoals = s.total_goals;
         }
         const isLeader = lastPos === 1;
 
@@ -1318,17 +1045,14 @@
           <div class="gb-row${isLeader ? ' leader' : ''}">
             <div class="gb-pos">${lastPos}</div>
             <div class="gb-crest">
-              ${s.logo ? `<img src="${s.logo}" alt="" onerror="this.remove()">` : initialsOf(s.name)}
+              ${s.team_logo ? `<img src="${s.team_logo}" alt="" onerror="this.remove()">` : initialsOf(s.full_name)}
             </div>
-            <div class="gb-name">${s.name}</div>
-            <div class="gb-goals">${s.goals}</div>
+            <div class="gb-name">${s.full_name}</div>
+            <div class="gb-goals">${s.total_goals}</div>
           </div>
         `;
       }).join('');
     }
-
-    renderGoldenBoot();
-
 
     /* =========================================================
        TEAM MODAL
@@ -1341,44 +1065,42 @@
     const modalPlayers = document.getElementById('modalPlayers');
     const modalClose   = document.getElementById('modalClose');
 
-    function openTeamModal(id) {
-      const t = MOCK_TEAMS.find(x => x.id === id);
+    function openTeamModal(teamId) {
+      const t = TEAMS.find(x => String(x.id) === String(teamId));
       if (!t) return;
 
       modalCrest.innerHTML = `
         <span class="fallback">${initialsOf(t.name)}</span>
-        <img src="${t.logo}" alt="" onerror="this.remove()">
+        ${t.logo ? `<img src="${t.logo}" alt="" onerror="this.remove()">` : ''}
       `;
 
       modalName.textContent = t.name;
-      const groupLabel = t.group === 'group-a' ? 'Group A' : 'Group B';
-      modalMeta.textContent = `Coach: ${t.coach} · ${groupLabel}`;
+      modalMeta.textContent = `Coach: ${t.coach || '—'}`;
 
-      const s = t.stats;
-      const gd = s.gf - s.ga;
-      const gdStr = gd > 0 ? `+${gd}` : String(gd);
+      const s = t.stats || { played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0, gd: 0 };
+      const gdStr = s.gd > 0 ? `+${s.gd}` : String(s.gd ?? 0);
       modalStats.innerHTML = `
-        <div class="stat"><div class="stat-value">${s.played}</div><div class="stat-label">Played</div></div>
-        <div class="stat win"><div class="stat-value">${s.wins}</div><div class="stat-label">Won</div></div>
-        <div class="stat draw"><div class="stat-value">${s.draws}</div><div class="stat-label">Draw</div></div>
-        <div class="stat loss"><div class="stat-value">${s.losses}</div><div class="stat-label">Lost</div></div>
+        <div class="stat"><div class="stat-value">${s.played ?? 0}</div><div class="stat-label">Played</div></div>
+        <div class="stat win"><div class="stat-value">${s.wins ?? 0}</div><div class="stat-label">Won</div></div>
+        <div class="stat draw"><div class="stat-value">${s.draws ?? 0}</div><div class="stat-label">Draw</div></div>
+        <div class="stat loss"><div class="stat-value">${s.losses ?? 0}</div><div class="stat-label">Lost</div></div>
         <div class="stat"><div class="stat-value">${gdStr}</div><div class="stat-label">GD</div></div>
       `;
 
-      if (!t.players.length) {
-        modalPlayers.innerHTML = `<div style="color:var(--text-dim);font-size:13px;padding:12px 0;">Squad not yet available.</div>`;
+      const players = t.players || [];
+      if (!players.length) {
+        modalPlayers.innerHTML = `<div class="modal-loading">Squad not yet available.</div>`;
       } else {
-        modalPlayers.innerHTML = t.players.map(p => `
+        modalPlayers.innerHTML = players.map(p => `
           <div class="player-row">
-            <div class="player-num">${p.num}</div>
+            <div class="player-num">${p.num ?? '—'}</div>
             <div class="player-info">
-              <div class="player-name">${p.name}</div>
-              <div class="player-pos">${p.position}</div>
+              <div class="player-name">${p.name || p.full_name}</div>
+              <div class="player-pos">${p.position || '—'}</div>
             </div>
             <div class="player-mini-stats">
-              <span>Apps<strong>${p.apps}</strong></span>
-              <span>Goals<strong>${p.goals}</strong></span>
-              <span>Assists<strong>${p.assists}</strong></span>
+              <span>Goals<strong>${p.goals ?? 0}</strong></span>
+              <span>Assists<strong>${p.assists ?? 0}</strong></span>
             </div>
           </div>
         `).join('');
@@ -1402,6 +1124,13 @@
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape' && modal.classList.contains('open')) closeTeamModal();
     });
+
+    /* =========================================================
+       INIT
+       ========================================================= */
+    loadTeams();
+    loadGoldenBoot();
+
   </script>
 
 </body>
