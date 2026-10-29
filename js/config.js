@@ -8,7 +8,7 @@ export const CONFIG = {
   APP_FULL_NAME: 'Polokwane Champions League',
   VERSION: '1.0.0-mvp1',
 
-  API_BASE_URLL: 'https://premier-server.onrender.com/api', 
+  API_BASE_URL: 'https://premier-server.onrender.com/api', 
   //API_BASE_URL: 'http://localhost:5000/api',
 
   FEATURES: {
